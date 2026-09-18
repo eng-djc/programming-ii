@@ -1,8 +1,8 @@
 # Programming II
 
-Coursework, exercises, assignments, and projects from my Programming II course at Universidad Latina de Costa Rica.
+This repository contains my coursework for Programming II at Universidad Latina de Costa Rica.
 
-This repository tracks my learning and development throughout the course.
+It tracks my progress throughout the course, including class exercises, assignments, projects, and study notes.
 
 ## Repository Structure
 
