@@ -1,0 +1,138 @@
+<!-- DE ESTA MANERA DE PONEN COMENTARIOS EN HTML
+HTTP: Hypertext Transfer Protocol, Sigue un esquema de petición-respuesta entre un cliente y un servidor.
+HTTPS (HyperText Transport Protocol Secure)
+www: World Wide Web
+URL, uniform resource locator), son siempre únicas
+	protocolo://maquina:puerto/camino/fichero
+	máquina es el nombre o la IP del servidor al cual nos queremos conectar, se emplea un nombre (como Google.com) que es traducido a una IP por el servicio de DNS.
+	Separado por ":" el puerto. Por defecto, cada protocolo tiene un puerto. Por ejemplo: http-> puerto 80 y https-> puerto 443.
+	
+Los programadores se encargan del "Back end"-> el servidor. Y los diseñadores se encargan del "Front end", la parte del cliente, lo que el usuario vee en el navegador.
+
+
+-->
+
+<html> <!-- Etiqueta donde inicia el HTML (HyperText Markup Language) -->
+	<head> <!-- Etiqueta de Cabecera, 
+			Toda la información que se incluye en la cabecera -->
+        <title>Lección 2 - Programación II</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> <!--Con esta línea hacemos que se muestren las tildes, ñ y caracteres especiales -->
+	</head>
+	
+    <body>
+        <!-- TITULOS -->
+        Títulos de encabezamiento
+        <h1>Encabezado 1</h1>
+        <h2>Encabezado 2</h2>
+        <h3>Encabezado 3</h3>
+        <h4>Encabezado 4</h4>
+        <h5>Encabezado 5</h5>
+        <h6>Encabezado 6</h6>
+
+        <p>Hola mundo </p>
+        Hola mundo
+        <br />
+        Hola mundo
+        <br />
+
+        <!-- OTRAS ETIQUETAS -->
+        Otras Etiquetas
+        <p>
+            <b>Negrita</b>
+            <i>Cursiva</i>
+            <tt> Emplea una fuente de tamaño fijo</tt>
+            <em>Énfasis</em>
+            <strong>Más énfasis</strong>
+            <font color="BLUE" size="4">Texto</font>  <!-- el tamaño mediante un número entero entre 1 y 7, en aumento-->
+        <p>
+            <br /> <!-- <br/> es para hacer saltos de paguina en un HTML	-->
+            <!-- LISTAS -->
+            Lista ordenada
+            <ol>
+                <!-- Listas ordenada numérica -->
+                <li> Introducción </li>
+                <li>
+                    Desarrollo
+                    <ul>
+                        <!-- Listas desordenada por puntos -->
+                        <li> Java </li>
+                        <li> C# </li>
+                        <li>HTML</li>
+                        <ul>
+                            <!-- Listas desordenada por puntos -->
+                            <li> Head 1 </li>
+                            <li> Head 2 </li>
+                            <li> Head 3 </li>
+                        </ul>
+                    </ul>
+                </li>
+                <li> Conclución </li>
+            </ol>
+            </li>
+            <li>Conclusión</li>
+            </ol>
+
+            Lista desordenada
+            <ul>
+                <!-- Listas desordenada por puntos -->
+                <li> Java </li>
+                <li> C# </li>
+                <li>HTML</li>
+            </ul>
+
+            <!-- REFERENCIA A OTRAS PAGINAS -->
+        <p><a href="Tags_2.html" target="_blank">Ir a la Tags_2.html</a></p>
+
+        <p>Diseñado por <a href="mailto:adryrubio209@hotmail.com" title="Ing. Adriana Rubio Escobar">Ing. Adriana Rubio Escobar</a></p>
+
+        <!-- INSERTAR IMAGEN -->
+        Imágenes
+        <p>
+            <a href="https://www.ulatina.ac.cr/" target="_blank" >
+                <img src="https://www.ulatina.ac.cr/sites/default/files/styles/convert_to_webp/public/logo_ulatina_1_0.png.webp?itok=h33VhKN8"
+                     alt="Universidad Latina de Costa Rica"
+                     width="150"
+                     style="border: 4px solid black;">
+            </a>
+        </p>
+        <!-- TABLAS -->
+        Tablas
+        <table border="1" width="20%">
+            <!-- Inicio de la tabla -->
+            <tr>
+                <!-- <tr> para crear filas -->
+                <th>Nombre</th>  <!-- <td> para crear celdas -->
+                <th>Apellido 1</th>
+                <th>Apellido 2</th>
+            </tr>
+            <tr><td>David</td><td>Jiménez</td><td>García</td></tr>
+            <tr><td>Maria</td><td>López</td><td>Martínez</td></tr>
+        </table>
+        <p>
+            <br />
+
+            <!-- FORMULARIOS -->
+            <fieldset style="width: 350px; padding: 30px;">
+
+                <h3 style="text-align: center;">LOGIN</h3>
+
+                <form name="Formulario" method="POST" action="">
+
+                    <label for="usuario">Put your username here</label>
+                    <br>
+                    <input type="text" required id="usuario" name="Put your username here" placeholder="Put your name here">
+                    <br><br>
+                    <label for="password">Put your password here</label>
+                    <br>
+                    <input type="password" required id="password" name="Put your password here" placeholder="Put your password here">
+                    <br><br><br>
+                    <input value="Enter" type="submit">
+                    <input value="Cancel" type="reset">
+                </form>
+                <br><br><br>
+                <br><br><br>
+
+            </fieldset>
+
+</body>
+        </html>  <!-- Etiqueta donde finaliza el HTML -->
