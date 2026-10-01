@@ -14,10 +14,10 @@ File: `homework/agregar-usuario.html`
 
 The form implements only the fields requested in the assignment:
 
-| Field | HTML control |
+| Field | HTML control / validation |
 | --- | --- |
-| Nombre | `input type="text"` |
-| Edad | `input type="number"` |
+| Nombre | `input type="text"`; accepts letters and spaces only |
+| Edad | `input type="number"`; minimum 0 and whole numbers only |
 | Fecha de nacimiento | `input type="date"` |
 | Perfil | Three radio buttons: Administrativo, Plataforma, Docente |
 | Permisos extras | `select` with Sí / No |
@@ -25,4 +25,4 @@ The form implements only the fields requested in the assignment:
 | Usuario | `input type="text"` |
 | Clave | `input type="password"` |
 
-The password is masked by the browser. Perfil is one radio-button group, so only one of the three profiles can be selected. Permisos extras is one select control with the two requested choices.
+The password is masked by the browser. Perfil is one radio-button group, so only one of the three profiles can be selected. Permisos extras is one select control with the two requested choices and requires an explicit selection. The form also includes a Reset button.
