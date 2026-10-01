@@ -14,3 +14,5 @@ It tracks my progress throughout the course, including class exercises, assignme
 ## Progress
 
 - [ ] Class 01
+- [x] Class 02
+- [x] Class 03

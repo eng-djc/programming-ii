@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Usuario - Programación II</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        form {
+            max-width: 520px;
+        }
+
+        fieldset {
+            padding: 24px;
+        }
+
+        .campo {
+            margin-bottom: 16px;
+        }
+
+        label,
+        legend {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        input[type="password"],
+        select,
+        textarea {
+            box-sizing: border-box;
+            margin-top: 6px;
+            padding: 8px;
+            width: 100%;
+        }
+
+        .opciones label {
+            font-weight: normal;
+            margin-right: 16px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            padding: 8px 16px;
+        }
+    </style>
+</head>
+<body>
+    <form method="post" action="">
+        <fieldset>
+            <legend>Agregar Usuario</legend>
+
+            <div class="campo">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" required>
+            </div>
+
+            <div class="campo">
+                <label for="edad">Edad</label>
+                <input type="number" id="edad" name="edad" required>
+            </div>
+
+            <div class="campo">
+                <label for="fechaNacimiento">Fecha de nacimiento</label>
+                <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
+            </div>
+
+            <fieldset class="campo">
+                <legend>Perfil</legend>
+                <div class="opciones">
+                    <label><input type="radio" name="perfil" value="administrativo" required> Administrativo</label>
+                    <label><input type="radio" name="perfil" value="plataforma"> Plataforma</label>
+                    <label><input type="radio" name="perfil" value="docente"> Docente</label>
+                </div>
+            </fieldset>
+
+            <div class="campo">
+                <label for="permisosExtras">Permisos extras</label>
+                <select id="permisosExtras" name="permisosExtras" required>
+                    <option value="si">Sí</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+
+            <div class="campo">
+                <label for="otros">Otros</label>
+                <textarea id="otros" name="otros"></textarea>
+            </div>
+
+            <div class="campo">
+                <label for="usuario">Usuario</label>
+                <input type="text" id="usuario" name="usuario" required>
+            </div>
+
+            <div class="campo">
+                <label for="clave">Clave</label>
+                <input type="password" id="clave" name="clave" required>
+            </div>
+
+            <button type="submit">Agregar usuario</button>
+        </fieldset>
+    </form>
+</body>
+</html>
