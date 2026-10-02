@@ -1,0 +1,141 @@
+@model ProyectoWeb.Models.Usuario
+@{
+    // Esta vista conserva el documento completo y los estilos del formulario original.
+    Layout = null;
+}
+@* Los asp-for usan exactamente las propiedades del modelo Usuario. *@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Usuario - Programación II</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        form {
+            max-width: 520px;
+        }
+
+        fieldset {
+            padding: 24px;
+        }
+
+        .campo {
+            margin-bottom: 16px;
+        }
+
+        label,
+        legend {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        input[type="password"],
+        select,
+        textarea {
+            box-sizing: border-box;
+            margin-top: 6px;
+            padding: 8px;
+            width: 100%;
+        }
+
+        .opciones label {
+            font-weight: normal;
+            margin-right: 16px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            padding: 8px 16px;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    @if (TempData["MensajeUsuario"] is string mensaje)
+    {
+        <p role="status">@mensaje</p>
+    }
+    <form method="post" asp-controller="Home" asp-action="AgregarUsuario">
+        @* El Form Tag Helper genera el token que valida el controlador. *@
+        <div asp-validation-summary="All" role="alert"></div>
+        <fieldset>
+            <legend>Agregar Usuario</legend>
+
+            <div class="campo">
+                <label for="nombre">Nombre</label>
+                <input
+                    type="text"
+                    id="nombre"
+                    name="nombre" asp-for="nombre"
+                    pattern="[A-Za-zÁÉÍÓÚáéíóúÑñÜü ]+"
+                    title="El nombre solo puede contener letras y espacios."
+                    oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñÜü ]/g, '')"
+                    required>
+            </div>
+
+            <div class="campo">
+                <label for="edad">Edad</label>
+                <input
+                    type="number"
+                    id="edad"
+                    name="edad" asp-for="edad"
+                    min="0"
+                    step="1"
+                    required>
+            </div>
+
+            <div class="campo">
+                <label for="fechaNacimiento">Fecha de nacimiento</label>
+                <input type="date" id="fechaNacimiento" name="fechaNacimiento" asp-for="fechaNacimiento" required>
+            </div>
+
+            <fieldset class="campo">
+                <legend>Perfil</legend>
+                <div class="opciones">
+                    <label><input type="radio" name="perfil" asp-for="perfil" value="administrativo" required> Administrativo</label>
+                    <label><input type="radio" name="perfil" asp-for="perfil" value="plataforma"> Plataforma</label>
+                    <label><input type="radio" name="perfil" asp-for="perfil" value="docente"> Docente</label>
+                </div>
+            </fieldset>
+
+            <div class="campo">
+                <label for="permisosExtras">Permisos extras</label>
+                <select id="permisosExtras" name="permisosExtras" asp-for="permisosExtras" required>
+                    <option value="" disabled>Seleccione una opción</option>
+                    <option value="si">Sí</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+
+            <div class="campo">
+                <label for="otros">Otros</label>
+                <textarea id="otros" name="otros" asp-for="otros"></textarea>
+            </div>
+
+            <div class="campo">
+                <label for="usuario">Usuario</label>
+                <input type="text" id="usuario" name="usuario" asp-for="usuario" required>
+            </div>
+
+            <div class="campo">
+                <label for="clave">Clave</label>
+                <input type="password" id="clave" name="clave" asp-for="clave" required>
+            </div>
+
+            <button type="submit">Agregar usuario</button>
+            <button type="reset">Reset</button>
+        </fieldset>
+    </form>
+</body>
+</html>
