@@ -10,14 +10,16 @@ namespace ProyectoWeb.Models
     public class Usuario
     {
         // Estado interno: private permite acceso únicamente desde esta clase.
-        private string nombre;
+        // Los textos parten de string.Empty para garantizar su inicialización (CS8618).
+        // Se conservan las asignaciones mediante propiedades en ambos constructores.
+        private string nombre = string.Empty;
         private int edad;
         private DateTime fechaNacimiento;
-        private string perfil;
-        private string permisosExtras;
-        private string otros;
-        private string usuario;
-        private string clave;
+        private string perfil = string.Empty;
+        private string permisosExtras = string.Empty;
+        private string otros = string.Empty;
+        private string usuario = string.Empty;
+        private string clave = string.Empty;
 
         /// <summary>Nombre completo: admite letras, tildes, ñ, ü y espacios.</summary>
         [Required(ErrorMessage = "El nombre es obligatorio.")]
