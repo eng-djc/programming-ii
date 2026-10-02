@@ -66,6 +66,7 @@
     {
         <p role="status">@mensaje</p>
     }
+    <p><a asp-controller="Home" asp-action="MostrarUsuarios">Mostrar usuarios</a></p>
     <form method="post" asp-controller="Home" asp-action="AgregarUsuario">
         @* El Form Tag Helper genera el token que valida el controlador. *@
         <div asp-validation-summary="All" role="alert"></div>

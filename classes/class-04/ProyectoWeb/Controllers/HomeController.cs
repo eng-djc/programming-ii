@@ -50,15 +50,24 @@ namespace ProyectoWeb.Controllers
 
             if (ModelState.IsValid)
             {
-                // Este ejercicio valida datos; todavía no implementa persistencia.
-                TempData["MensajeUsuario"] = "Datos validados correctamente. El ejercicio no guarda usuarios.";
-                return RedirectToAction(nameof(AgregarUsuario));
+                servicio.AgregarUsuario(modelo);
+                TempData["MensajeUsuario"] = "Usuario agregado correctamente.";
+                // Redirigir evita repetir el POST al actualizar la página de resultados.
+                return RedirectToAction(nameof(MostrarUsuarios));
             }
 
             // No devolver la clave introducida al volver a mostrar el formulario.
             modelo.Clave = string.Empty;
             ModelState.Remove(nameof(Usuario.Clave));
             return View(modelo);
+        }
+
+        /// <summary>Entrega a la vista los usuarios de la lista estática del servicio.</summary>
+        [HttpGet]
+        public IActionResult MostrarUsuarios()
+        {
+            var servicio = new Service();
+            return View(servicio.MostrarUsuarios());
         }
 
         public IActionResult Privacy()

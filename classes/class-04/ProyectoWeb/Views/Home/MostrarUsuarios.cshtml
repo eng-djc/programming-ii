@@ -1,0 +1,48 @@
+@model List<ProyectoWeb.Models.Usuario>
+@{
+    ViewData["Title"] = "Usuarios";
+}
+
+<h1>Usuarios</h1>
+@if (TempData["MensajeUsuario"] is string mensaje)
+{
+    <p role="status">@mensaje</p>
+}
+
+<p><a asp-controller="Home" asp-action="AgregarUsuario">Agregar usuario</a></p>
+
+@if (Model.Count == 0)
+{
+    <p>Todavía no hay usuarios registrados.</p>
+}
+else
+{
+    @* Razor codifica los valores; las claves no se incluyen en la tabla. *@
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Edad</th>
+                <th>Fecha de nacimiento</th>
+                <th>Perfil</th>
+                <th>Permisos extras</th>
+                <th>Otros</th>
+                <th>Usuario</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var usuario in Model)
+            {
+                <tr>
+                    <td>@usuario.Nombre</td>
+                    <td>@usuario.Edad</td>
+                    <td>@usuario.FechaNacimiento.ToString("dd/MM/yyyy")</td>
+                    <td>@usuario.Perfil</td>
+                    <td>@(usuario.PermisosExtras == "si" ? "Sí" : "No")</td>
+                    <td>@usuario.Otros</td>
+                    <td>@usuario.NombreUsuario</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

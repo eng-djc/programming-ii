@@ -3,11 +3,14 @@ using System.ComponentModel.DataAnnotations;
 namespace ProyectoWeb.Models
 {
     /// <summary>
-    /// Servicio del ejercicio: valida un Usuario usando las reglas declaradas en el modelo.
-    /// No guarda usuarios ni claves y no representa una base de datos.
+    /// Valida usuarios y administra una lista compartida en memoria para el ejercicio.
     /// </summary>
     public class Service
     {
+        // private: únicamente Service modifica la lista.
+        // static: todas las instancias comparten la misma lista durante la ejecución.
+        private static List<Usuario> usuarios = new List<Usuario>();
+
         // private impide acceder directamente al estado interno.
         // readonly impide reemplazar esta referencia después de construir el servicio.
         private readonly Usuario _usuario;
@@ -24,6 +27,34 @@ namespace ProyectoWeb.Models
         {
             ArgumentNullException.ThrowIfNull(usuario);
             _usuario = usuario;
+        }
+
+        /// <summary>
+        /// Devuelve una copia de la lista para mostrar los usuarios.
+        /// Los datos permanecen en memoria y se pierden al reiniciar la aplicación.
+        /// </summary>
+        public List<Usuario> MostrarUsuarios()
+        {
+            // lock evita leer la lista mientras otra petición agrega un elemento.
+            lock (usuarios)
+            {
+                return usuarios.ToList();
+            }
+        }
+
+        /// <summary>Valida y agrega el usuario recibido a la lista compartida.</summary>
+        /// <param name="usuario">Usuario que se desea agregar.</param>
+        /// <exception cref="ArgumentNullException">El usuario es null.</exception>
+        /// <exception cref="ValidationException">El modelo incumple sus reglas.</exception>
+        public void AgregarUsuario(Usuario usuario)
+        {
+            ArgumentNullException.ThrowIfNull(usuario);
+            // Mantener las reglas también cuando se llama al servicio fuera del controlador.
+            Validator.ValidateObject(usuario, new ValidationContext(usuario), validateAllProperties: true);
+            lock (usuarios)
+            {
+                usuarios.Add(usuario);
+            }
         }
 
         /// <summary>

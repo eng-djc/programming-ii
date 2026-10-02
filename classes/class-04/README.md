@@ -47,4 +47,9 @@ Los demás nombres se vinculan sin distinguir mayúsculas y minúsculas.
 Las reglas DataAnnotations validan los datos; MVC detecta errores de conversión
 y campos vacíos para int y DateTime. La vista conserva el filtro inmediato del nombre.
 Service tiene ambos constructores, una referencia private readonly y el método público Validar.
-El POST valida el token antifalsificación y los datos; no almacena usuarios ni claves.
+El POST valida el token antifalsificación y los datos y agrega el usuario a la lista estática.
+La lista private static es compartida por todas las instancias de Service.
+AgregarUsuario(Usuario usuario) valida e inserta; MostrarUsuarios() devuelve una copia de la lista.
+Ambos métodos son public para su uso desde el controlador y protegen la lista con lock.
+La ruta /Home/MostrarUsuarios muestra la tabla sin incluir claves.
+Los usuarios se conservan únicamente en memoria y se pierden al reiniciar la aplicación.
