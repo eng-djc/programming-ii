@@ -39,6 +39,7 @@ namespace ProyectoWeb.Models
         public string Otros { get => otros; set => otros = value; }
 
         [Required(ErrorMessage = "El usuario es obligatorio.")]
+        [RegularExpression("[A-Za-z0-9]+", ErrorMessage = "El usuario solo puede contener letras y números, sin espacios ni caracteres especiales.")]
         // Vincula User con el campo usuario del formulario.
         [ModelBinder(Name = "usuario")]
         public string User { get => usuario; set => usuario = value; }
