@@ -18,39 +18,17 @@ namespace ProyectoWeb.Controllers
             return View();
         }
 
+        // Conserva los enlaces anteriores al formulario.
         [HttpGet]
         public IActionResult AgregarUsuario()
         {
-            return View(new Usuario());
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult AgregarUsuario(Usuario modelo)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    Service.agregar(modelo);
-                    TempData["MensajeUsuario"] = "Usuario agregado correctamente.";
-                    return RedirectToAction(nameof(MostrarUsuarios));
-                }
-                catch (Exception error)
-                {
-                    ModelState.AddModelError(string.Empty, error.Message);
-                }
-            }
-
-            modelo.Clave = string.Empty;
-            ModelState.Remove(nameof(Usuario.Clave));
-            return View(modelo);
+            return RedirectToAction("Create", "Usuario");
         }
 
         [HttpGet]
         public IActionResult MostrarUsuarios()
         {
-            return View(Service.mostrar());
+            return RedirectToAction("Index", "Usuario");
         }
 
         public IActionResult Privacy()
