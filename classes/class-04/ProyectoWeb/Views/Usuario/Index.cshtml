@@ -1,47 +1,74 @@
-@model List<ProyectoWeb.Models.Usuario>
+@model IEnumerable<ProyectoWeb.Models.Usuario>
+
 @{
     ViewData["Title"] = "Usuarios";
 }
 
 <h1>Usuarios</h1>
+
 @if (TempData["MensajeUsuario"] is string mensaje)
 {
     <p role="status">@mensaje</p>
 }
 
-<p><a asp-controller="Usuario" asp-action="Create">Agregar usuario</a></p>
+<p>
+    <a asp-controller="Usuario" asp-action="Create">Agregar usuario</a>
+</p>
 
-@if (Model.Count == 0)
-{
-    <p>Todavía no hay usuarios registrados.</p>
-}
-else
-{
+<div class="table-responsive">
     <table class="table">
         <thead>
             <tr>
-                <th>Nombre</th>
-                <th>Edad</th>
-                <th>Fecha de nacimiento</th>
-                <th>Perfil</th>
-                <th>Permisos extras</th>
-                <th>Otros</th>
-                <th>Usuario</th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Edad)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FechaNacimiento)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Perfil)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PermisosExtras)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Otros)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.User)
+                </th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var usuario in Model)
+            @foreach (var item in Model)
             {
                 <tr>
-                    <td>@usuario.Nombre</td>
-                    <td>@usuario.Edad</td>
-                    <td>@usuario.FechaNacimiento.ToString("dd/MM/yyyy")</td>
-                    <td>@usuario.Perfil</td>
-                    <td>@(usuario.PermisosExtras == "si" ? "Sí" : "No")</td>
-                    <td>@usuario.Otros</td>
-                    <td>@usuario.User</td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Edad)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FechaNacimiento)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Perfil)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PermisosExtras)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Otros)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.User)
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
-}
+</div>

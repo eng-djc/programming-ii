@@ -1,43 +1,74 @@
+@model IEnumerable<ProyectoWeb.Models.Usuario>
+
 @{
-    ViewData["Title"] = "Home Page";
-    int numero = 7;
+    ViewData["Title"] = "Usuarios";
 }
-hola mundo
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
 
-@numero
-<style>
-    table {
-        border-collapse: collapse;
-        width: 20%;
-    }
-    th, td {
-        border: 1px solid black;
-        padding: 5px;
-    }
-</style>
-<br />
-    <table border="1" width="20%">
-    <tr>
-        <td> <b> Multiplicacion </b></td>
-        <td> <b> Resultado </b></td>
-    </tr>
-        @{
-            for (int resultado = 1; resultado <= 10; resultado++)
+<h1>Usuarios</h1>
+
+@if (TempData["MensajeUsuario"] is string mensaje)
+{
+    <p role="status">@mensaje</p>
+}
+
+<p>
+    <a asp-controller="Usuario" asp-action="Create">Agregar usuario</a>
+</p>
+
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Edad)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FechaNacimiento)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Perfil)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PermisosExtras)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Otros)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.User)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
             {
-                int total = numero * resultado;
-
                 <tr>
-                    <td>@numero * @resultado</td>
-                    <td>@total</td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Edad)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FechaNacimiento)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Perfil)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PermisosExtras)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Otros)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.User)
+                    </td>
                 </tr>
             }
-        }
+        </tbody>
     </table>
-
-<p><a asp-controller="Usuario" asp-action="Create">Agregar usuario — Semana 4</a></p>
-
-<p><a asp-controller="Usuario" asp-action="Index">Mostrar usuarios</a></p>
+</div>

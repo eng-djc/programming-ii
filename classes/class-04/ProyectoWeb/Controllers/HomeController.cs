@@ -15,7 +15,8 @@ namespace ProyectoWeb.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var usuarios = Service.mostrar();
+            return View(usuarios);
         }
 
         // Conserva los enlaces anteriores al formulario.
