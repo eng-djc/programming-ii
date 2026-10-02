@@ -24,6 +24,22 @@ namespace ProyectoWeb.Models
             usuarios.Add(usuarito);
         }
 
+        // Actualiza el usuario reemplazándolo por los datos recibidos.
+        public static void actualizar(Usuario usuarito)
+        {
+            foreach (Usuario aux in usuarios)
+            {
+                if (aux.User == usuarito.User)
+                {
+                    usuarios.Remove(aux);
+                    usuarios.Add(usuarito);
+                    // Termina el método sin seguir recorriendo la lista modificada.
+                    return;
+                }
+            }
+            throw new Exception("Usuario no encontrado");
+        }
+
         // Devuelve la lista de usuarios.
         public static List<Usuario> mostrar() {
             return usuarios;
