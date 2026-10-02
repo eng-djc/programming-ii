@@ -36,8 +36,10 @@ namespace ProyectoWeb.Controllers
             var servicio = new Service(modelo);
             foreach (var error in servicio.Validar())
             {
-                foreach (var campo in error.MemberNames)
+                foreach (var propiedad in error.MemberNames)
                 {
+                    // NombreUsuario se vincula con el nombre original del formulario.
+                    var campo = propiedad == nameof(Usuario.NombreUsuario) ? "usuario" : propiedad;
                     // MVC ya valida los atributos; evita duplicar sus mensajes.
                     if (!ModelState.TryGetValue(campo, out var estado) || estado.Errors.Count == 0)
                     {
@@ -54,8 +56,8 @@ namespace ProyectoWeb.Controllers
             }
 
             // No devolver la clave introducida al volver a mostrar el formulario.
-            modelo.clave = string.Empty;
-            ModelState.Remove(nameof(Usuario.clave));
+            modelo.Clave = string.Empty;
+            ModelState.Remove(nameof(Usuario.Clave));
             return View(modelo);
         }
 

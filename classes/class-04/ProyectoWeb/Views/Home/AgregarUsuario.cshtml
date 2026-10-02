@@ -77,7 +77,7 @@
                 <input
                     type="text"
                     id="nombre"
-                    name="nombre" asp-for="nombre"
+                    name="nombre" asp-for="Nombre"
                     pattern="[A-Za-zÁÉÍÓÚáéíóúÑñÜü ]+"
                     title="El nombre solo puede contener letras y espacios."
                     oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñÜü ]/g, '')"
@@ -89,7 +89,7 @@
                 <input
                     type="number"
                     id="edad"
-                    name="edad" asp-for="edad"
+                    name="edad" asp-for="Edad"
                     min="0"
                     step="1"
                     required>
@@ -97,21 +97,21 @@
 
             <div class="campo">
                 <label for="fechaNacimiento">Fecha de nacimiento</label>
-                <input type="date" id="fechaNacimiento" name="fechaNacimiento" asp-for="fechaNacimiento" required>
+                <input type="date" id="fechaNacimiento" name="fechaNacimiento" asp-for="FechaNacimiento" value="@(Model.FechaNacimiento == DateTime.MinValue ? string.Empty : Model.FechaNacimiento.ToString("yyyy-MM-dd"))" required>
             </div>
 
             <fieldset class="campo">
                 <legend>Perfil</legend>
                 <div class="opciones">
-                    <label><input type="radio" name="perfil" asp-for="perfil" value="administrativo" required> Administrativo</label>
-                    <label><input type="radio" name="perfil" asp-for="perfil" value="plataforma"> Plataforma</label>
-                    <label><input type="radio" name="perfil" asp-for="perfil" value="docente"> Docente</label>
+                    <label><input type="radio" name="perfil" asp-for="Perfil" value="administrativo" required> Administrativo</label>
+                    <label><input type="radio" name="perfil" asp-for="Perfil" value="plataforma"> Plataforma</label>
+                    <label><input type="radio" name="perfil" asp-for="Perfil" value="docente"> Docente</label>
                 </div>
             </fieldset>
 
             <div class="campo">
                 <label for="permisosExtras">Permisos extras</label>
-                <select id="permisosExtras" name="permisosExtras" asp-for="permisosExtras" required>
+                <select id="permisosExtras" name="permisosExtras" asp-for="PermisosExtras" required>
                     <option value="" disabled>Seleccione una opción</option>
                     <option value="si">Sí</option>
                     <option value="no">No</option>
@@ -120,17 +120,17 @@
 
             <div class="campo">
                 <label for="otros">Otros</label>
-                <textarea id="otros" name="otros" asp-for="otros"></textarea>
+                <textarea id="otros" name="otros" asp-for="Otros"></textarea>
             </div>
 
             <div class="campo">
                 <label for="usuario">Usuario</label>
-                <input type="text" id="usuario" name="usuario" asp-for="usuario" required>
+                <input type="text" id="usuario" name="usuario" asp-for="NombreUsuario" required>
             </div>
 
             <div class="campo">
                 <label for="clave">Clave</label>
-                <input type="password" id="clave" name="clave" asp-for="clave" required>
+                <input type="password" id="clave" name="clave" asp-for="Clave" required>
             </div>
 
             <button type="submit">Agregar usuario</button>

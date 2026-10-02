@@ -1,7 +1,6 @@
 # Semana 4 — Formulario MVC de usuarios
 
-Copia de la semana 3 en el commit `3cc3f61`. La semana 3 conserva su contenido original.
-El formulario de homework se trasladó a `ProyectoWeb/Views/Home/AgregarUsuario.cshtml`.
+Copia de semana 3; el formulario está en `ProyectoWeb/Views/Home/AgregarUsuario.cshtml`.
 
 ## Ejecutar
 
@@ -11,32 +10,41 @@ dotnet build ProyectoWeb.csproj
 dotnet run --project ProyectoWeb.csproj
 ```
 
-Abrir la URL que muestra la consola seguida de `/Home/AgregarUsuario`.
-La vista Razor se ejecuta desde ASP.NET Core; no se abre con explorer.exe.
+Abrir la URL de la consola seguida de `/Home/AgregarUsuario`.
 
-## Vista, modelo y servicio
+## Formato de la profesora
 
-| Campo de la vista / propiedad | Tipo C# | Regla |
+El modelo usa campos privados, propiedades públicas encapsuladas y constructores
+con y sin parámetros. Las propiedades siguen el formato generado por
+«Encapsular campos (y usar propiedad)» de Visual Studio:
+
+```csharp
+private string nombre;
+public string Nombre { get => nombre; set => nombre = value; }
+```
+
+`get` devuelve el campo privado; `set` asigna el valor recibido en `value`.
+Ambos constructores asignan mediante las propiedades, como en la refactorización de clase.
+El constructor vacío inicializa textos con string.Empty, edad con 0 y fecha con DateTime.MinValue.
+La vista muestra esa fecha inicial como un campo vacío.
+
+| Nombre en formulario / campo privado | Propiedad pública | Tipo |
 | --- | --- | --- |
-| nombre | string | Obligatorio; letras y espacios |
-| edad | int? | Obligatorio; entero no negativo |
-| fechaNacimiento | DateTime? | Obligatoria |
-| perfil | string | administrativo, plataforma o docente |
-| permisosExtras | string | si o no |
-| otros | string? | Opcional |
-| usuario | string | Obligatorio |
-| clave | string | Obligatoria; no se almacena ni se devuelve |
+| nombre | Nombre | string |
+| edad | Edad | int |
+| fechaNacimiento | FechaNacimiento | DateTime |
+| perfil | Perfil | string |
+| permisosExtras | PermisosExtras | string |
+| otros | Otros | string |
+| usuario | NombreUsuario | string |
+| clave | Clave | string |
 
-Se conservan exactamente los nombres del formulario a petición del ejercicio.
-Aunque las propiedades C# suelen usar PascalCase, aquí se mantiene la correspondencia literal.
-Las propiedades usan `public get; set;` para la vinculación de MVC.
-Los tipos nullable permiten distinguir un campo vacío de un valor numérico o de fecha.
+C# prohíbe que una propiedad tenga el mismo nombre que su clase (CS0542).
+Por ello se usa NombreUsuario en lugar de Usuario, que aparece marcado como error en la foto.
+Su atributo ModelBinder conserva la vinculación con el campo HTML usuario.
+Los demás nombres se vinculan sin distinguir mayúsculas y minúsculas.
 
-`Usuario` tiene un constructor vacío y otro con los ocho campos.
-`Service` tiene un constructor vacío y otro que recibe un Usuario.
-Su referencia interna es `private readonly` y su método de validación es `public`.
-
-El controlador ofrece GET y POST, valida el token antifalsificación y los datos del modelo.
-El servicio reutiliza las reglas DataAnnotations; MVC detecta también conversiones inválidas.
-Se conserva el filtro inmediato de números en Nombre.
-Un envío válido muestra una confirmación de validación: no crea cuentas ni persiste datos.
+Las reglas DataAnnotations validan los datos; MVC detecta errores de conversión
+y campos vacíos para int y DateTime. La vista conserva el filtro inmediato del nombre.
+Service tiene ambos constructores, una referencia private readonly y el método público Validar.
+El POST valida el token antifalsificación y los datos; no almacena usuarios ni claves.
