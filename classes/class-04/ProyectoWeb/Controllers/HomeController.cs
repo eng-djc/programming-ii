@@ -33,27 +33,20 @@ namespace ProyectoWeb.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult AgregarUsuario(Usuario modelo)
         {
-            var servicio = new Service(modelo);
-            foreach (var error in servicio.Validar())
-            {
-                foreach (var propiedad in error.MemberNames)
-                {
-                    // NombreUsuario se vincula con el nombre original del formulario.
-                    var campo = propiedad == nameof(Usuario.NombreUsuario) ? "usuario" : propiedad;
-                    // MVC ya valida los atributos; evita duplicar sus mensajes.
-                    if (!ModelState.TryGetValue(campo, out var estado) || estado.Errors.Count == 0)
-                    {
-                        ModelState.AddModelError(campo, error.ErrorMessage ?? "Valor inválido.");
-                    }
-                }
-            }
-
             if (ModelState.IsValid)
             {
-                servicio.AgregarUsuario(modelo);
-                TempData["MensajeUsuario"] = "Usuario agregado correctamente.";
-                // Redirigir evita repetir el POST al actualizar la página de resultados.
-                return RedirectToAction(nameof(MostrarUsuarios));
+                try
+                {
+                    // Llamada estática con el nombre utilizado por la profesora.
+                    Service.agregar(modelo);
+                    TempData["MensajeUsuario"] = "Usuario agregado correctamente.";
+                    return RedirectToAction(nameof(MostrarUsuarios));
+                }
+                catch (Exception error)
+                {
+                    // Mostrar en el formulario el mensaje de usuario repetido.
+                    ModelState.AddModelError(string.Empty, error.Message);
+                }
             }
 
             // No devolver la clave introducida al volver a mostrar el formulario.
@@ -66,8 +59,7 @@ namespace ProyectoWeb.Controllers
         [HttpGet]
         public IActionResult MostrarUsuarios()
         {
-            var servicio = new Service();
-            return View(servicio.MostrarUsuarios());
+            return View(Service.GetAll());
         }
 
         public IActionResult Privacy()

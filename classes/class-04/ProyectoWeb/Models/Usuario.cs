@@ -51,10 +51,10 @@ namespace ProyectoWeb.Models
 
         /// <summary>Nombre de usuario indicado en el formulario.</summary>
         [Required(ErrorMessage = "El usuario es obligatorio.")]
-        // Una propiedad no puede llamarse Usuario dentro de la clase Usuario (CS0542).
+        // User sigue el nombre usado por la profesora en Service.
         // El alias conserva name="usuario" para la vinculación del formulario.
         [ModelBinder(Name = "usuario")]
-        public string NombreUsuario { get => usuario; set => usuario = value; }
+        public string User { get => usuario; set => usuario = value; }
 
         /// <summary>Clave recibida para este ejercicio; no se almacena ni se muestra.</summary>
         [Required(ErrorMessage = "La clave es obligatoria.")]
@@ -73,7 +73,7 @@ namespace ProyectoWeb.Models
             this.Perfil = string.Empty;
             this.PermisosExtras = string.Empty;
             this.Otros = string.Empty;
-            this.NombreUsuario = string.Empty;
+            this.User = string.Empty;
             this.Clave = string.Empty;
         }
 
@@ -95,7 +95,7 @@ namespace ProyectoWeb.Models
             this.Perfil = perfil;
             this.PermisosExtras = permisosExtras;
             this.Otros = otros;
-            this.NombreUsuario = usuario;
+            this.User = usuario;
             this.Clave = clave;
         }
     }

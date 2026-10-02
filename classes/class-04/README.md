@@ -1,6 +1,6 @@
-# Semana 4 — Formulario MVC de usuarios
+# Semana 4 — Usuarios
 
-Copia de semana 3; el formulario está en `ProyectoWeb/Views/Home/AgregarUsuario.cshtml`.
+Proyecto copiado de semana 3 y adaptado al formato de la profesora.
 
 ## Ejecutar
 
@@ -10,25 +10,20 @@ dotnet build ProyectoWeb.csproj
 dotnet run --project ProyectoWeb.csproj
 ```
 
-Abrir la URL de la consola seguida de `/Home/AgregarUsuario`.
+Abrir la dirección de la consola seguida de /Home/AgregarUsuario.
+La lista se muestra en /Home/MostrarUsuarios.
 
-## Formato de la profesora
+## Modelo y propiedades
 
-El modelo usa campos privados, propiedades públicas encapsuladas y constructores
-con y sin parámetros. Las propiedades siguen el formato generado por
-«Encapsular campos (y usar propiedad)» de Visual Studio:
+Los campos privados usan inicial minúscula y las propiedades públicas inicial mayúscula.
+Cada propiedad encapsula su campo mediante get y set:
 
 ```csharp
-private string nombre;
-public string Nombre { get => nombre; set => nombre = value; }
+private string usuario = string.Empty;
+public string User { get => usuario; set => usuario = value; }
 ```
 
-`get` devuelve el campo privado; `set` asigna el valor recibido en `value`.
-Ambos constructores asignan mediante las propiedades, como en la refactorización de clase.
-El constructor vacío inicializa textos con string.Empty, edad con 0 y fecha con DateTime.MinValue.
-La vista muestra esa fecha inicial como un campo vacío.
-
-| Nombre en formulario / campo privado | Propiedad pública | Tipo |
+| Campo privado y nombre del formulario | Propiedad | Tipo |
 | --- | --- | --- |
 | nombre | Nombre | string |
 | edad | Edad | int |
@@ -36,20 +31,31 @@ La vista muestra esa fecha inicial como un campo vacío.
 | perfil | Perfil | string |
 | permisosExtras | PermisosExtras | string |
 | otros | Otros | string |
-| usuario | NombreUsuario | string |
+| usuario | User | string |
 | clave | Clave | string |
 
-C# prohíbe que una propiedad tenga el mismo nombre que su clase (CS0542).
-Por ello se usa NombreUsuario en lugar de Usuario, que aparece marcado como error en la foto.
-Su atributo ModelBinder conserva la vinculación con el campo HTML usuario.
-Los demás nombres se vinculan sin distinguir mayúsculas y minúsculas.
+User coincide con el ejemplo de Service de la profesora.
+ModelBinder conserva la vinculación de User con el campo HTML usuario.
+Los textos se inicializan con string.Empty para evitar advertencias CS8618.
+Usuario conserva los constructores sin parámetros y con los ocho parámetros.
 
-Las reglas DataAnnotations validan los datos; MVC detecta errores de conversión
-y campos vacíos para int y DateTime. La vista conserva el filtro inmediato del nombre.
-Service tiene ambos constructores, una referencia private readonly y el método público Validar.
-El POST valida el token antifalsificación y los datos y agrega el usuario a la lista estática.
-La lista private static es compartida por todas las instancias de Service.
-AgregarUsuario(Usuario usuario) valida e inserta; MostrarUsuarios() devuelve una copia de la lista.
-Ambos métodos son public para su uso desde el controlador y protegen la lista con lock.
-La ruta /Home/MostrarUsuarios muestra la tabla sin incluir claves.
-Los usuarios se conservan únicamente en memoria y se pierden al reiniciar la aplicación.
+## Service
+
+La declaración coincide con la foto de clase:
+
+```csharp
+private static List<Usuario> usuarios = new List<Usuario>();
+```
+
+- agregar(Usuario usuarito) es public static void. Recorre la lista con foreach,
+  compara aux.User con usuarito.User y lanza una Exception si ya está registrado.
+  Si no está repetido, usa usuarios.Add(usuarito).
+- GetAll() es public static List<Usuario> y devuelve directamente usuarios.
+- El constructor vacío no agrega datos; el constructor con Usuario llama a agregar.
+
+El controlador utiliza Service.agregar(modelo) y Service.GetAll().
+MVC valida los datos del formulario y el token antifalsificación.
+Si agregar lanza una excepción, el controlador muestra su mensaje en el formulario.
+La tabla muestra los usuarios sin incluir las claves.
+
+La lista estática existe únicamente en memoria y se pierde al reiniciar la aplicación.
