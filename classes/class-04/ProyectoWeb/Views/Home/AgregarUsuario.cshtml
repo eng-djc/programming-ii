@@ -1,9 +1,7 @@
 @model ProyectoWeb.Models.Usuario
 @{
-    // Esta vista conserva el documento completo y los estilos del formulario original.
     Layout = null;
 }
-@* Los asp-for usan exactamente las propiedades del modelo Usuario. *@
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -68,7 +66,6 @@
     }
     <p><a asp-controller="Home" asp-action="MostrarUsuarios">Mostrar usuarios</a></p>
     <form method="post" asp-controller="Home" asp-action="AgregarUsuario">
-        @* El Form Tag Helper genera el token que valida el controlador. *@
         <div asp-validation-summary="All" role="alert"></div>
         <fieldset>
             <legend>Agregar Usuario</legend>
