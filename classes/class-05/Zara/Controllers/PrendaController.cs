@@ -45,17 +45,29 @@ namespace Zara.Controllers
         }
 
         // POST: /Prenda/Create
-        // Recibe el formulario y guarda la prenda en la base de datos.
+        // Recibe los campos del formulario y valida antes de insertar la prenda.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind("Marca,Talla,Precio,Genero")] Prenda prenda)
+        public ActionResult Create([Bind("Marca,Talla,Precio,Genero")] Prenda prendita)
         {
-            // Si hay errores de validación, muestra el formulario con los datos ingresados.
-            if (!ModelState.IsValid)
-                return View(prenda);
+            try
+            {
+                // Solo guardar si los datos cumplen las validaciones del modelo.
+                if (ModelState.IsValid)
+                {
+                    service.agregarPrenda(prendita);
+                    return RedirectToAction(nameof(Index));
+                }
 
-            service.agregarPrenda(prenda);
-            return RedirectToAction(nameof(Index));
+                // Si hay datos inválidos, conservarlos y mostrar sus errores.
+                return View(prendita);
+            }
+            catch (Exception)
+            {
+                // Si falla la base de datos, informar sin perder lo ingresado.
+                ModelState.AddModelError("", "No se pudo guardar la prenda. Inténtelo nuevamente.");
+                return View(prendita);
+            }
         }
 
         // GET: /Prenda/Edit/5
