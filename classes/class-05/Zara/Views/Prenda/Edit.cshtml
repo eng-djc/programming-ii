@@ -1,0 +1,40 @@
+@model Zara.Models.Prenda
+@{ ViewData["Title"] = "Editar prenda"; }
+
+@* GET Edit carga los datos existentes; POST Edit guarda las modificaciones. *@
+<h2>Editar prenda</h2>
+<form asp-controller="Prenda" asp-action="Edit" asp-route-id="@Model.Id" method="post">
+    @* Enviar el identificador de la prenda sin permitir su edición visual. *@
+    <input asp-for="Id" type="hidden" />
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    @* Campos modificables precargados con los valores actuales. *@
+    <div class="mb-3">
+        <label asp-for="Marca" class="form-label"></label>
+        <input asp-for="Marca" class="form-control" maxlength="25" />
+        <span asp-validation-for="Marca" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Talla" class="form-label"></label>
+        <input asp-for="Talla" class="form-control" />
+        <span asp-validation-for="Talla" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Precio" class="form-label"></label>
+        <input asp-for="Precio" type="number" step="0.01" min="0" class="form-control" />
+        <span asp-validation-for="Precio" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Genero" class="form-label"></label>
+        <input asp-for="Genero" class="form-control" />
+        <span asp-validation-for="Genero" class="text-danger"></span>
+    </div>
+
+    @* Enviar cambios al POST o cancelar. *@
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
