@@ -8,25 +8,38 @@
     <input asp-for="Id" type="hidden" />
     <div asp-validation-summary="All" class="text-danger"></div>
 
-    @* Campos modificables precargados con los valores actuales. *@
+    @* Los valores actuales quedan seleccionados con asp-for y se validan igual que en Create. *@
     <div class="mb-3">
         <label asp-for="Marca" class="form-label"></label>
-        <input asp-for="Marca" class="form-control" maxlength="25" />
+        <input asp-for="Marca" class="form-control" maxlength="25" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+" title="Solo letras y espacios" required />
         <span asp-validation-for="Marca" class="text-danger"></span>
     </div>
     <div class="mb-3">
         <label asp-for="Talla" class="form-label"></label>
-        <input asp-for="Talla" class="form-control" />
+        <select asp-for="Talla" class="form-select" required>
+            <option value="">Seleccione una talla</option>
+            @* Valores permitidos por la validación del modelo Prenda. *@
+            @foreach (var talla in new[] { "XS", "S", "M", "L", "XL", "XXL" })
+            {
+                <option value="@talla">@talla</option>
+            }
+        </select>
         <span asp-validation-for="Talla" class="text-danger"></span>
     </div>
     <div class="mb-3">
         <label asp-for="Precio" class="form-label"></label>
-        <input asp-for="Precio" type="number" step="0.01" min="0" class="form-control" />
+        <input asp-for="Precio" type="number" step="0.01" min="0.01" max="999999999.99" class="form-control" required />
         <span asp-validation-for="Precio" class="text-danger"></span>
     </div>
     <div class="mb-3">
         <label asp-for="Genero" class="form-label"></label>
-        <input asp-for="Genero" class="form-control" />
+        <select asp-for="Genero" class="form-select" required>
+            <option value="">Seleccione una categoría</option>
+            @* Categorías de ropa definidas para este ejercicio. *@
+            <option value="Hombre">Hombre</option>
+            <option value="Mujer">Mujer</option>
+            <option value="Unisex">Unisex</option>
+        </select>
         <span asp-validation-for="Genero" class="text-danger"></span>
     </div>
 
