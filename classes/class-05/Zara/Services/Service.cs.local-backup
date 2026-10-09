@@ -1,0 +1,16 @@
+using System.Data.Entity;
+using Zara.Models;
+
+namespace Zara.Services
+{
+    public class Service : DbContext
+    {
+        // Constructor para inicializar el contexto de la base de datos
+        public Service() : base("Zara")
+        {
+        }
+
+        // Representa la tabla Prendas en la base de datos
+        public DbSet<Prenda> Prendas { get; set; } = null!;
+    }
+}

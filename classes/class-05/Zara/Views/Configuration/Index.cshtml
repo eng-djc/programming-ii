@@ -1,0 +1,40 @@
+@model IEnumerable<Zara.Migrations.Configuration>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Configurations</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+
+@if (Model == null || !Model.Any())
+{
+    <p>No items found.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.GetType().FullName</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.GetHashCode()">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.GetHashCode()">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.GetHashCode()">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
