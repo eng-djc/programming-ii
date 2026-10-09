@@ -1,0 +1,16 @@
+@model Zara.Models.Prenda
+@{ ViewData["Title"] = "Detalle de prenda"; }
+
+@* GET Details presenta información; no necesita formulario POST. *@
+<h2>Detalle de prenda</h2>
+<dl class="row">
+    <dt class="col-sm-3">ID</dt><dd class="col-sm-9">@Model.Id</dd>
+    <dt class="col-sm-3">Marca</dt><dd class="col-sm-9">@Model.Marca</dd>
+    <dt class="col-sm-3">Talla</dt><dd class="col-sm-9">@Model.Talla</dd>
+    <dt class="col-sm-3">Precio</dt><dd class="col-sm-9">@Model.Precio</dd>
+    <dt class="col-sm-3">Género</dt><dd class="col-sm-9">@Model.Genero</dd>
+</dl>
+
+@* Navegación a edición o listado. *@
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
+<a asp-action="Index" class="btn btn-secondary">Volver</a>
