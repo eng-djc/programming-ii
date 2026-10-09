@@ -1,0 +1,20 @@
+@model Zara.Models.Prenda
+@{ ViewData["Title"] = "Eliminar prenda"; }
+
+@* GET Delete muestra la confirmación; POST Delete ejecuta la eliminación. *@
+<h2>Eliminar prenda</h2>
+<p>¿Está seguro de que desea eliminar esta prenda?</p>
+
+@* Información de solo lectura para confirmar el registro correcto. *@
+<dl class="row">
+    <dt class="col-sm-3">Marca</dt><dd class="col-sm-9">@Model.Marca</dd>
+    <dt class="col-sm-3">Talla</dt><dd class="col-sm-9">@Model.Talla</dd>
+    <dt class="col-sm-3">Precio</dt><dd class="col-sm-9">@Model.Precio</dd>
+    <dt class="col-sm-3">Género</dt><dd class="col-sm-9">@Model.Genero</dd>
+</dl>
+
+@* Submit invoca Delete [HttpPost] con el ID desde la ruta. *@
+<form asp-controller="Prenda" asp-action="Delete" asp-route-id="@Model.Id" method="post">
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
