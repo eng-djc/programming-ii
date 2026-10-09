@@ -1,53 +1,41 @@
 @model IEnumerable<Zara.Models.Prenda>
-
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Prendas";
 }
 
-<h1>Index</h1>
+@* GET Index recibe la lista de prendas que consulta el controlador. *@
+<h2>Lista de prendas</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+@* Navega al formulario GET Create para agregar una nueva prenda. *@
+<p><a asp-action="Create" class="btn btn-primary">Agregar prenda</a></p>
+
+@* Tabla que muestra los registros consultados mediante Service.mostrarPrendas(). *@
+<table class="table table-striped">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Marca)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Talla)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Precio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Genero)
-            </th>
-            <th></th>
+            <th>Marca</th>
+            <th>Talla</th>
+            <th>Precio</th>
+            <th>Género</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(model => item.Marca)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Talla)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Precio)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Genero)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @* Genera una fila por cada prenda recibida del controlador. *@
+        @foreach (var prenda in Model)
+        {
+            <tr>
+                <td>@prenda.Marca</td>
+                <td>@prenda.Talla</td>
+                <td>@prenda.Precio</td>
+                <td>@prenda.Genero</td>
+                <td>
+                    @* Enlaces GET para editar, consultar o confirmar eliminación. *@
+                    <a asp-action="Edit" asp-route-id="@prenda.Id">Editar</a> |
+                    <a asp-action="Details" asp-route-id="@prenda.Id">Detalles</a> |
+                    <a asp-action="Delete" asp-route-id="@prenda.Id">Eliminar</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
