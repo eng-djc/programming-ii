@@ -1,0 +1,9 @@
+
+# Visual Studio and .NET
+.vs/
+bin/
+obj/
+*.csproj.user
+*.suo
+*.log
+*.bak
