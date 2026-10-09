@@ -1,10 +1,12 @@
 @model Zara.Models.Prenda
 @{ ViewData["Title"] = "Agregar prenda"; }
 
-@* GET Create presenta este formulario vacío; POST Create recibe los datos al enviarlo. *@
+@* GET /Prenda/Create muestra el formulario vacío. Al pulsar Guardar,
+   el POST /Prenda/Create recibe Prenda prendita, valida ModelState
+   y solo guarda cuando los datos son válidos. *@
 <h2>Agregar prenda</h2>
 <form asp-controller="Prenda" asp-action="Create" method="post">
-    @* Resumen de errores de validación. *@
+    @* Muestra errores de validación y errores al guardar devueltos por el Controller. *@
     <div asp-validation-summary="All" class="text-danger"></div>
 
     @* Campos del modelo que se envían al controlador. *@
@@ -29,7 +31,8 @@
         <span asp-validation-for="Genero" class="text-danger"></span>
     </div>
 
-    @* Submit ejecuta Create [HttpPost]; Cancelar regresa al listado. *@
+    @* Submit envía los datos mediante POST; el controlador redirige al Index
+       si guarda correctamente y vuelve a mostrar esta vista si hay errores. *@
     <button type="submit" class="btn btn-primary">Guardar</button>
     <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
 </form>
