@@ -21,7 +21,7 @@
     </div>
 
     <div class="mb-3">
-        <label asp-for="FechaCreacion" class="form-label"></label>
+        <label asp-for="FechaCreacion" class="form-label">Fecha de creación</label>
         @* Date picker sin horas; asp-format conserva el formato yyyy-MM-dd. *@
         <input asp-for="FechaCreacion" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" required />
         <span asp-validation-for="FechaCreacion" class="text-danger"></span>
