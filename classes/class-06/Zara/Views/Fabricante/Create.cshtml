@@ -1,0 +1,37 @@
+@model Zara.Models.Fabricante
+@{ ViewData["Title"] = "Agregar fabricante"; }
+
+@* GET Create: formulario sin valores. POST Create recibe solo Prestigio y FechaCreacion. *@
+<h2>Agregar fabricante</h2>
+<form asp-controller="Fabricante" asp-action="Create" method="post">
+    @* Los Tag Helpers incluyen antiforgery y devuelven errores de ModelState. *@
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    @* ID no se introduce: SQL Server lo genera como IDENTITY. *@
+    <div class="mb-3">
+        <label asp-for="Prestigio" class="form-label"></label>
+        @* Desplegable de selección única: una opción visible y tres valores permitidos. *@
+        <select asp-for="Prestigio" class="form-select" required>
+            <option value="">Seleccione un prestigio</option>
+            <option value="Bajo">Bajo</option>
+            <option value="Medio">Medio</option>
+            <option value="Alto">Alto</option>
+        </select>
+        <span asp-validation-for="Prestigio" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="FechaCreacion" class="form-label"></label>
+        @* Solo fecha (sin hora); required obliga al usuario a elegirla. *@
+        <input asp-for="FechaCreacion" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" required />
+        <span asp-validation-for="FechaCreacion" class="text-danger"></span>
+    </div>
+
+    @* Submit invoca POST; Cancelar no guarda información. *@
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
