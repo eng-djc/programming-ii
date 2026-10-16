@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using Zara.Models;
@@ -66,6 +67,13 @@ namespace Zara.Services
         public void agregarFabricante(Fabricante fabricante)
         {
             ArgumentNullException.ThrowIfNull(fabricante);
+            // Reutiliza las reglas del modelo si otro código llama directamente al servicio.
+            // Se valida antes de agregar o modificar entidades rastreadas por EF.
+            Validator.ValidateObject(fabricante, new ValidationContext(fabricante),
+                validateAllProperties: true);
+            // En una creación el identificador lo asigna SQL Server.
+            if (fabricante.Id != 0)
+                throw new ArgumentException("El ID de un fabricante nuevo debe ser cero.", nameof(fabricante));
             Fabricantes.Add(fabricante);
             SaveChanges();
         }
@@ -80,6 +88,12 @@ namespace Zara.Services
         public bool actualizarFabricante(Fabricante fabricante)
         {
             ArgumentNullException.ThrowIfNull(fabricante);
+            // Reutiliza las reglas del modelo si otro código llama directamente al servicio.
+            // Se valida antes de agregar o modificar entidades rastreadas por EF.
+            Validator.ValidateObject(fabricante, new ValidationContext(fabricante),
+                validateAllProperties: true);
+            if (fabricante.Id <= 0)
+                throw new ArgumentException("El ID del fabricante debe ser positivo.", nameof(fabricante));
             var existente = Fabricantes.Find(fabricante.Id);
             if (existente == null) return false;
             existente.Prestigio = fabricante.Prestigio;
