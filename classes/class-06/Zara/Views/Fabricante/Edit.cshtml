@@ -14,6 +14,11 @@
             <div asp-validation-summary="All" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
+                <label asp-for="Nombre" class="control-label"></label>
+                <input asp-for="Nombre" class="form-control" maxlength="100" required />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Prestigio" class="control-label"></label>
                 <select asp-for="Prestigio" class="form-select" required>
                     <option value="">Seleccione un prestigio</option>
