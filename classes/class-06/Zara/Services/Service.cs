@@ -292,16 +292,6 @@ namespace Zara.Services
             return true;
         }
 
-        internal bool actualizarPrenda(object prendita)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal bool actualizarPrenda()
-        {
-            throw new NotImplementedException();
-        }
-
         #endregion
     }
 }
