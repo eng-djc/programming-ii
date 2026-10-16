@@ -31,15 +31,10 @@
         <input asp-for="Precio" type="number" step="0.01" min="0.01" max="999999999.99" class="form-control" required />
         <span asp-validation-for="Precio" class="text-danger"></span>
     </div>
+    @* El método actualizarPrenda de la profesora solo modifica Marca, Talla y Precio. *@
     <div class="mb-3">
         <label asp-for="Genero" class="form-label"></label>
-        <select asp-for="Genero" class="form-select" required>
-            <option value="">Seleccione una categoría</option>
-            @* Categorías de ropa definidas para este ejercicio. *@
-            <option value="Hombre">Hombre</option>
-            <option value="Mujer">Mujer</option>
-            <option value="Unisex">Unisex</option>
-        </select>
+        <input asp-for="Genero" class="form-control" readonly />
         <span asp-validation-for="Genero" class="text-danger"></span>
     </div>
 
