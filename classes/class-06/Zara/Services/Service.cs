@@ -253,6 +253,9 @@ namespace Zara.Services
             if (existente == null)
                 return false;
 
+            // Actualiza el nombre del fabricante.
+            existente.Nombre = fabricante.Nombre;
+
             // Actualiza el prestigio del fabricante.
             existente.Prestigio = fabricante.Prestigio;
 
