@@ -99,6 +99,9 @@ namespace Zara.Controllers
             if (!service.actualizarPrenda(prenda))
                 return NotFound();
 
+            // actualizarPrenda returns void in your Service signature
+            service.actualizarPrenda(prenda);
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -107,12 +110,20 @@ namespace Zara.Controllers
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            var prenda = service.buscarPrenda(id);
+            try
+            {
+                var prendaEliminada = service.buscarPrenda(id);
+                service.eliminarPrenda(prendaEliminada);
+                return RedirectToAction("Index");
+            }
+            catch (Exception)
+            {
 
-            if (prenda == null)
-                return NotFound();
+                return RedirectToAction("Index");
+            }
 
-            return View(prenda);
+            
+
         }
 
         // POST: /Prenda/Delete/5
@@ -122,8 +133,12 @@ namespace Zara.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            if (!service.eliminarPrenda(id))
+            var prenda = service.buscarPrenda(id);
+            if (prenda == null)
                 return NotFound();
+
+            // eliminarPrenda expects a Prenda and returns void
+            service.eliminarPrenda(prenda);
 
             return RedirectToAction(nameof(Index));
         }
