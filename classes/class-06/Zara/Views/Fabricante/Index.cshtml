@@ -8,7 +8,7 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>ID</th>
+            <th>Nombre</th>
             <th>Prestigio</th>
             <th>Fecha de creación</th>
             <th>Acciones</th>
@@ -19,13 +19,16 @@
         @foreach (var fabricante in Model)
         {
             <tr>
-                <td>@fabricante.Id</td>
+                <td>@fabricante.Nombre</td>
                 <td>@fabricante.Prestigio</td>
                 <td>@(fabricante.FechaCreacion?.ToString("dd/MM/yyyy"))</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@fabricante.Id">Detalles</a> |
                     <a asp-action="Edit" asp-route-id="@fabricante.Id">Editar</a> |
-                    <a asp-action="Delete" asp-route-id="@fabricante.Id">Eliminar</a>
+                    @* Elimina desde el listado mediante POST; no muestra confirmación. *@
+                    <form asp-controller="Fabricante" asp-action="Delete"
+                          asp-route-id="@fabricante.Id" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-link p-0 align-baseline">Eliminar</button>
+                    </form>
                 </td>
             </tr>
         }
