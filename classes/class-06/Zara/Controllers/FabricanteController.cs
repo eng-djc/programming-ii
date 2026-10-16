@@ -19,6 +19,8 @@ namespace Zara.Controllers
         [HttpGet]
         public ActionResult Details(int id)
         {
+            // Un IDENTITY válido es positivo; los errores de conversión tampoco se consultan.
+            if (!ModelState.IsValid || id <= 0) return BadRequest();
             var fabricante = service.buscarFabricante(id);
             return fabricante == null ? NotFound() : View(fabricante);
         }
@@ -32,6 +34,9 @@ namespace Zara.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind("Prestigio,FechaCreacion")] Fabricante fabricante)
         {
+            // MVC incorpora a ModelState los errores de conversión (por ejemplo, una
+            // fecha imposible) y las reglas del modelo. Si hay errores, no se llama al
+            // servicio: se conserva el formulario y se muestran los mensajes por campo.
             if (!ModelState.IsValid) return View(fabricante);
             try
             {
@@ -49,6 +54,8 @@ namespace Zara.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
+            // Un IDENTITY válido es positivo; los errores de conversión tampoco se consultan.
+            if (!ModelState.IsValid || id <= 0) return BadRequest();
             var fabricante = service.buscarFabricante(id);
             return fabricante == null ? NotFound() : View(fabricante);
         }
@@ -56,9 +63,14 @@ namespace Zara.Controllers
         // POST /Fabricante/Edit/5: comprueba ID, valida y guarda los cambios.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, [Bind("Id,Prestigio,FechaCreacion")] Fabricante fabricante)
+        public ActionResult Edit([FromRoute] int id, [Bind("Id,Prestigio,FechaCreacion")] Fabricante fabricante)
         {
-            if (id != fabricante.Id) return BadRequest();
+            // FromRoute impide que el ID oculto sustituya al ID de la URL.
+            // Bind limita los campos recibidos, pero no valida sus valores.
+            if (id <= 0 || fabricante.Id <= 0 || id != fabricante.Id) return BadRequest();
+            // MVC incorpora a ModelState los errores de conversión (por ejemplo, una
+            // fecha imposible) y las reglas del modelo. Si hay errores, no se llama al
+            // servicio: se conserva el formulario y se muestran los mensajes por campo.
             if (!ModelState.IsValid) return View(fabricante);
             try
             {
@@ -76,6 +88,8 @@ namespace Zara.Controllers
         [HttpGet]
         public ActionResult Delete(int id)
         {
+            // Un IDENTITY válido es positivo; los errores de conversión tampoco se consultan.
+            if (!ModelState.IsValid || id <= 0) return BadRequest();
             var fabricante = service.buscarFabricante(id);
             return fabricante == null ? NotFound() : View(fabricante);
         }
@@ -86,6 +100,7 @@ namespace Zara.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!ModelState.IsValid || id <= 0) return BadRequest();
             if (!service.eliminarFabricante(id)) return NotFound();
             return RedirectToAction(nameof(Index));
         }

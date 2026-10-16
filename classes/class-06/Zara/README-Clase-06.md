@@ -51,3 +51,63 @@ dotnet run --launch-profile http
 Páginas: `http://localhost:5260/Prenda` y `http://localhost:5260/Fabricante`.
 
 **Evolución:** Clase 6 utiliza la misma base `Zara`: conserva la tabla `Prendas` y agrega `Fabricantes` mediante migraciones de EF6. No eliminar ni recrear la base.
+
+## Validación de Fabricante en el servidor
+
+El navegador facilita la entrada, pero un cliente puede modificar el HTML o enviar
+un POST directamente. Las mismas reglas deben comprobarse antes de guardar:
+
+| Campo | Regla | Dónde se comprueba |
+| --- | --- | --- |
+| Prestigio | Obligatorio; exactamente Bajo, Medio o Alto, respetando mayúsculas y sin espacios adicionales | DataAnnotations del modelo |
+| FechaCreacion | Obligatoria; fecha convertible a DateTime y sin componente horario distinto de cero | Model binding de MVC, Required e IValidatableObject |
+| Id al crear | SQL Server lo genera; no se recibe en el Bind | Controlador y servicio |
+| Id al editar | Positivo e igual al ID de la ruta | Controlador; positividad también en el servicio |
+
+No se impone una fecha máxima: el formulario original no prohíbe fechas futuras.
+Una fecha imposible, como 2026-02-30, produce un error de conversión en MVC.
+
+### Recorrido del código
+
+1. MVC convierte los campos HTTP y valida las anotaciones de Fabricante. Los errores
+   quedan en ModelState. IValidatableObject agrega la regla de fecha sin hora.
+2. Los POST Create y Edit revisan ModelState.IsValid **antes** de llamar al servicio.
+   Cuando falla, View(fabricante) conserva la entrada y muestra los errores mediante
+   asp-validation-for y asp-validation-summary.
+3. Edit toma el ID de la URL con FromRoute y lo compara con el campo oculto.
+   Un ID no positivo o diferente devuelve HTTP 400; un registro inexistente devuelve 404.
+4. El servicio usa Validator.ValidateObject antes de modificar entidades, para aplicar
+   las mismas reglas a llamadas desde código que no pasen por el controlador.
+   Una entrada inválida lanza ValidationException. La conversión de texto HTTP pertenece
+   a MVC; el servicio recibe una fecha ya tipada.
+5. Bind limita las propiedades recibidas y ValidateAntiForgeryToken comprueba el token
+   del formulario. Ninguno sustituye las reglas de validación de valores.
+
+### Verificación manual
+
+Ejecutar con .NET 8 y SQL Server LocalDB configurado:
+
+```bash
+dotnet build Zara.csproj
+dotnet run --project Zara.csproj
+```
+
+Probar tanto Create como Edit. Para probar valores que el navegador bloquea,
+modificar el formulario desde las herramientas de desarrollo y usar novalidate,
+conservando el token antiforgery válido.
+
+| Entrada o acción | Resultado esperado |
+| --- | --- |
+| Bajo / Medio / Alto y 2026-10-15 | Guardado correcto |
+| Prestigio vacío, espacios, Otro, bajo o Alto con un espacio final | Error de prestigio; no guardar |
+| Prestigio de más de cinco caracteres | Error de validación; no guardar |
+| Fecha vacía o 2026-02-30 | Error de fecha; no guardar |
+| Fecha 2026-10-15T12:30:00 enviada manualmente | Error de fecha sin hora; no guardar |
+| ID de la URL distinto del campo oculto al editar | HTTP 400; no guardar |
+| ID cero, negativo o no numérico | HTTP 400; no modificar datos |
+| ID positivo inexistente, con los demás campos válidos | HTTP 404 |
+| Corregir un formulario rechazado | Guardar y redirigir al listado |
+| Llamar agregarFabricante/actualizarFabricante con prestigio Otro desde C# | ValidationException antes de modificar entidades |
+
+Después de un envío inválido, consultar el listado para confirmar que no se insertó
+ni se actualizó el registro.
