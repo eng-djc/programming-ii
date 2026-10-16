@@ -1,13 +1,19 @@
 @model Zara.Models.Fabricante
 @{ ViewData["Title"] = "Agregar fabricante"; }
 
-@* GET Create: formulario sin valores. POST Create recibe solo Prestigio y FechaCreacion. *@
+@* GET Create: formulario sin valores. POST Create recibe Nombre, Prestigio y FechaCreacion. *@
 <h2>Agregar fabricante</h2>
 <form asp-controller="Fabricante" asp-action="Create" method="post">
     @* Los Tag Helpers incluyen antiforgery y devuelven errores de ModelState. *@
     <div asp-validation-summary="All" class="text-danger"></div>
 
     @* ID no se introduce: SQL Server lo genera como IDENTITY. *@
+    <div class="mb-3">
+        <label asp-for="Nombre" class="form-label"></label>
+        <input asp-for="Nombre" class="form-control" maxlength="100" required />
+        <span asp-validation-for="Nombre" class="text-danger"></span>
+    </div>
+
     <div class="mb-3">
         <label asp-for="Prestigio" class="form-label"></label>
         @* Desplegable de selección única: una opción visible y tres valores permitidos. *@
