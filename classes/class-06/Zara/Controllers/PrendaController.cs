@@ -89,27 +89,35 @@ namespace Zara.Controllers
         }
 
         // POST: /Prenda/Edit/5
-        // Recibe el formulario y actualiza el registro existente.
+        // Valida el formulario y actualiza la prenda existente.
         [HttpPost]
         [ValidateAntiForgeryToken]
-
-        public ActionResult Edit(Prenda prendita)
+        public ActionResult Edit([FromRoute] int id, [Bind("Id,Marca,Talla,Precio,Genero")] Prenda prendita)
         {
+            // Verifica que el Id de la URL sea el de la prenda enviada.
+            if (id <= 0 || prendita.Id <= 0 || id != prendita.Id)
+                return BadRequest();
+
+            // Si los datos son inválidos, vuelve a mostrar el formulario.
+            if (!ModelState.IsValid)
+                return View(prendita);
+
             try
             {
-                if (ModelState.IsValid)
-                    service.actualizarPrenda(prendita);
-                    return RedirectToAction("Index");
-               
-            
+                // actualizarPrenda devuelve void, según el código de la profesora.
+                service.actualizarPrenda(prendita);
+                return RedirectToAction(nameof(Index));
             }
-            catch 
+            catch (Exception ex) when (ex.Message == "No se encontraron registros de esa prenda")
+            {
+                return NotFound();
+            }
+            catch (Exception)
             {
                 ModelState.AddModelError("", "No se pudo actualizar la prenda. Inténtelo nuevamente.");
-                return View();
+                return View(prendita);
             }
         }
-
 
         // GET: /Prenda/Delete/5
         // Muestra los datos y solicita confirmación; no elimina registros.
