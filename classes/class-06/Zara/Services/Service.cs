@@ -145,6 +145,9 @@ namespace Zara.Services
                 // Actualiza el precio de la prenda.
                 prendaBuscada.Precio = prendita.Precio;
 
+                // Genero
+                prendaBuscada.Genero = prendita.Genero;
+
                 // Guarda los cambios en la base de datos.
                 SaveChanges();
             }

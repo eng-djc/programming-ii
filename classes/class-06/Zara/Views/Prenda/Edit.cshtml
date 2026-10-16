@@ -1,48 +1,49 @@
 @model Zara.Models.Prenda
-@{ ViewData["Title"] = "Editar prenda"; }
 
-@* GET Edit carga los datos existentes; POST Edit guarda las modificaciones. *@
-<h2>Editar prenda</h2>
-<form asp-controller="Prenda" asp-action="Edit" asp-route-id="@Model.Id" method="post">
-    @* Enviar el identificador de la prenda sin permitir su edición visual. *@
-    <input asp-for="Id" type="hidden" />
-    <div asp-validation-summary="All" class="text-danger"></div>
+@{
+    ViewData["Title"] = "Edit";
+}
 
-    @* Los valores actuales quedan seleccionados con asp-for y se validan igual que en Create. *@
-    <div class="mb-3">
-        <label asp-for="Marca" class="form-label"></label>
-        <input asp-for="Marca" class="form-control" maxlength="25" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+" title="Solo letras y espacios" required />
-        <span asp-validation-for="Marca" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="Talla" class="form-label"></label>
-        <select asp-for="Talla" class="form-select" required>
-            <option value="">Seleccione una talla</option>
-            @* Valores permitidos por la validación del modelo Prenda. *@
-            @foreach (var talla in new[] { "XS", "S", "M", "L", "XL", "XXL" })
-            {
-                <option value="@talla">@talla</option>
-            }
-        </select>
-        <span asp-validation-for="Talla" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="Precio" class="form-label"></label>
-        <input asp-for="Precio" type="number" step="0.01" min="0.01" max="999999999.99" class="form-control" required />
-        <span asp-validation-for="Precio" class="text-danger"></span>
-    </div>
-    @* El método actualizarPrenda de la profesora solo modifica Marca, Talla y Precio. *@
-    <div class="mb-3">
-        <label asp-for="Genero" class="form-label"></label>
-        <input asp-for="Genero" class="form-control" readonly />
-        <span asp-validation-for="Genero" class="text-danger"></span>
-    </div>
+<h1>Edit</h1>
 
-    @* Enviar cambios al POST o cancelar. *@
-    <button type="submit" class="btn btn-primary">Actualizar</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-</form>
+<h4>Prenda</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Marca" class="control-label"></label>
+                <input asp-for="Marca" class="form-control" />
+                <span asp-validation-for="Marca" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Talla" class="control-label"></label>
+                <input asp-for="Talla" class="form-control" />
+                <span asp-validation-for="Talla" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Precio" class="control-label"></label>
+                <input asp-for="Precio" class="form-control" />
+                <span asp-validation-for="Precio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Genero" class="control-label"></label>
+                <input asp-for="Genero" class="form-control" />
+                <span asp-validation-for="Genero" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
