@@ -4,10 +4,10 @@ Proyecto ASP.NET Core MVC (.NET 8) que conserva la Clase 5 y agrega la entidad *
 
 ## Modelo MVC y CRUD
 
-- `Models/Fabricante.cs`: `Id` autoincremental (`IDENTITY`); `Prestigio` obligatorio, selección **Bajo / Medio / Alto**; `FechaCreacion` obligatoria, tipo SQL `date` y sin hora en HTML.
+- `Models/Fabricante.cs`: `Id` autoincremental (`IDENTITY`); `Nombre` obligatorio en formularios, máximo 100 caracteres (columna nullable para conservar registros previos); `Prestigio` obligatorio, selección **Bajo / Medio / Alto**; `FechaCreacion` obligatoria, tipo SQL `date` y sin hora en HTML.
 - `Services/Service.cs`: `DbSet<Prenda> Prendas` + `DbSet<Fabricante> Fabricantes` y cinco operaciones CRUD por entidad.
-- `Controllers/FabricanteController.cs`: GET `Index`, `Details`, `Create`, `Edit`, `Delete`; POST `Create`, `Edit`, `Delete` con antiforgery y validación.
-- `Views/Fabricante/`: Index, Details, Create, Edit, Delete. `select` obliga a elegir exactamente una opción; `input type=date` solicita solo fecha.
+- `Controllers/FabricanteController.cs`: GET `Index`, `Details`, `Create`, `Edit`; POST `Create`, `Edit`, `Delete` con antiforgery y validación. Eliminar desde Index sin confirmación.
+- `Views/Fabricante/`: Index (sin ID ni enlace Detalles, con botón Eliminar por POST), Details (acceso directo), Create y Edit. `select` obliga a elegir exactamente una opción; `input type=date` solicita solo fecha.
 - `Views/Shared/_Layout.cshtml`: menú para Prendas y Fabricantes.
 
 ## Pasos exigidos en el curso
@@ -30,7 +30,7 @@ Proyecto ASP.NET Core MVC (.NET 8) que conserva la Clase 5 y agrega la entidad *
    ```sql
    USE Zara;
    SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE';
-   SELECT TOP (10) Id, Prestigio, FechaCreacion FROM dbo.Fabricantes;
+   SELECT TOP (10) Id, Nombre, Prestigio, FechaCreacion FROM dbo.Fabricantes;
    ```
 
 9. **CRUD en Service**: `agregarFabricante`, `mostrarFabricantes`, `buscarFabricante`, `actualizarFabricante`, `eliminarFabricante`.
@@ -59,6 +59,7 @@ un POST directamente. Las mismas reglas deben comprobarse antes de guardar:
 
 | Campo | Regla | Dónde se comprueba |
 | --- | --- | --- |
+| Nombre | Obligatorio al crear o editar; máximo 100 caracteres; nueva columna nullable para preservar registros anteriores | Validación MVC, IValidatableObject y MaxLength |
 | Prestigio | Obligatorio; exactamente Bajo, Medio o Alto, respetando mayúsculas y sin espacios adicionales | DataAnnotations del modelo |
 | FechaCreacion | Obligatoria; fecha convertible a DateTime y sin componente horario distinto de cero | Model binding de MVC, Required e IValidatableObject |
 | Id al crear | SQL Server lo genera; no se recibe en el Bind | Controlador y servicio |
