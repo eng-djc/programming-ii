@@ -8,13 +8,15 @@ namespace Zara.Models
     {
         // Atributos privados
         private int id;
+        private string nombre = "";
         private string prestigio = "";
         private DateTime? fechaCreacion;
 
         // Constructor con parámetros
-        public Fabricante(int id, string prestigio, DateTime? fechaCreacion)
+        public Fabricante(int id, string prestigio, DateTime? fechaCreacion, string nombre = "")
         {
             this.Id = id;
+            this.Nombre = nombre;
             this.Prestigio = prestigio;
             this.FechaCreacion = fechaCreacion;
         }
@@ -23,6 +25,7 @@ namespace Zara.Models
         public Fabricante()
         {
             this.Id = 0;
+            this.Nombre = "";
             this.Prestigio = "";
             this.FechaCreacion = null;
         }
@@ -32,6 +35,11 @@ namespace Zara.Models
         // Clave primaria
         [Key]
         public int Id { get => id; set => id = value; }
+
+        // Columna opcional en SQL para conservar fabricantes ya registrados.
+        // Se exige un nombre al crear o editar mediante IValidatableObject.
+        [MaxLength(100, ErrorMessage = "El nombre no puede superar 100 caracteres.")]
+        public string Nombre { get => nombre; set => nombre = value; }
 
         // Estas reglas se ejecutan en el servidor aunque se manipule el select HTML.
         // Required rechaza null, vacío y espacios; la expresión permite solo las tres opciones.
@@ -51,6 +59,13 @@ namespace Zara.Models
         // Esta regla evita descartar silenciosamente una hora enviada fuera del formulario.
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
+            if (string.IsNullOrWhiteSpace(Nombre))
+            {
+                yield return new ValidationResult(
+                    "Ingrese el nombre del fabricante.",
+                    new[] { nameof(Nombre) });
+            }
+
             if (FechaCreacion.HasValue && FechaCreacion.Value.TimeOfDay != TimeSpan.Zero)
             {
                 yield return new ValidationResult(
