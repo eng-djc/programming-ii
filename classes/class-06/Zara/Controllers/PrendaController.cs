@@ -28,12 +28,14 @@ namespace Zara.Controllers
         [HttpGet]
         public ActionResult Details(int id)
         {
-            var prenda = service.buscarPrenda(id);
-
-            if (prenda == null)
+            try
+            {
+                return View(service.buscarPrenda(id));
+            }
+            catch (Exception ex) when (ex.Message == "Esa prenda no se encuentra registrada")
+            {
                 return NotFound();
-
-            return View(prenda);
+            }
         }
 
         // GET: /Prenda/Create
@@ -75,12 +77,14 @@ namespace Zara.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            var prenda = service.buscarPrenda(id);
-
-            if (prenda == null)
+            try
+            {
+                return View(service.buscarPrenda(id));
+            }
+            catch (Exception ex) when (ex.Message == "Esa prenda no se encuentra registrada")
+            {
                 return NotFound();
-
-            return View(prenda);
+            }
         }
 
         // POST: /Prenda/Edit/5
@@ -96,51 +100,55 @@ namespace Zara.Controllers
             if (!ModelState.IsValid)
                 return View(prenda);
 
-            if (!service.actualizarPrenda(prenda))
+            try
+            {
+                // La profesora definió actualizarPrenda como void.
+                service.actualizarPrenda(prenda);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex) when (ex.Message == "No se encontraron registros de esa prenda")
+            {
                 return NotFound();
-
-            // actualizarPrenda returns void in your Service signature
-            service.actualizarPrenda(prenda);
-
-            return RedirectToAction(nameof(Index));
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError("", "No se pudo actualizar la prenda. Inténtelo nuevamente.");
+                return View(prenda);
+            }
         }
 
         // GET: /Prenda/Delete/5
-        // Muestra los datos y solicita confirmación antes de eliminar.
+        // Muestra los datos y solicita confirmación; no elimina registros.
         [HttpGet]
         public ActionResult Delete(int id)
         {
             try
             {
-                var prendaEliminada = service.buscarPrenda(id);
-                service.eliminarPrenda(prendaEliminada);
-                return RedirectToAction("Index");
+                return View(service.buscarPrenda(id));
             }
-            catch (Exception)
+            catch (Exception ex) when (ex.Message == "Esa prenda no se encuentra registrada")
             {
-
-                return RedirectToAction("Index");
+                return NotFound();
             }
-
-            
-
         }
 
         // POST: /Prenda/Delete/5
-        // Confirma la eliminación del registro y vuelve al listado.
+        // Elimina la prenda únicamente después de confirmar el formulario.
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            var prenda = service.buscarPrenda(id);
-            if (prenda == null)
+            try
+            {
+                var prenda = service.buscarPrenda(id);
+                service.eliminarPrenda(prenda);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex) when (ex.Message == "Esa prenda no se encuentra registrada")
+            {
                 return NotFound();
-
-            // eliminarPrenda expects a Prenda and returns void
-            service.eliminarPrenda(prenda);
-
-            return RedirectToAction(nameof(Index));
+            }
         }
     }
 }
