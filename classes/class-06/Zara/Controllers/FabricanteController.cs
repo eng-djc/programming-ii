@@ -32,7 +32,7 @@ namespace Zara.Controllers
         // POST /Fabricante/Create: valida, inserta y redirige a Index.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind("Prestigio,FechaCreacion")] Fabricante fabricante)
+        public ActionResult Create([Bind("Nombre,Prestigio,FechaCreacion")] Fabricante fabricante)
         {
             // MVC incorpora a ModelState los errores de conversión (por ejemplo, una
             // fecha imposible) y las reglas del modelo. Si hay errores, no se llama al
@@ -63,7 +63,7 @@ namespace Zara.Controllers
         // POST /Fabricante/Edit/5: comprueba ID, valida y guarda los cambios.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([FromRoute] int id, [Bind("Id,Prestigio,FechaCreacion")] Fabricante fabricante)
+        public ActionResult Edit([FromRoute] int id, [Bind("Id,Nombre,Prestigio,FechaCreacion")] Fabricante fabricante)
         {
             // FromRoute impide que el ID oculto sustituya al ID de la URL.
             // Bind limita los campos recibidos, pero no valida sus valores.
@@ -84,17 +84,7 @@ namespace Zara.Controllers
             }
         }
 
-        // GET /Fabricante/Delete/5: pantalla de confirmación (no borra).
-        [HttpGet]
-        public ActionResult Delete(int id)
-        {
-            // Un IDENTITY válido es positivo; los errores de conversión tampoco se consultan.
-            if (!ModelState.IsValid || id <= 0) return BadRequest();
-            var fabricante = service.buscarFabricante(id);
-            return fabricante == null ? NotFound() : View(fabricante);
-        }
-
-        // POST /Fabricante/Delete/5: eliminación real después de confirmar.
+        // POST /Fabricante/Delete/5: elimina desde Index, sin confirmación.
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
