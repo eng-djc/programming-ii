@@ -31,17 +31,46 @@ public class Producto : IValidatableObject
     [Required(ErrorMessage = "Seleccione entrega."), RegularExpression(@"^(si|no)$", ErrorMessage = "Seleccione si o no."), Display(Name = "Entrega a domicilio")]
     public string EntregaDomicilio { get; set; } = "";
 
+    // Porcentaje adicional según la calidad del producto.
+    // La letra m indica que trabajamos con números decimales (dinero).
     [NotMapped]
-    public decimal PorcentajeCalidad => Calidad switch { "baja" => 0.02m, "media" => 0.04m, "alta" => 0.06m, _ => 0m };
+    public decimal PorcentajeCalidad
+    {
+        get
+        {
+            if (Calidad == "baja") return 0.02m;  // 2%
+            if (Calidad == "media") return 0.04m; // 4%
+            if (Calidad == "alta") return 0.06m;  // 6%
 
-    // El recargo y el envío forman parte de la base gravable: supuesto documentado en README.
+            return 0m;
+        }
+    }
+
+    // Esta propiedad calcula el total, sin guardar otro valor en la tabla.
+    // El IVA se aplica al precio más el recargo por calidad y el envío.
     [NotMapped]
     public decimal MontoPagar
     {
         get
         {
-            var subtotal = (Precio ?? 0m) * (1m + PorcentajeCalidad) + (EntregaDomicilio == "si" ? 10m : 0m);
-            return decimal.Round(subtotal * 1.13m, 2, MidpointRounding.AwayFromZero);
+            // 1. Precio del producto.
+            decimal precio = Precio ?? 0m;
+
+            // 2. Recargo por calidad: precio multiplicado por 2%, 4% o 6%.
+            decimal recargoCalidad = precio * PorcentajeCalidad;
+
+            // 3. Entrega a domicilio: $10 si se solicita, $0 si no.
+            decimal envio = EntregaDomicilio == "si" ? 10m : 0m;
+
+            // 4. Sumar el precio, la calidad y el envío.
+            decimal subtotal = precio + recargoCalidad + envio;
+
+            // 5. Calcular el 13% de IVA sobre el subtotal.
+            decimal iva = subtotal * 0.13m;
+
+            // 6. Sumar el IVA y redondear a dos decimales.
+            decimal total = subtotal + iva;
+            return decimal.Round(total, 2, MidpointRounding.AwayFromZero);
         }
     }
 
