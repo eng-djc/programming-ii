@@ -60,3 +60,7 @@ Comprobar los campos obligatorios, precios negativos o no numéricos, fechas imp
 ## Estado de verificación
 
 Estructura generada y lista para pruebas; **no se ha ejecutado** la compilación, Visual Studio ni SQL Server LocalDB en este entorno. Ver también `docs/VERIFICACION.md`. No se alteran Clase 5 ni Clase 6.
+
+## Presentación visual (plantilla Visual Studio)
+
+Se conserva la estructura del layout de Zara Clase 6 (`Home`, `Privacy`, navegación y pie de página), con reemplazo exclusivo del nombre Zara por EGamer y la entidad Prendas por Productos. `Views/Home/Index.cshtml` y `Views/Home/Privacy.cshtml` siguen la plantilla predeterminada MVC. Los recursos `wwwroot` se reutilizan de Clase 6 sin rediseño. Para probar estas rutas: `/Home/Index`, `/Home/Privacy`, `/Producto/Index`. El listado usa tabla `table table-striped` y botón Bootstrap como Zara.
