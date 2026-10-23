@@ -1,0 +1,13 @@
+@model IEnumerable<EGamer.Models.Producto>
+@{ ViewData["Title"] = "Productos / Facturas"; }
+<h2>Productos / Facturas</h2>
+<p><a asp-action="Create" class="btn btn-primary">Agregar producto</a></p>
+<div class="table-responsive"><table class="table table-striped">
+<thead><tr><th>Fecha</th><th>Producto</th><th>Proveedor</th><th>Precio</th><th>Calidad</th><th>Descripción</th><th>Entrega</th><th>Monto a pagar</th><th>Acciones</th></tr></thead><tbody>
+@foreach(var producto in Model)
+{
+<tr><td>@producto.FechaFactura?.ToString("dd/MM/yyyy")</td><td>@producto.Nombre</td><td>@producto.Proveedor</td><td>@producto.Precio?.ToString("F2")</td><td>@producto.Calidad</td><td>@producto.Descripcion</td><td>@producto.EntregaDomicilio</td><td>@producto.MontoPagar.ToString("F2")</td>
+<td><a asp-action="Edit" asp-route-id="@producto.Id">Editar</a> |
+<form asp-action="Delete" asp-route-id="@producto.Id" method="post" class="d-inline">@Html.AntiForgeryToken()<button type="submit" class="btn btn-link p-0 align-baseline">Eliminar</button></form></td></tr>
+}
+</tbody></table></div>
