@@ -64,3 +64,10 @@ Estructura generada y lista para pruebas; **no se ha ejecutado** la compilación
 ## Presentación visual (plantilla Visual Studio)
 
 Se conserva la estructura del layout de Zara Clase 6 (`Home`, `Privacy`, navegación y pie de página), con reemplazo exclusivo del nombre Zara por EGamer y la entidad Prendas por Productos. `Views/Home/Index.cshtml` y `Views/Home/Privacy.cshtml` siguen la plantilla predeterminada MVC. Los recursos `wwwroot` se reutilizan de Clase 6 sin rediseño. Para probar estas rutas: `/Home/Index`, `/Home/Privacy`, `/Producto/Index`. El listado usa tabla `table table-striped` y botón Bootstrap como Zara.
+
+## Ajustes de fidelidad a Zara Clase 6
+
+- La ruta predeterminada es `Home/Index`, exactamente como en `Program.cs` de Zara. El menú **Productos** abre `/Producto`.
+- `Views/Shared/_ValidationScriptsPartial.cshtml` reproduce los dos scripts locales de la Clase 6: jQuery Validation y jQuery Validation Unobtrusive. Se cargan con `@section Scripts` en Create y Edit.
+- **JavaScript solo valida en el navegador** como en Clase 6. No realiza recargos, IVA, cálculos ni guardado. Las reglas autoritativas permanecen en `Models/Producto.cs`, se comprueban con `ModelState.IsValid` en `ProductoController.cs` y se vuelven a verificar desde `Services/Service.cs`.
+- No es necesario cambiar las migraciones ni la base de datos para este ajuste de navegación y validación.
