@@ -314,7 +314,27 @@ python classes/class-08/Verification/http_checks.py
 
 El segundo comando requiere Windows, LocalDB y build Release previo. Crea una base aislada `Cherkessia_Verification_<uuid>`; nunca usa Zara ni la base normal de la aplicación. Reinicia la aplicación para verificar persistencia y deja esa base de prueba para inspección local. En GitHub Actions desaparece con la VM. El log se guarda en Verification/http-server.log (ignorado por Git).
 
-Resultados locales comprobados: **152 verificaciones del dominio aprobadas**, ejecutadas compilando los dos modelos reales y Verification/Program.cs con Roslyn del SDK 8.0.427 y runtime 8.0.33. Incluyen 48 combinaciones de IRV, límites de garantía, aniversarios y año bisiesto, catálogos y entradas inválidas. No equivalen a pruebas de SQL ni MVC. La CLI local y MSBuild fallaron al consultar información de procesos del entorno; no se atribuye ese fallo al proyecto. La compilación completa, Razor y CRUD/LocalDB se delegan al workflow Windows y se registrarán con su resultado real.
+Resultados locales comprobados: **152 verificaciones del dominio aprobadas**, ejecutadas compilando los dos modelos reales y Verification/Program.cs con Roslyn del SDK 8.0.427 y runtime 8.0.33. Incluyen 48 combinaciones de IRV, límites de garantía, aniversarios y año bisiesto, catálogos y entradas inválidas. No equivalen a pruebas de SQL ni MVC. La CLI local y MSBuild fallaron al consultar información de procesos del entorno; no se atribuye ese fallo al proyecto. La compilación completa y las pruebas Windows se ejecutaron posteriormente en GitHub Actions con los resultados siguientes.
+
+### Resultado de integración confirmado
+
+[GitHub Actions — ejecución 41258618033](https://github.com/eng-djc/programming-ii/actions/runs/41258618033), 31 de octubre de 2026, 18:53 Costa Rica. Código evaluado: commit de rama `58042c50daf50c71106d943447e692679bc72e36`, mediante el merge de prueba del PR `ef0387c685ed06b60756b6078b033761a7a868b1`. La actualización posterior de este README no cambia código, dependencias ni pruebas.
+
+| Comprobación | Resultado observado |
+| --- | --- |
+| Runner | Windows Server 2025; imagen windows-2025-vs2026; setup-dotnet confirmó SDK 8.0.427 instalado |
+| Restore/build Release, incluido Razor | Correcto; 0 Warning(s), 0 Error(s) |
+| Reglas del dominio | 152 comprobaciones aprobadas |
+| HTTP y SQL Server LocalDB | 83 comprobaciones aprobadas; son aserciones, no 83 escenarios distintos |
+| Persistencia | Volcán e IRV conservados después de terminar y reiniciar la aplicación |
+| Entradas inválidas | Garantía fuera de rango, provincia falsa y FK inexistente rechazadas sin insertar |
+| Identidad | Duplicados rechazados; modificaciones de PK entre URL y formulario devuelven 400 |
+| Integridad del cálculo | IRV enviado por cliente ignorado; mínimo 1 y recálculo 5 comprobados contra detalles persistidos |
+| Borrado | GET no elimina; POST confirmado elimina volcán y conserva instrumento; ruta de borrar instrumento ausente |
+| Antiforgery | Crear/eliminar sin token devuelve 400 |
+| Rutas y HTML | Home, Privacy, Error y páginas del flujo responden; sin script, eventos JS o URLs javascript: en HTML examinado |
+
+El workflow ejecuta Node internamente para checkout/setup; eso no es una dependencia JavaScript de la aplicación. Las advertencias de deprecación de esas acciones no fueron advertencias de compilación del proyecto. El comando Package Manager Console, la inspección visual y la instalación/sincronización del equipo del estudiante siguen pendientes.
 
 | Criterio | Evidencia | Resultado actual | Corrección o pendiente |
 | --- | --- | --- | --- |
@@ -322,10 +342,10 @@ Resultados locales comprobados: **152 verificaciones del dominio aprobadas**, ej
 | Reglas y límites de cálculo | Models y Verification/Program.cs, 152 checks | Cumple | Rango Muy Bajo 1–2 documentado como ajuste derivado |
 | MVC y dependencias de originales | csproj, Program, Controllers/Models/Services/Views | Cumple | No EF Core ni capas adicionales |
 | Validación y antiforgery | POST, Bind, ModelState, IValidatableObject, validación de Service | Cumple | Inspección del código; pruebas HTTP por separado |
-| Ausencia de JS | Layout, partials y recursos CSS | Cumple | Verificación HTML automatizada en pruebas HTTP |
-| Home/Privacy/Error | HomeController y Views | Cumple | Rutas verificables por HTTP |
-| PK/FK y CRUD persistente | Service y http_checks.py | No verificado | Ejecutar integración en Windows |
-| Compilación completa y Razor | Workflow class-08.yml | No verificado | Registrar resultado de CI |
+| Ausencia de JS | Inspección de archivos y HTML de las páginas probadas en CI | Cumple | Sin scripts/eventos ejecutables ni bibliotecas JS en la aplicación |
+| Home/Privacy/Error | HomeController, Views y respuestas HTTP 200 en CI | Cumple | Sin verificación visual del navegador del estudiante |
+| PK/FK y CRUD persistente | Service y http_checks.py; CI con 83 checks HTTP/integración aprobados | Cumple | Verificado en Windows de CI; no en el equipo del estudiante |
+| Compilación completa y Razor | Workflow class-08.yml; build Release con 0 errores y 0 advertencias | Cumple | Verificado en Windows de CI |
 | Class 05/06 sin cambios | Diff con commit base | Cumple | Solo se añade Class 08 y su workflow |
 | Windows/WSL/Visual Studio del estudiante | Sin acceso al equipo | No verificado | Ejecutar diagnóstico y sincronización anteriores |
 
