@@ -1,0 +1,21 @@
+@model IEnumerable<Volcan>
+@{ ViewData["Title"] = "Volcanes"; }
+<h1>Volcanes</h1>
+<p><a asp-action="Create" class="btn btn-primary">Agregar volcán</a></p>
+<p>El IRV corresponde al último guardado del volcán.</p>
+<div class="table-responsive">
+<table class="table table-striped">
+    <thead><tr><th>Nombre</th><th>Provincia</th><th>Activo</th><th>Expulsa gases</th><th>Instrumento</th><th>IRV</th><th>Clasificación</th><th>Acciones</th></tr></thead>
+    <tbody>
+    @foreach (var volcan in Model)
+    {
+        <tr>
+            <td>@volcan.Nombre</td><td>@volcan.Provincia</td><td>@(volcan.Activo == true ? "Sí" : "No")</td><td>@volcan.Gases</td>
+            <td>@volcan.Instrumento?.Nombre</td><td>@volcan.IRV</td><td>@volcan.clasificarRiesgo()</td>
+            <td><a asp-action="Edit" asp-route-nombre="@volcan.Nombre">Actualizar</a> | <a asp-action="Details" asp-route-nombre="@volcan.Nombre">Detalles</a> | <a asp-action="Delete" asp-route-nombre="@volcan.Nombre">Eliminar</a></td>
+        </tr>
+    }
+    </tbody>
+</table>
+</div>
+@if (!Model.Any()) { <p>No hay volcanes registrados.</p> }

@@ -1,0 +1,6 @@
+@model Volcan
+@{ ViewData["Title"] = "Detalle del volcán"; }
+<h1>Detalle del volcán</h1>
+<partial name="_Detalle" model="Model" />
+<a asp-action="Edit" asp-route-nombre="@Model.Nombre" class="btn btn-primary">Actualizar</a>
+<a asp-action="Index" class="btn btn-secondary">Volver</a>
