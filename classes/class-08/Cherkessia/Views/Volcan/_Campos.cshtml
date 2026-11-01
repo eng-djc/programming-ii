@@ -1,29 +1,29 @@
 @model Volcan
-<div class="form-group mb-3">
-    <label asp-for="Provincia" class="control-label"></label>
+<div class="mb-3">
+    <label asp-for="Provincia" class="form-label"></label>
     <select asp-for="Provincia" class="form-select" required>
         <option value="">Seleccione una provincia</option>
         @foreach (var provincia in Volcan.Provincias) { <option value="@provincia">@provincia</option> }
     </select>
     <span asp-validation-for="Provincia" class="text-danger"></span>
 </div>
-<div class="form-group mb-3">
-    <label asp-for="Activo" class="control-label"></label>
+<div class="mb-3">
+    <label asp-for="Activo" class="form-label"></label>
     <select asp-for="Activo" class="form-select" required>
         <option value="">Seleccione una opción</option><option value="true">Sí</option><option value="false">No</option>
     </select>
     <span asp-validation-for="Activo" class="text-danger"></span>
 </div>
-<div class="form-group mb-3">
-    <label asp-for="Gases" class="control-label"></label>
+<div class="mb-3">
+    <label asp-for="Gases" class="form-label"></label>
     <select asp-for="Gases" class="form-select" required>
         <option value="">Seleccione una opción</option>
         @foreach (var gases in Volcan.OpcionesGases) { <option value="@gases">@gases</option> }
     </select>
     <span asp-validation-for="Gases" class="text-danger"></span>
 </div>
-<div class="form-group mb-3">
-    <label asp-for="InstrumentoCodigo" class="control-label"></label>
+<div class="mb-3">
+    <label asp-for="InstrumentoCodigo" class="form-label"></label>
     <select asp-for="InstrumentoCodigo" asp-items="ViewBag.Instrumentos" class="form-select" required>
         <option value="">Seleccione un instrumento</option>
     </select>

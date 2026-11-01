@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
+using Microsoft.Extensions.Configuration;
 using Cherkessia.Models;
 
 namespace Cherkessia.Services
@@ -12,15 +13,21 @@ namespace Cherkessia.Services
                 Cherkessia.Migrations.Configuration>(useSuppliedContext: true));
         }
 
-        // Constructor usado por las herramientas de migración de EF6.
-        public Service() : this(new ConfigurationBuilder()
-            .SetBasePath(AppContext.BaseDirectory)
-            .AddJsonFile("appsettings.json", optional: false)
-            .AddEnvironmentVariables().Build()) { }
+        // Constructor directo usado por Zara/EGamer. Permite sustituir la conexión
+        // mediante appsettings o variables ASPNETCORE para pruebas aisladas.
+        public Service() : base(ObtenerConexion()) { }
 
-        public Service(IConfiguration configuration)
-            : base(configuration.GetConnectionString("BloggingDatabase")
-                ?? throw new InvalidOperationException("Falta la conexión BloggingDatabase.")) { }
+        private static string ObtenerConexion()
+        {
+            var configuracion = new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile("appsettings.json", optional: true)
+                .AddEnvironmentVariables()
+                .Build();
+
+            return configuracion.GetConnectionString("BloggingDatabase")
+                ?? @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Cherkessia;Integrated Security=True;";
+        }
 
         public DbSet<Instrumento> Instrumentos { get; set; } = null!;
         public DbSet<Volcan> Volcanes { get; set; } = null!;

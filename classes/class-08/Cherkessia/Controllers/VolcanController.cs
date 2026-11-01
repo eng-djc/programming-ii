@@ -8,13 +8,12 @@ namespace Cherkessia.Controllers
 {
     public class VolcanController : Controller
     {
+        // Crea el contexto de EF6 dentro del controlador, como clase 6.
         private readonly Service service;
-        private readonly ILogger<VolcanController> logger;
 
-        public VolcanController(IConfiguration configuration, ILogger<VolcanController> logger)
+        public VolcanController()
         {
-            service = new Service(configuration);
-            this.logger = logger;
+            service = new Service();
         }
 
         [HttpGet]
@@ -47,7 +46,7 @@ namespace Cherkessia.Controllers
                     return RedirectToAction(nameof(Index));
                 }
                 catch (ValidationException ex) { ModelState.AddModelError("", ex.Message); }
-                catch (Exception ex) { errorGuardado(ex); }
+                catch (Exception) { errorGuardado(); }
             }
             cargarInstrumentos();
             return View(volcan);
@@ -70,7 +69,7 @@ namespace Cherkessia.Controllers
                     return RedirectToAction(nameof(Index));
                 }
                 catch (ValidationException ex) { ModelState.AddModelError("", ex.Message); }
-                catch (Exception ex) { errorGuardado(ex); }
+                catch (Exception) { errorGuardado(); }
             }
             cargarInstrumentos();
             return View(volcan);
@@ -115,23 +114,21 @@ namespace Cherkessia.Controllers
                 if (instrumentos.Count == 0)
                     ModelState.AddModelError("", "Primero registre un instrumento para poder guardar un volcán.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                logger.LogError(ex, "Error al cargar instrumentos");
                 ViewBag.Instrumentos = new SelectList(Array.Empty<Instrumento>(), "Codigo", "Nombre");
                 ModelState.AddModelError("", "No se pudieron cargar los instrumentos. Verifique la conexión a la base de datos.");
             }
         }
 
-        private void errorGuardado(Exception ex)
+        private void errorGuardado()
         {
-            logger.LogError(ex, "Error al guardar volcán");
             ModelState.AddModelError("", "No se pudo guardar. Verifique que el nombre no esté repetido y que la base de datos esté disponible.");
         }
 
         private IActionResult errorConsulta(Exception ex)
         {
-            logger.LogError(ex, "Error al consultar volcanes");
+            _ = ex;
             Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
             return View("Error", new ErrorViewModel { RequestId = HttpContext.TraceIdentifier });
         }

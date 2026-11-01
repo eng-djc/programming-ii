@@ -9,6 +9,7 @@ namespace Cherkessia.Models
         private bool? activo;
         private string gases = "";
         private int instrumentoCodigo;
+        private Instrumento? instrumento;
         private int irv;
 
         public static IReadOnlyList<string> Provincias { get; } = Array.AsReadOnly(new[]
@@ -16,8 +17,19 @@ namespace Cherkessia.Models
         public static IReadOnlyList<string> OpcionesGases { get; } = Array.AsReadOnly(new[]
             { "Poco probable", "Probable", "Muy probable" });
 
-        public Volcan() { }
+        // Constructor sin parámetros
+        public Volcan()
+        {
+            this.Nombre = "";
+            this.Provincia = "";
+            this.Activo = null;
+            this.Gases = "";
+            this.InstrumentoCodigo = 0;
+            this.Instrumento = null;
+            this.IRV = 0;
+        }
 
+        // Constructor con parámetros
         public Volcan(string nombre, string provincia, bool activo, string gases, int instrumentoCodigo)
         {
             this.Nombre = nombre;
@@ -49,7 +61,11 @@ namespace Cherkessia.Models
         [Display(Name = "Instrumento utilizado")]
         public int InstrumentoCodigo { get => instrumentoCodigo; set => instrumentoCodigo = value; }
 
-        public Instrumento? Instrumento { get; set; }
+        public Instrumento? Instrumento
+        {
+            get => instrumento;
+            set => instrumento = value;
+        }
 
         // No se recibe desde los formularios; se calcula antes de SaveChanges.
         public int IRV { get => irv; private set => irv = value; }

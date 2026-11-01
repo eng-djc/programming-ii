@@ -2,6 +2,20 @@
 
 Aplicación de Programación II para administrar instrumentos especializados y registros de volcanes del centro de vulcanología Cherkessia. Calcula la antigüedad y cobertura de los instrumentos, y el índice de riesgo volcánico (IRV) de cada volcán.
 
+## Organización HTML sin JavaScript
+
+La interfaz conserva el formato Razor/Bootstrap de las clases 5, 6 y 7, pero no utiliza JavaScript ni validación realizada por el navegador:
+
+- El layout contiene navegación HTML siempre visible; no hay menú desplegable, toggles ni scripts de Bootstrap/jQuery.
+- Los formularios usan Tag Helpers, controles HTML estándar y antiforgery tokens.
+- La presentación usa Razor para mostrar valores y las vistas parciales para reutilizar campos y detalles.
+- Cada acción modifica datos únicamente mediante `POST`; los enlaces `GET` consultan o muestran confirmación, no eliminan.
+- Las validaciones obligatorias se ejecutan en los modelos, controladores y servicio mediante C#; HTML conserva los campos enviados y Razor muestra los mensajes devueltos por el servidor.
+- Los cálculos de antigüedad, garantía, antigüedad del instrumento e IRV son ejecutados por clases de C#, no mediante JavaScript.
+- Bootstrap se usa solamente como CSS; no se carga JavaScript ni componentes interactivos.
+
+Esta separación permite que un formulario manipulado o enviado sin navegador pase exactamente por las mismas reglas que la interfaz normal.
+
 ## Funcionalidades
 
 | Módulo | Operaciones |

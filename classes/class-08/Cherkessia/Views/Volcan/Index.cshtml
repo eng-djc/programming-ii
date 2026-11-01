@@ -1,9 +1,8 @@
 @model IEnumerable<Volcan>
 @{ ViewData["Title"] = "Volcanes"; }
-<h1>Volcanes</h1>
+@* La presentación conserva el formato de lista de la Clase 6. *@
+<h2>Lista de volcanes</h2>
 <p><a asp-action="Create" class="btn btn-primary">Agregar volcán</a></p>
-<p>El IRV corresponde al último guardado del volcán.</p>
-<div class="table-responsive">
 <table class="table table-striped">
     <thead><tr><th>Nombre</th><th>Provincia</th><th>Activo</th><th>Expulsa gases</th><th>Instrumento</th><th>IRV</th><th>Clasificación</th><th>Acciones</th></tr></thead>
     <tbody>
@@ -17,5 +16,4 @@
     }
     </tbody>
 </table>
-</div>
 @if (!Model.Any()) { <p>No hay volcanes registrados.</p> }

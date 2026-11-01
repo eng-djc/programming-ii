@@ -7,13 +7,12 @@ namespace Cherkessia.Controllers
 {
     public class InstrumentoController : Controller
     {
+        // Crea el contexto de EF6 como en los controladores de Zara y EGamer.
         private readonly Service service;
-        private readonly ILogger<InstrumentoController> logger;
 
-        public InstrumentoController(IConfiguration configuration, ILogger<InstrumentoController> logger)
+        public InstrumentoController()
         {
-            service = new Service(configuration);
-            this.logger = logger;
+            service = new Service();
         }
 
         [HttpGet]
@@ -49,9 +48,8 @@ namespace Cherkessia.Controllers
                 return RedirectToAction(nameof(Index));
             }
             catch (ValidationException ex) { ModelState.AddModelError("", ex.Message); }
-            catch (Exception ex)
+            catch (Exception)
             {
-                logger.LogError(ex, "Error al registrar instrumento");
                 ModelState.AddModelError("", "No se pudo guardar. Verifique que el código no esté repetido y que la base de datos esté disponible.");
             }
             return View(instrumento);
@@ -81,9 +79,8 @@ namespace Cherkessia.Controllers
                 return RedirectToAction(nameof(Index));
             }
             catch (ValidationException ex) { ModelState.AddModelError("", ex.Message); }
-            catch (Exception ex)
+            catch (Exception)
             {
-                logger.LogError(ex, "Error al actualizar instrumento");
                 ModelState.AddModelError("", "No se pudo actualizar el instrumento. Inténtelo nuevamente.");
             }
             return View(instrumento);
@@ -91,7 +88,7 @@ namespace Cherkessia.Controllers
 
         private IActionResult errorConsulta(Exception ex)
         {
-            logger.LogError(ex, "Error al consultar instrumentos");
+            _ = ex;
             Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
             return View("Error", new ErrorViewModel { RequestId = HttpContext.TraceIdentifier });
         }

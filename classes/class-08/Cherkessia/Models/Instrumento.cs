@@ -11,8 +11,17 @@ namespace Cherkessia.Models
         private decimal? precio;
         private int garantia;
 
-        public Instrumento() { }
+        // Constructor sin parámetros
+        public Instrumento()
+        {
+            this.Codigo = 0;
+            this.Nombre = "";
+            this.FechaRegistro = null;
+            this.Precio = null;
+            this.Garantia = 0;
+        }
 
+        // Constructor con parámetros
         public Instrumento(int codigo, string nombre, DateTime fechaRegistro, decimal precio, int garantia)
         {
             this.Codigo = codigo;

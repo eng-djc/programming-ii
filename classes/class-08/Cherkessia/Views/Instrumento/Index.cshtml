@@ -1,8 +1,8 @@
 @model IEnumerable<Instrumento>
 @{ ViewData["Title"] = "Instrumentos"; DateTime hoy = DateTime.Today; }
-<h1>Instrumentos</h1>
+@* La presentación conserva el formato de lista de la Clase 6. *@
+<h2>Lista de instrumentos</h2>
 <p><a asp-action="Create" class="btn btn-primary">Agregar instrumento</a></p>
-<div class="table-responsive">
 <table class="table table-striped">
     <thead><tr><th>Código</th><th>Nombre</th><th>Fecha de registro</th><th>Precio (USD)</th><th>Garantía (años)</th><th>Antigüedad (años)</th><th>Estado</th><th>Acciones</th></tr></thead>
     <tbody>
@@ -17,5 +17,4 @@
     }
     </tbody>
 </table>
-</div>
 @if (!Model.Any()) { <p>No hay instrumentos registrados.</p> }

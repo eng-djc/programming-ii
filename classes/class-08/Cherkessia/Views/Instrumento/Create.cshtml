@@ -1,14 +1,13 @@
 @model Instrumento
 @{ ViewData["Title"] = "Agregar instrumento"; }
-<h1>Agregar instrumento</h1>
-<div class="row"><div class="col-md-4">
-    <form asp-action="Create" method="post">
-        <div asp-validation-summary="All" class="text-danger"></div>
-        <div class="form-group mb-3"><label asp-for="Codigo" class="control-label"></label>
-            <input asp-for="Codigo" type="number" min="1" step="1" class="form-control" required />
-            <span asp-validation-for="Codigo" class="text-danger"></span></div>
-        <partial name="_Campos" model="Model" />
-        <button type="submit" class="btn btn-primary">Guardar</button>
-        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-    </form>
-</div></div>
+<h2>Agregar instrumento</h2>
+<form asp-controller="Instrumento" asp-action="Create" method="post">
+@Html.AntiForgeryToken()
+<div asp-validation-summary="All" class="text-danger"></div>
+    <div class="mb-3"><label asp-for="Codigo" class="form-label"></label>
+        <input asp-for="Codigo" type="number" min="1" step="1" class="form-control" required />
+        <span asp-validation-for="Codigo" class="text-danger"></span></div>
+    <partial name="_Campos" model="Model" />
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
