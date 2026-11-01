@@ -1,0 +1,23 @@
+@model EGamer.Models.Producto
+@{ ViewData["Title"] = "Agregar producto"; }
+<h2>@ViewData["Title"]</h2>
+<form asp-controller="Producto" asp-action="Create"  method="post">
+@Html.AntiForgeryToken()
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<div class="mb-3"><label asp-for="FechaFactura" class="form-label"></label><input asp-for="FechaFactura" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" required /><span asp-validation-for="FechaFactura" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="Nombre" class="form-label"></label><input asp-for="Nombre" type="text" class="form-control" maxlength="100" required /><span asp-validation-for="Nombre" class="text-danger"></span></div>
+<fieldset class="mb-3"><legend class="fs-6">Proveedor</legend>
+@foreach (var proveedor in new[] { "p1", "p2", "p3", "p4", "p5" })
+{
+<div class="form-check"><input asp-for="Proveedor" type="radio" value="@proveedor" id="proveedor-@proveedor" class="form-check-input" required /><label class="form-check-label" for="proveedor-@proveedor">@proveedor</label></div>
+}
+<span asp-validation-for="Proveedor" class="text-danger"></span></fieldset>
+<div class="mb-3"><label asp-for="Precio" class="form-label"></label><input asp-for="Precio" type="number" step="0.01" min="0" class="form-control" required /><span asp-validation-for="Precio" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="Calidad" class="form-label"></label><select asp-for="Calidad" class="form-select" required><option value="">Seleccione</option><option value="baja">baja</option><option value="media">media</option><option value="alta">alta</option></select><span asp-validation-for="Calidad" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="Descripcion" class="form-label"></label><textarea asp-for="Descripcion" class="form-control" rows="5" maxlength="2000" required></textarea><span asp-validation-for="Descripcion" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="EntregaDomicilio" class="form-label"></label><select asp-for="EntregaDomicilio" class="form-select" required><option value="">Seleccione</option><option value="si">Sí</option><option value="no">No</option></select><span asp-validation-for="EntregaDomicilio" class="text-danger"></span></div>
+<button type="submit" class="btn btn-primary">Guardar</button>
+<a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
