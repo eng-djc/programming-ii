@@ -2,6 +2,10 @@
 @{ ViewData["Title"] = "Instrumentos"; DateTime hoy = DateTime.Today; }
 @* La presentación conserva el formato de lista de la Clase 6. *@
 <h2>Lista de instrumentos</h2>
+@if (TempData["InstrumentoError"] != null)
+{
+    <div class="alert alert-warning">@TempData["InstrumentoError"]</div>
+}
 <p><a asp-action="Create" class="btn btn-primary">Agregar instrumento</a></p>
 <table class="table table-striped">
     <thead><tr><th>Código</th><th>Nombre</th><th>Fecha de registro</th><th>Precio (USD)</th><th>Garantía (años)</th><th>Antigüedad (años)</th><th>Estado</th><th>Acciones</th></tr></thead>
@@ -12,7 +16,17 @@
             <td>@instrumento.Codigo</td><td>@instrumento.Nombre</td><td>@instrumento.FechaRegistro?.ToString("dd/MM/yyyy")</td>
             <td>@instrumento.Precio?.ToString("F2")</td><td>@instrumento.Garantia</td><td>@instrumento.calcularAntiguedad(hoy)</td>
             <td>@(instrumento.calcularGarantia(hoy) ? "En garantía" : "Fuera de garantía")</td>
-            <td><a asp-action="Edit" asp-route-id="@instrumento.Codigo">Actualizar</a></td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@instrumento.Codigo">Actualizar</a>
+                @if (!((HashSet<int>)ViewBag.InstrumentosEnUso).Contains(instrumento.Codigo))
+                {
+                    <span> | </span><a asp-action="Delete" asp-route-id="@instrumento.Codigo">Eliminar</a>
+                }
+                else
+                {
+                    <span> | </span><span class="text-muted">Eliminar</span>
+                }
+            </td>
         </tr>
     }
     </tbody>

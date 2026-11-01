@@ -18,7 +18,15 @@ namespace Cherkessia.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            try { return View(service.mostrarInstrumentos()); }
+            try
+            {
+                var instrumentos = service.mostrarInstrumentos();
+                ViewBag.InstrumentosEnUso = instrumentos
+                    .Where(i => service.instrumentoEstaEnUso(i.Codigo))
+                    .Select(i => i.Codigo)
+                    .ToHashSet();
+                return View(instrumentos);
+            }
             catch (Exception ex) { return errorConsulta(ex); }
         }
 
@@ -84,6 +92,32 @@ namespace Cherkessia.Controllers
                 ModelState.AddModelError("", "No se pudo actualizar el instrumento. Inténtelo nuevamente.");
             }
             return View(instrumento);
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            if (!ModelState.IsValid || id <= 0) return BadRequest();
+            try
+            {
+                if (service.instrumentoEstaEnUso(id))
+                {
+                    TempData["InstrumentoError"] = "No se puede eliminar el instrumento porque está siendo utilizado por uno o más volcanes.";
+                    return RedirectToAction(nameof(Index));
+                }
+                if (!service.eliminarInstrumento(id)) return NotFound();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (ValidationException ex)
+            {
+                TempData["InstrumentoError"] = ex.Message;
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception)
+            {
+                TempData["InstrumentoError"] = "No se pudo eliminar el instrumento. Inténtelo nuevamente.";
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         private IActionResult errorConsulta(Exception ex)

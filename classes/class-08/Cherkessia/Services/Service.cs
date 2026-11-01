@@ -68,6 +68,20 @@ namespace Cherkessia.Services
             SaveChanges();
             return true;
         }
+
+        public bool instrumentoEstaEnUso(int codigo) =>
+            Volcanes.Any(v => v.InstrumentoCodigo == codigo);
+
+        public bool eliminarInstrumento(int codigo)
+        {
+            var existente = buscarInstrumento(codigo);
+            if (existente == null) return false;
+            if (instrumentoEstaEnUso(codigo))
+                throw new ValidationException("No se puede eliminar el instrumento porque está siendo utilizado por uno o más volcanes.");
+            Instrumentos.Remove(existente);
+            SaveChanges();
+            return true;
+        }
         #endregion
 
         #region CRUD de volcanes
