@@ -1,8 +1,11 @@
 @model Volcan
 @{ ViewData["Title"] = "Eliminar volcán"; }
 <h2>Eliminar volcán</h2>
-<p>¿Está seguro de que desea eliminar este volcán? El instrumento se conservará.</p>
-<partial name="_Detalle" model="Model" />
+<p>¿Está seguro de que desea eliminar este volcán?</p>
+<dl class="row">
+    <dt class="col-sm-3">Nombre</dt><dd class="col-sm-9">@Model.Nombre</dd>
+    <dt class="col-sm-3">Provincia</dt><dd class="col-sm-9">@Model.Provincia</dd>
+</dl>
 <form asp-action="Delete" asp-route-nombre="@Model.Nombre" method="post">
 @Html.AntiForgeryToken()
 <button type="submit" class="btn btn-danger">Eliminar</button>

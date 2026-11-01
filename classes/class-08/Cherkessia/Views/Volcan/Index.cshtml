@@ -11,7 +11,7 @@
         <tr>
             <td>@volcan.Nombre</td><td>@volcan.Provincia</td><td>@(volcan.Activo == true ? "Sí" : "No")</td><td>@volcan.Gases</td>
             <td>@volcan.Instrumento?.Nombre</td><td>@volcan.IRV</td><td>@volcan.clasificarRiesgo()</td>
-            <td><a asp-action="Edit" asp-route-nombre="@volcan.Nombre">Actualizar</a> | <a asp-action="Details" asp-route-nombre="@volcan.Nombre">Detalles</a> | <a asp-action="Delete" asp-route-nombre="@volcan.Nombre">Eliminar</a></td>
+            <td><a asp-action="Edit" asp-route-nombre="@volcan.Nombre">Actualizar</a> | <a asp-action="Delete" asp-route-nombre="@volcan.Nombre">Eliminar</a></td>
         </tr>
     }
     </tbody>
