@@ -1,7 +1,7 @@
 name: Class 08 verification
 on:
   push:
-    branches: [class-8-cherkessia]
+    branches: [main, class-8-cherkessia]
     paths: ['classes/class-08/**', '.github/workflows/class-08.yml']
   pull_request:
     paths: ['classes/class-08/**', '.github/workflows/class-08.yml']
@@ -13,8 +13,8 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '8.0.x'
       - name: Restore and build MVC including Razor
