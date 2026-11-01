@@ -1,0 +1,9 @@
+@model Volcan
+@{ ViewData["Title"] = "Eliminar volcán"; }
+<h1>Eliminar volcán</h1>
+<p>¿Está seguro de que desea eliminar este volcán? El instrumento se conservará.</p>
+<partial name="_Detalle" model="Model" />
+<form asp-action="Delete" asp-route-nombre="@Model.Nombre" method="post">
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

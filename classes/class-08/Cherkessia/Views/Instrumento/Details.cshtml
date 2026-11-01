@@ -1,0 +1,14 @@
+@model Instrumento
+@{ ViewData["Title"] = "Detalle del instrumento"; DateTime hoy = DateTime.Today; }
+<h1>Detalle del instrumento</h1>
+<dl class="row">
+    <dt class="col-sm-3">Código</dt><dd class="col-sm-9">@Model.Codigo</dd>
+    <dt class="col-sm-3">Nombre</dt><dd class="col-sm-9">@Model.Nombre</dd>
+    <dt class="col-sm-3">Fecha de registro</dt><dd class="col-sm-9">@Model.FechaRegistro?.ToString("dd/MM/yyyy")</dd>
+    <dt class="col-sm-3">Precio (USD)</dt><dd class="col-sm-9">@Model.Precio?.ToString("F2")</dd>
+    <dt class="col-sm-3">Garantía (años)</dt><dd class="col-sm-9">@Model.Garantia</dd>
+    <dt class="col-sm-3">Antigüedad (años)</dt><dd class="col-sm-9">@Model.calcularAntiguedad(hoy)</dd>
+    <dt class="col-sm-3">Estado</dt><dd class="col-sm-9">@(Model.calcularGarantia(hoy) ? "En garantía" : "Fuera de garantía")</dd>
+</dl>
+<a asp-action="Edit" asp-route-id="@Model.Codigo" class="btn btn-primary">Actualizar</a>
+<a asp-action="Index" class="btn btn-secondary">Volver</a>

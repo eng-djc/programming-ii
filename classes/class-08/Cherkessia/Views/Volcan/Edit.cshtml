@@ -1,0 +1,13 @@
+@model Volcan
+@{ ViewData["Title"] = "Editar volcán"; }
+<h1>Editar volcán</h1>
+<div class="row"><div class="col-md-4">
+    <form asp-action="Edit" asp-route-nombre="@Model.Nombre" method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="form-group mb-3"><p>Nombre: @Model.Nombre</p><input asp-for="Nombre" type="hidden" /></div>
+        <partial name="_Campos" model="Model" />
+        <p>El IRV se calcula al guardar con los datos del instrumento seleccionado.</p>
+        <button type="submit" class="btn btn-primary">Actualizar</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div></div>

@@ -1,0 +1,21 @@
+@model IEnumerable<Instrumento>
+@{ ViewData["Title"] = "Instrumentos"; DateTime hoy = DateTime.Today; }
+<h1>Instrumentos</h1>
+<p><a asp-action="Create" class="btn btn-primary">Agregar instrumento</a></p>
+<div class="table-responsive">
+<table class="table table-striped">
+    <thead><tr><th>Código</th><th>Nombre</th><th>Fecha de registro</th><th>Precio (USD)</th><th>Garantía (años)</th><th>Antigüedad (años)</th><th>Estado</th><th>Acciones</th></tr></thead>
+    <tbody>
+    @foreach (var instrumento in Model)
+    {
+        <tr>
+            <td>@instrumento.Codigo</td><td>@instrumento.Nombre</td><td>@instrumento.FechaRegistro?.ToString("dd/MM/yyyy")</td>
+            <td>@instrumento.Precio?.ToString("F2")</td><td>@instrumento.Garantia</td><td>@instrumento.calcularAntiguedad(hoy)</td>
+            <td>@(instrumento.calcularGarantia(hoy) ? "En garantía" : "Fuera de garantía")</td>
+            <td><a asp-action="Edit" asp-route-id="@instrumento.Codigo">Actualizar</a> | <a asp-action="Details" asp-route-id="@instrumento.Codigo">Detalles</a></td>
+        </tr>
+    }
+    </tbody>
+</table>
+</div>
+@if (!Model.Any()) { <p>No hay instrumentos registrados.</p> }

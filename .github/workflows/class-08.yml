@@ -1,0 +1,30 @@
+name: Class 08 verification
+on:
+  push:
+    branches: [class-8-cherkessia]
+    paths: ['classes/class-08/**', '.github/workflows/class-08.yml']
+  pull_request:
+    paths: ['classes/class-08/**', '.github/workflows/class-08.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Restore and build MVC including Razor
+        run: dotnet build classes/class-08/Cherkessia/Cherkessia.csproj --configuration Release
+      - name: Domain rules
+        run: dotnet run --project classes/class-08/Verification/Verification.csproj --configuration Release
+      - name: Start LocalDB
+        shell: pwsh
+        run: |
+          SqlLocalDB start MSSQLLocalDB
+          if ($LASTEXITCODE -ne 0) { throw 'LocalDB could not start' }
+      - name: HTTP CRUD and persistence with isolated database
+        run: python classes/class-08/Verification/http_checks.py
