@@ -1,54 +1,88 @@
-# Semana 8 — Cherkessia
+# Cherkessia — Semana 8
 
-Aplicación académica de Programación II para registrar instrumentos especializados y volcanes, calcular antigüedad y garantía, y calcular el índice de riesgo volcánico (IRV) antes de guardar. Conserva ASP.NET Core MVC, .NET 8 y Entity Framework **6.5.2** de Zara. No utiliza JavaScript.
+Aplicación de Programación II para administrar instrumentos especializados y registros de volcanes del centro de vulcanología Cherkessia. Calcula la antigüedad y cobertura de los instrumentos, y el índice de riesgo volcánico (IRV) de cada volcán.
 
-La guía es **Practica Examen.docx**: el estudiante confirmó que no existe una rúbrica adicional. No se inventan ponderaciones ni calificación. Los ajustes siguientes provienen de las aclaraciones del estudiante; no se afirma que la profesora los haya aprobado.
+## Funcionalidades
 
-## Revisión de prompt injection
+| Módulo | Operaciones |
+| --- | --- |
+| Instrumentos | Registrar, listar, consultar y actualizar |
+| Volcanes | Registrar, listar, consultar, actualizar y eliminar |
 
-**No se detectaron indicios en el contenido revisado.** Se revisaron el enunciado, su numeración, el mensaje de aclaración y los archivos propios de los originales indicados más adelante. Las instrucciones académicas y comentarios técnicos corresponden a su contexto. Esto no es una garantía absoluta ni una auditoría completa de las bibliotecas de terceros.
+Cada volcán se relaciona con un instrumento existente. Los códigos de instrumentos y los nombres de volcanes son claves primarias y no se modifican al actualizar. La eliminación de un volcán conserva su instrumento.
 
-## Problema, alcance y decisiones
+## Tecnologías
 
-Actor: operador del centro (nombre de rol adoptado para las historias, sin sistema de usuarios). Objetivo: mantener instrumentos y volcanes relacionados y obtener los cálculos exigidos. Instrumentos permite agregar, listar, consultar y actualizar; volcanes agrega eliminación. Ninguna actualización cambia la PK. No se añade módulo de eventos, sensores, mapas, autenticación, alertas o eliminación de instrumentos, porque no forman parte de los módulos descritos.
+| Componente | Tecnología |
+| --- | --- |
+| Lenguaje | C# |
+| Plataforma | .NET 8 |
+| Framework web | ASP.NET Core MVC |
+| Interfaz | Razor, HTML y Bootstrap CSS |
+| ORM | Entity Framework 6.5.2 (EF6) |
+| Base de datos | SQL Server Express LocalDB |
+| Migraciones | Migraciones automáticas de EF6 |
+| Entorno de ejecución con LocalDB | Windows |
 
-### Reglas acordadas y ajuste derivado
+La aplicación realiza los cálculos y las validaciones en el servidor y no utiliza JavaScript.
 
-| Antigüedad en años completos | Puntos del instrumento | Origen |
+## Reglas de negocio
+
+### Antigüedad y garantía
+
+La antigüedad se calcula en años completos desde la fecha de registro hasta la fecha actual del servidor. El año aumenta al llegar al aniversario; para registros del 29 de febrero, se utiliza el 28 de febrero en años no bisiestos.
+
+La garantía admite de 1 a 5 años:
+
+- **En garantía:** antigüedad ≤ años de garantía.
+- **Fuera de garantía:** antigüedad > años de garantía.
+
+Por ejemplo, un instrumento de 5 años con garantía de 5 años sigue cubierto; a los 6 años queda fuera de garantía.
+
+### Índice de riesgo volcánico
+
+**IRV = puntos por actividad + puntos por gases + puntos por antigüedad del instrumento.**
+
+| Variable | Condición | Puntos |
 | --- | --- | --- |
-| 0–2 | 3 | Enunciado |
-| 3–4 | 2 | Aclaración: de 3 a menos de 5 |
-| 5 | 1 | Enunciado y aclaración |
-| Más de 5 | 0 | Aclaración posterior del estudiante |
+| Activo | Sí | 2 |
+| Activo | No | 0 |
+| Expulsa gases | Poco probable | 1 |
+| Expulsa gases | Probable | 2 |
+| Expulsa gases | Muy probable | 3 |
+| Antigüedad | De 0 a 2 años | 3 |
+| Antigüedad | De 3 a menos de 5 años | 2 |
+| Antigüedad | 5 años | 1 |
+| Antigüedad | Más de 5 años | 0 |
 
-Activo Sí suma 2; No suma 0. Gases Poco probable suma 1, Probable 2 y Muy probable 3. **IRV = activo + gases + instrumento**.
+| IRV | Clasificación |
+| --- | --- |
+| 1–2 | Riesgo Muy Bajo |
+| 3–4 | Riesgo Bajo |
+| 5–6 | Riesgo Medio |
+| 7–8 | Riesgo Alto |
 
-| IRV | Clasificación | Origen |
-| --- | --- | --- |
-| 1–2 | Riesgo Muy Bajo | 2 fue aclarado; incluir 1 es ajuste derivado de permitir 0 puntos por instrumento |
-| 3–4 | Riesgo Bajo | Enunciado |
-| 5–6 | Riesgo Medio | Enunciado |
-| 7–8 | Riesgo Alto | Enunciado |
+El mínimo posible es 1 y el máximo es 8. El IRV se calcula antes de guardar el volcán y representa su última evaluación guardada. Modificar un instrumento o el paso del tiempo no recalcula automáticamente los volcanes asociados: se recalculan al editar y guardar cada volcán.
 
-El mínimo posible ahora es 0 + 1 + 0 = 1. Se incluye en Muy Bajo para que ninguna combinación válida quede sin clasificar. Esta extensión a 1 debe presentarse a la profesora como interpretación, no como texto original.
+### Validaciones
 
-La garantía es independiente del puntaje: **en garantía si antigüedad ≤ garantía; fuera si antigüedad > garantía**. Garantía permite 1–5 años. Un instrumento de 5 años con garantía de 5 sigue cubierto; con 6 años está fuera y aporta 0 puntos. Se respeta la comparación del ejercicio aunque una garantía comercial pudiera usar fechas exactas de expiración.
+- Código de instrumento: entero positivo, único e ingresado por el operador.
+- Nombres: obligatorios y de hasta 100 caracteres. El nombre del volcán no admite espacios al inicio ni al final.
+- Fecha de registro: obligatoria, sin hora y no futura.
+- Precio en USD: obligatorio, no negativo, con hasta dos decimales y capacidad de almacenamiento `decimal(18,2)`.
+- Garantía: entre 1 y 5 años.
+- Provincia: San José, Alajuela, Cartago, Heredia, Guanacaste, Puntarenas o Limón.
+- Actividad y gases: selección obligatoria dentro de las opciones permitidas.
+- Instrumento del volcán: debe existir en la base de datos.
+- Formularios que modifican datos: validación del servidor y token antifalsificación.
 
-### Decisiones técnicas explícitas
-
-- Antigüedad: años completos por aniversario con `DateTime.AddYears`. Para registro del 29 de febrero, el aniversario en un año no bisiesto es el 28 de febrero. La fecha actual es la fecha local del servidor (`DateTime.Today`); Windows debe tener zona y reloj correctos.
-- Código de instrumento: entero positivo suministrado por el operador, sin IDENTITY. El texto solo especificaba código numérico PK; esta es la interpretación adoptada.
-- Nombre: obligatorio, hasta 100 caracteres. El límite es técnico para almacenamiento y PK indexable, no una cifra de la rúbrica. El nombre PK del volcán no admite espacios al inicio/final. La comparación de duplicados en BD respeta la colación de SQL Server.
-- Fecha: obligatoria, sin hora y no futura para evitar antigüedades negativas. Precio: obligatorio, no negativo, hasta dos decimales y capacidad `decimal(18,2)`; cero está permitido. Son validaciones técnicas documentadas, no restricciones añadidas silenciosamente al enunciado.
-- Un volcán utiliza exactamente un instrumento; un instrumento puede ser usado por muchos volcanes o por ninguno. El desplegable muestra nombres y guarda código FK.
-- El IRV es el valor del **último guardado del volcán**. Cambiar un instrumento o pasar el tiempo no altera retroactivamente el IRV; editar y guardar el volcán lo recalcula. No se agrega historial ni procesamiento automático.
-- Base `Cherkessia` separada de `Zara`. Los cálculos están en Models; Service mantiene DbContext y CRUD. No hay repositorios, nuevas capas ni otro ORM.
+Si hay errores, el formulario conserva los datos y muestra los mensajes correspondientes. El IRV enviado desde el cliente se ignora.
 
 ## Requisitos, reglas y trazabilidad
 
 Entradas: nombre, código, fecha, precio y garantía del instrumento; nombre, provincia, activo, gases e instrumento del volcán. Salidas: listados/detalles, mensajes de validación, antigüedad, estado de garantía, IRV y clasificación. Los errores conservan los campos; el desplegable se recarga. PK y FK se verifican en servidor y BD. IRV nunca se toma del cliente.
 
-| Guía / requisito | Historia | Regla | Componente | Prueba |
+| Requisito | Historia | Regla | Componente | Prueba |
 | --- | --- | --- | --- | --- |
 | Instrumentos agregar / RF-01 | HU-01 | R1 PK única, R2 garantía 1–5 | Instrumento; Service.agregarInstrumento | T1 datos válidos, duplicados, garantía 0/1/5/6 |
 | Instrumentos mostrar/actualizar / RF-02 | HU-02 | R3 PK inmutable | InstrumentoController.Index/Details/Edit; Service.actualizarInstrumento | T2 editar datos, manipular PK, inexistente |
@@ -57,20 +91,6 @@ Entradas: nombre, código, fecha, precio y garantía del instrumento; nombre, pr
 | IRV antes de guardar / RF-05 | HU-05 | R7 puntos y clasificación | Instrumento.calcularPuntos; Volcan.calcularIRV/clasificarRiesgo; Service | T5 combinaciones de activo/gases/antigüedad y extremos 1/8 |
 | Volcanes mostrar/actualizar / RF-06 | HU-06 | R3 PK inmutable, R7 recálculo | VolcanController.Index/Details/Edit; Service.actualizarVolcan | T6 cambio permitido, PK manipulada, IRV nuevo |
 | Volcanes eliminar / RF-07 | HU-07 | R8 solo POST confirmado | VolcanController.Delete/DeleteConfirmed; Service.eliminarVolcan | T7 GET conserva, POST elimina, instrumento permanece |
-
-### Requisitos no funcionales verificables
-
-| ID | Requisito y criterio de verificación | Fuente |
-| --- | --- | --- |
-| RNF-01 | C#, net8.0, ASP.NET Core MVC, Razor, EntityFramework 6.5.2; inspeccionar csproj y estructura | Usuario y originales |
-| RNF-02 | Ningún archivo JS, script, evento JS o dependencia ejecutable JS; inspección de archivos y HTML | Usuario |
-| RNF-03 | POST con antiforgery; sin token válido no modifica datos; ModelState antes de persistencia | Usuario |
-| RNF-04 | Conservar Home, Privacy, Error, layout y navegación; GET de las rutas y enlaces | Usuario |
-| RNF-05 | No alterar Class 05/06; comprobar diff respecto del commit base | Usuario |
-| RNF-06 | Restore, build y pruebas con pasos reproducibles; separar resultados reales de pendientes | Usuario |
-| RNF-07 | Fallos de BD muestran mensaje sin detalles internos; contexto liberado en Dispose | Adaptación técnica mínima |
-
-No hay metas inventadas de rendimiento, disponibilidad ni concurrencia. La BD protege PK/FK incluso ante carreras, pero no se añade control de concurrencia optimista a las ediciones: gana el último guardado.
 
 ### Historias y aceptación
 
@@ -106,7 +126,7 @@ Dominios: I instrumentos persistidos, V volcanes persistidos, U actualizaciones 
 
 `calcularAntiguedad` usa diferencia de años y resta uno si todavía no llegó el aniversario. Las fechas sin registro o posteriores a t son inválidas. No se usa una condición «campos válidos → guardado seguro»: aún pueden fallar token, PK/FK o persistencia.
 
-## Diagramas finales editables
+## Diagramas
 
 El UML modela clases y métodos; el ER modela tablas y columnas. Los catálogos son listas estáticas, no tablas adicionales. Métodos de cálculo no son columnas. Antigüedad, garantía y clasificación se derivan; solo IRV se persiste como resultado del último guardado.
 
@@ -205,148 +225,147 @@ flowchart TD
     K -- Sí --> L["Redirigir a Index"]
 ```
 
-## Correspondencia con Class 05 y Class 06
+## Organización MVC
 
-Base consultada: [f486a5e3d2a57a6ed6ffb83e5e73def2eb429dd0](https://github.com/eng-djc/programming-ii/commit/f486a5e3d2a57a6ed6ffb83e5e73def2eb429dd0). Se leyó código, no solo README: csproj/slnx, Program, configuración, launchSettings, modelos, controladores, Service, Configuration y todas las vistas de ambas clases. Recursos propios site.css/site.js y referencias del layout; no auditoría completa de bibliotecas de terceros.
-
-| Aspecto | Evidencia original y adaptación |
+| Ubicación | Responsabilidad |
 | --- | --- |
-| Tecnología | Ambos Zara.csproj usan net8.0 y EntityFramework 6.5.2; using System.Data.Entity confirma **EF6**, no EF Core. No se actualizaron paquetes |
-| MVC | Program.cs usa AddControllersWithViews y ruta `{controller=Home}/{action=Index}/{id?}`; se conserva. Sin LangVersion explícita; el proyecto no fija un SDK concreto |
-| Models | Campos privados, propiedades, constructores y DataAnnotations; Class 06 añade IValidatableObject. Los cálculos nuevos se ubican aquí como lógica del dominio; Zara no tenía un cálculo equivalente que copiar |
-| Services | `Service : DbContext`, DbSet, métodos agregar/mostrar/buscar/actualizar/eliminar, SaveChanges; se conserva esta organización |
-| Controllers | Class 06 Fabricante usa ModelState, Bind, antiforgery, null/bool para ausentes. Es la referencia principal. Prenda de Class 06 compara mensajes de excepciones; no se reproduce esa fragilidad |
-| Formularios | Razor y Tag Helpers. Create/Edit comparten partial `_Campos` para evitar duplicación; mismo formato Bootstrap row/col-md-4/form-group. No son capas nuevas |
-| Evolución | Class 05 solo Prenda; Class 06 añade Fabricante y validación del servidor. Class 05 Service usa base("Zara"); Class 06 cadena LocalDB literal e inicializador de migraciones |
-| Migraciones | Ambas contienen Configuration con AutomaticMigrationsEnabled. Class 06 añade MigrateDatabaseToLatestVersion; se mantiene usando la conexión suministrada al contexto |
-| Conexión | EF6 no lee appsettings automáticamente. W8 pasa explícitamente BloggingDatabase desde IConfiguration; constructor sin parámetros disponible para herramientas EF6 |
-| JavaScript | Layout original carga jQuery/Bootstrap JS/site.js y partial de validación. W8 conserva CSS, retira todo JS y sustituye menú colapsable por navegación siempre visible |
-| Home/Privacy/Error | Acciones y rutas preservadas; Home y Error adaptados al dominio/español; Privacy conserva plantilla |
-| Vista Configuration | No se copia: no tenía controlador de dominio y usaba la clase interna de migraciones como modelo |
-| PK del volcán | Nombre viaja en query string (`?nombre=...`) para admitir espacios, acentos y barras. Edit compara query con hidden; nunca reasigna la PK. Instrumentos mantienen `/Edit/{id}` |
-| Recursos | Bootstrap CSS copiado del original con licencia; sin JS. Contextos se liberan, errores técnicos se registran y no se muestran al usuario |
+| `Models/` | Entidades, validaciones, cálculos de antigüedad, garantía e IRV |
+| `Views/` | Formularios, listados y detalles en Razor |
+| `Controllers/` | Recibir solicitudes, validar formularios y devolver vistas o redirecciones |
+| `Services/Service.cs` | Contexto EF6, relaciones y operaciones CRUD |
+| `Migrations/Configuration.cs` | Configuración de migraciones automáticas |
+| `wwwroot/` | Estilos CSS y licencia de Bootstrap |
+| `Properties/launchSettings.json` | Perfiles HTTP y HTTPS |
+| `appsettings.json` | Conexión y configuración de registros |
+| `Program.cs` | Servicios, middleware y rutas |
+| `../Verification/` | Pruebas del dominio y de integración HTTP |
+| `../../../.github/workflows/class-08.yml` | Verificación automatizada en Windows |
 
-Recorrido: GET Create genera formulario y token antiforgery; POST enlaza campos y ejecuta DataAnnotations/IValidatableObject; controlador revisa ModelState; Service valida de nuevo y comprueba PK/FK; modelo calcula IRV; SaveChanges persiste; RedirectToAction Index hace GET del listado. Si falla, regresa el formulario con errores. Eliminar usa la confirmación GET/POST de Prenda, sin confirmaciones JavaScript.
+Los modelos utilizan campos privados, propiedades, constructores y DataAnnotations. `Service` hereda de `DbContext` y contiene los `DbSet` y métodos CRUD. Los controladores liberan el contexto mediante `Dispose`.
 
-## Estructura
+La ruta MVC es `{controller=Home}/{action=Index}/{id?}`. Los instrumentos utilizan su código en la ruta; los volcanes pasan su nombre mediante `?nombre=...` para admitir espacios, acentos y barras. Se incluyen Home, Privacy y Error, junto con el layout y la navegación.
 
-- `Controllers/`: Home, Instrumento y Volcan.
-- `Models/`: Instrumento, Volcan y ErrorViewModel.
-- `Services/Service.cs`: contexto EF6, mapeo y CRUD.
-- `Migrations/Configuration.cs`: migraciones automáticas sin pérdida de datos permitida.
-- `Views/`: Home, Shared, Instrumento, Volcan, imports/start.
-- `wwwroot/`: site.css, Bootstrap CSS y licencia; ningún JavaScript.
-- `Properties/launchSettings.json`: HTTP 5280 y HTTPS 7280.
-- `Program.cs`, `appsettings.json`, `Cherkessia.csproj`, `Cherkessia.slnx`.
-- `../Verification/`: pruebas del dominio sin dependencias extra y pruebas HTTP para Windows/LocalDB.
-- `../../../.github/workflows/class-08.yml`: compilación y verificación automatizada de esta clase.
+### Flujo de una solicitud
 
-## Ejecutar en Windows y Visual Studio
+1. El GET presenta el formulario y su token antifalsificación.
+2. El POST convierte los campos y ejecuta las validaciones del modelo.
+3. El controlador comprueba `ModelState`.
+4. `Service` valida la entidad y comprueba sus claves.
+5. El modelo calcula el IRV antes de `SaveChanges`.
+6. Tras guardar, el controlador redirige al listado. Si hay errores, devuelve el formulario.
 
-Requisitos: SDK .NET 8 compatible, Visual Studio con carga ASP.NET and web development, SQL Server Express LocalDB. Para SLNX, soporte general de Visual Studio 17.14 o posterior; alternativamente abrir el csproj sin cambiar framework ni paquetes. No se comprobó la instalación del equipo del estudiante.
+## Instalación y ejecución
 
-Desde la raíz real del repositorio en PowerShell:
+### Requisitos
+
+- SDK .NET 8 compatible.
+- SQL Server Express LocalDB instalado en Windows.
+- Visual Studio con la carga **ASP.NET and web development**, si se utiliza el IDE.
+- Para abrir `.slnx`: Visual Studio 17.14 o posterior; también puede abrirse directamente `Cherkessia.csproj`.
+
+### Descargar y ejecutar
+
+Desde la raíz del repositorio, con los cambios locales previamente conservados:
 
 ```powershell
-dotnet --info
-dotnet --list-sdks
-SqlLocalDB info
+git switch main
+git pull --ff-only origin main
 SqlLocalDB start MSSQLLocalDB
 dotnet restore classes/class-08/Cherkessia/Cherkessia.csproj
 dotnet build classes/class-08/Cherkessia/Cherkessia.csproj --configuration Release
 dotnet run --project classes/class-08/Cherkessia/Cherkessia.csproj --launch-profile http
 ```
 
-Abrir `http://localhost:5280`, `/Instrumento`, `/Volcan`, `/Home/Privacy` y `/Home/Error`. Registrar primero un instrumento y después un volcán. La primera consulta de datos aplica las migraciones automáticas de EF6 con la conexión de appsettings. No ejecutar Enable-Migrations de nuevo ni comandos `dotnet ef` (corresponden a EF Core).
+Abrir **http://localhost:5280**. Registrar primero un instrumento y después un volcán.
 
-Visual Studio: abrir Cherkessia.slnx o csproj, seleccionar Cherkessia como proyecto de inicio, restaurar NuGet, compilar y ejecutar perfil http. Si se usa HTTPS, confiar el certificado de desarrollo con `dotnet dev-certs https --trust`.
+| Página | Ruta |
+| --- | --- |
+| Inicio | `/` |
+| Instrumentos | `/Instrumento` |
+| Volcanes | `/Volcan` |
+| Privacidad | `/Home/Privacy` |
+| Error | `/Home/Error` |
 
-Alternativa manual para migraciones: Package Manager Console, proyecto predeterminado Cherkessia:
+En Visual Studio, abrir `classes/class-08/Cherkessia/Cherkessia.slnx` o el `.csproj`, seleccionar Cherkessia como proyecto de inicio y ejecutar el perfil `http`. El perfil `https` utiliza el puerto 7280; para confiar el certificado de desarrollo:
+
+```powershell
+dotnet dev-certs https --trust
+```
+
+### Conexión y migraciones
+
+`appsettings.json` define la conexión `BloggingDatabase`:
+
+```text
+Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Cherkessia;Integrated Security=True;
+```
+
+`Service` recibe la conexión mediante `IConfiguration`. También puede sobrescribirse con la variable de entorno `ConnectionStrings__BloggingDatabase`.
+
+La primera consulta a la base de datos ejecuta las migraciones automáticas de EF6. La pérdida automática de datos está deshabilitada. Como alternativa, desde Package Manager Console de Visual Studio, con Cherkessia como proyecto predeterminado:
 
 ```powershell
 Update-Database -ConfigurationTypeName Cherkessia.Migrations.Configuration -ConnectionString "Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Cherkessia;Integrated Security=True;" -ConnectionProviderName "System.Data.SqlClient" -Verbose
 ```
 
-No se afirma que ese comando PMC haya sido probado en el equipo del estudiante. La inicialización automática es el mismo mecanismo base utilizado en Class 06. No habilitar pérdida automática de datos. La cadena usa autenticación integrada, sin contraseñas; `ConnectionStrings__BloggingDatabase` permite sustituirla por configuración del entorno sin editar código.
+Las migraciones ya están configuradas; no es necesario ejecutar `Enable-Migrations`. Los comandos `dotnet ef` corresponden a EF Core, no al ORM de este proyecto.
 
-Verificar en SQL Server Object Explorer, conexión `(localdb)\MSSQLLocalDB`:
+En SQL Server Object Explorer, conectar a `(localdb)\MSSQLLocalDB` y revisar:
 
 ```sql
 USE Cherkessia;
-SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE';
 SELECT Codigo, Nombre, FechaRegistro, Precio, Garantia FROM dbo.Instrumentos;
 SELECT Nombre, Provincia, Activo, Gases, InstrumentoCodigo, IRV FROM dbo.Volcanes;
 ```
 
-## WSL, Git y sincronización
+### Trabajo desde WSL
 
-LocalDB funciona en Windows, no nativamente en WSL. WSL puede editar y compilar con SDK compatible; ejecución y pruebas de esta conexión se realizan en Windows. No se sustituyó LocalDB por SQLite ni otro motor. Si WSL abre `/mnt/c/...` sobre la misma carpeta, puede trabajar sobre la misma copia; dos clones separados requieren sincronización mediante Git.
+WSL permite editar y compilar el proyecto con un SDK compatible. La ejecución con la conexión LocalDB se realiza en Windows.
 
-En cada copia, desde su carpeta real:
+Una carpeta de Windows como `C:\GitHub\programming-ii` se accede desde WSL mediante `/mnt/c/GitHub/programming-ii`. Si ambos entornos usan esa carpeta, comparten los archivos. Para comprobar la ubicación y el estado:
 
-```text
-git rev-parse --show-toplevel
+```bash
+pwd
+wslpath -w "$PWD"
 git branch --show-current
-git remote -v
-git rev-parse HEAD
 git status --short
-git diff -- classes/class-05 classes/class-06 classes/class-08
-git diff --cached -- classes/class-05 classes/class-06 classes/class-08
 ```
 
-En WSL: `pwd` y `wslpath -w "$PWD"`. En PowerShell: `Get-Location`, `wsl --list --verbose`, `dotnet --info`, `SqlLocalDB info`. En Visual Studio: Help → About. No se inventan rutas locales del usuario.
+Si se utilizan clones separados, sincronizar mediante commits y `git pull --ff-only`; no copiar `bin/`, `obj/` ni los archivos de la base de datos como código fuente.
 
-Para traer la rama después de revisar y conservar cambios locales:
+## Pruebas
 
-```text
-git fetch origin
-git switch --track origin/class-8-cherkessia
-```
-
-Si la rama ya existe localmente: `git switch class-8-cherkessia`, revisar `git status`, luego `git merge --ff-only origin/class-8-cherkessia` solo con árbol limpio. Si diverge, revisar en lugar de forzar. No usar reset --hard, clean ni copiar sobre trabajo existente. Comparar HEAD y estado: mismo commit no basta si hay modificaciones locales. No sincronizar bin/obj o MDF/LDF como código fuente.
-
-## Pruebas y revisión
+Desde la raíz del repositorio:
 
 ```powershell
 dotnet run --project classes/class-08/Verification/Verification.csproj --configuration Release
 python classes/class-08/Verification/http_checks.py
 ```
 
-El segundo comando requiere Windows, LocalDB y build Release previo. Crea una base aislada `Cherkessia_Verification_<uuid>`; nunca usa Zara ni la base normal de la aplicación. Reinicia la aplicación para verificar persistencia y deja esa base de prueba para inspección local. En GitHub Actions desaparece con la VM. El log se guarda en Verification/http-server.log (ignorado por Git).
+Las pruebas HTTP requieren Windows, LocalDB, Python y una compilación Release previa. Crean una base aislada `Cherkessia_Verification_<uuid>`, reinician la aplicación para comprobar persistencia y generan `Verification/http-server.log`. La base de prueba queda disponible para inspección local; en GitHub Actions desaparece con la máquina de ejecución.
 
-Resultados locales comprobados: **152 verificaciones del dominio aprobadas**, ejecutadas compilando los dos modelos reales y Verification/Program.cs con Roslyn del SDK 8.0.427 y runtime 8.0.33. Incluyen 48 combinaciones de IRV, límites de garantía, aniversarios y año bisiesto, catálogos y entradas inválidas. No equivalen a pruebas de SQL ni MVC. La CLI local y MSBuild fallaron al consultar información de procesos del entorno; no se atribuye ese fallo al proyecto. La compilación completa y las pruebas Windows se ejecutaron posteriormente en GitHub Actions con los resultados siguientes.
+### Resultados verificados
 
-### Resultado de integración confirmado
+[Ver ejecución en GitHub Actions](https://github.com/eng-djc/programming-ii/actions/runs/41258618033).
 
-[GitHub Actions — ejecución 41258618033](https://github.com/eng-djc/programming-ii/actions/runs/41258618033), 31 de octubre de 2026, 18:53 Costa Rica. Código evaluado: commit de rama `58042c50daf50c71106d943447e692679bc72e36`, mediante el merge de prueba del PR `ef0387c685ed06b60756b6078b033761a7a868b1`. La actualización posterior de este README no cambia código, dependencias ni pruebas.
-
-| Comprobación | Resultado observado |
+| Verificación | Resultado |
 | --- | --- |
-| Runner | Windows Server 2025; imagen windows-2025-vs2026; setup-dotnet confirmó SDK 8.0.427 instalado |
-| Restore/build Release, incluido Razor | Correcto; 0 Warning(s), 0 Error(s) |
+| Compilación Release, incluido Razor | 0 errores y 0 advertencias |
 | Reglas del dominio | 152 comprobaciones aprobadas |
-| HTTP y SQL Server LocalDB | 83 comprobaciones aprobadas; son aserciones, no 83 escenarios distintos |
-| Persistencia | Volcán e IRV conservados después de terminar y reiniciar la aplicación |
-| Entradas inválidas | Garantía fuera de rango, provincia falsa y FK inexistente rechazadas sin insertar |
-| Identidad | Duplicados rechazados; modificaciones de PK entre URL y formulario devuelven 400 |
-| Integridad del cálculo | IRV enviado por cliente ignorado; mínimo 1 y recálculo 5 comprobados contra detalles persistidos |
-| Borrado | GET no elimina; POST confirmado elimina volcán y conserva instrumento; ruta de borrar instrumento ausente |
-| Antiforgery | Crear/eliminar sin token devuelve 400 |
-| Rutas y HTML | Home, Privacy, Error y páginas del flujo responden; sin script, eventos JS o URLs javascript: en HTML examinado |
+| HTTP y LocalDB | 83 comprobaciones aprobadas |
+| Persistencia | Registros e IRV conservados tras reiniciar |
+| Validaciones | Entradas inválidas, duplicados y FK inexistentes rechazados |
+| Claves primarias | Intentos de cambiarlas desde el formulario rechazados |
+| Antifalsificación | Solicitudes de creación y eliminación sin token rechazadas |
+| Eliminación | GET conserva el registro; POST elimina el volcán y conserva el instrumento |
+| Páginas | Home, Privacy, Error y páginas del flujo accesibles |
+| Interfaz sin JavaScript | Archivos y HTML examinado sin scripts ni eventos ejecutables |
 
-El workflow ejecuta Node internamente para checkout/setup; eso no es una dependencia JavaScript de la aplicación. Las advertencias de deprecación de esas acciones no fueron advertencias de compilación del proyecto. El comando Package Manager Console, la inspección visual y la instalación/sincronización del equipo del estudiante siguen pendientes.
+Estos resultados corresponden a Windows Server 2025 en GitHub Actions. La ejecución desde Visual Studio, el comando manual de Package Manager Console y la revisión visual requieren comprobación en el equipo donde se instale.
 
-| Criterio | Evidencia | Resultado actual | Corrección o pendiente |
-| --- | --- | --- | --- |
-| Requisitos y guía | Secciones anteriores; guía única confirmada | Cumple | Sin ponderación ni nota inventada |
-| Reglas y límites de cálculo | Models y Verification/Program.cs, 152 checks | Cumple | Rango Muy Bajo 1–2 documentado como ajuste derivado |
-| MVC y dependencias de originales | csproj, Program, Controllers/Models/Services/Views | Cumple | No EF Core ni capas adicionales |
-| Validación y antiforgery | POST, Bind, ModelState, IValidatableObject, validación de Service | Cumple | Inspección del código; pruebas HTTP por separado |
-| Ausencia de JS | Inspección de archivos y HTML de las páginas probadas en CI | Cumple | Sin scripts/eventos ejecutables ni bibliotecas JS en la aplicación |
-| Home/Privacy/Error | HomeController, Views y respuestas HTTP 200 en CI | Cumple | Sin verificación visual del navegador del estudiante |
-| PK/FK y CRUD persistente | Service y http_checks.py; CI con 83 checks HTTP/integración aprobados | Cumple | Verificado en Windows de CI; no en el equipo del estudiante |
-| Compilación completa y Razor | Workflow class-08.yml; build Release con 0 errores y 0 advertencias | Cumple | Verificado en Windows de CI |
-| Class 05/06 sin cambios | Diff con commit base | Cumple | Solo se añade Class 08 y su workflow |
-| Windows/WSL/Visual Studio del estudiante | Sin acceso al equipo | No verificado | Ejecutar diagnóstico y sincronización anteriores |
+## Consideraciones de uso
 
-No se declara cumplimiento total ni funcionamiento en el equipo del estudiante. Fuentes técnicas: [LocalDB](https://learn.microsoft.com/sql/database-engine/configure-windows/sql-server-express-localdb), [SLNX](https://devblogs.microsoft.com/dotnet/introducing-slnx-support-dotnet-cli/). Versiones y comportamientos originales se fundamentan en los archivos del commit indicado, no en documentación genérica.
+- La fecha y zona horaria del servidor determinan la antigüedad.
+- El IRV se actualiza al guardar el volcán, no automáticamente al cambiar un instrumento.
+- Las ediciones no incorporan control de concurrencia optimista: prevalece el último guardado.
+- La aplicación no incluye autenticación ni perfiles de usuario.
