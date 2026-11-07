@@ -9,6 +9,7 @@ namespace ParanormalAgency.Controllers
     {
         private readonly Service service = new Service();
 
+        // Obtiene las investigaciones y las muestra en la lista principal.
         [HttpGet]
         public IActionResult Index()
         {
@@ -16,9 +17,11 @@ namespace ParanormalAgency.Controllers
             catch (Exception) { return DatabaseError(); }
         }
 
+        // Abre el formulario para registrar una investigación.
         [HttpGet]
         public IActionResult Create() => View(new Investigation());
 
+        // Valida el formulario y guarda una nueva investigación.
         [HttpPost, ValidateAntiForgeryToken]
         public IActionResult Create([Bind("CaseName,ClientName,PhenomenonType,RiskLevel,BaseBudget,RequiresSpecializedEquipment,InvestigationDate")] Investigation item)
         {
@@ -31,6 +34,7 @@ namespace ParanormalAgency.Controllers
             return View(item);
         }
 
+        // Busca una investigación y carga sus datos para editarlos.
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -39,6 +43,7 @@ namespace ParanormalAgency.Controllers
             catch (Exception) { return DatabaseError(); }
         }
 
+        // Valida los cambios y actualiza la investigación seleccionada.
         [HttpPost, ValidateAntiForgeryToken]
         public IActionResult Edit(int id, [Bind("Id,CaseName,ClientName,PhenomenonType,RiskLevel,BaseBudget,RequiresSpecializedEquipment,InvestigationDate")] Investigation item)
         {
@@ -56,6 +61,7 @@ namespace ParanormalAgency.Controllers
             return View(item);
         }
 
+        // Muestra los datos de la investigación antes de confirmar su eliminación.
         [HttpGet]
         public IActionResult Delete(int id)
         {
@@ -64,6 +70,7 @@ namespace ParanormalAgency.Controllers
             catch (Exception) { return DatabaseError(); }
         }
 
+        // Confirma la eliminación y regresa a la lista de investigaciones.
         [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
@@ -75,12 +82,14 @@ namespace ParanormalAgency.Controllers
         [HttpGet]
         public IActionResult Error() => View("Error");
 
+        // Devuelve la vista de error cuando falla el acceso a los datos.
         private IActionResult DatabaseError()
         {
             Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
             return View("Error");
         }
 
+        // Libera la conexión del servicio al finalizar la solicitud.
         protected override void Dispose(bool disposing)
         {
             if (disposing) service.Dispose();
