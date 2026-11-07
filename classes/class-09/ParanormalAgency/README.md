@@ -87,7 +87,7 @@ El equipo especializado agrega 20% del presupuesto base cuando se selecciona Sí
 | ID | Requerimiento | Historia de usuario | Criterio de aceptación |
 |---|---|---|---|
 | RF-01 | Registrar investigaciones: Registrar un caso con todos los campos obligatorios | Como operador, quiero registrar un caso con todos los campos obligatorios para administrar correctamente los casos. | El registro se almacena y aparece en Index |
-| RF-02 | Identificar caso y cliente: Capturar los nombres del caso y del cliente | Como operador, quiero capturar los nombres del caso y del cliente para administrar correctamente los casos. | Ambos campos son obligatorios |
+| RF-02 | Identificar caso y cliente: Capturar los nombres del caso y del cliente | Como operador, quiero capturar nombres legibles para identificar correctamente los expedientes y clientes. | Ambos obligatorios; caso máximo 60 caracteres (letras, números, espacios, guiones); cliente máximo 80 (letras, espacios, guiones, sin números) |
 | RF-03 | Seleccionar fenómeno: Elegir uno de los cuatro fenómenos oficiales | Como operador, quiero elegir uno de los cuatro fenómenos oficiales para administrar correctamente los casos. | Radio de selección única |
 | RF-04 | Seleccionar riesgo: Elegir Bajo, Medio, Alto o Crítico | Como operador, quiero elegir bajo, medio, alto o crítico para administrar correctamente los casos. | Lista desplegable obligatoria |
 | RF-05 | Presupuesto y equipo: Indicar presupuesto en USD y equipo especializado | Como operador, quiero indicar presupuesto en usd y equipo especializado para administrar correctamente los casos. | Número no negativo y radio Sí/No |
@@ -96,7 +96,7 @@ El equipo especializado agrega 20% del presupuesto base cuando se selecciona Sí
 | RF-08 | Listado: Consultar todos los casos y sus datos | Como operador, quiero consultar todos los casos y sus datos para administrar correctamente los casos. | Index muestra todos los campos y costo |
 | RF-09 | Edición: Actualizar un caso existente | Como operador, quiero actualizar un caso existente para administrar correctamente los casos. | Edit precarga datos y recalcula costo |
 | RF-10 | Eliminación: Retirar un caso existente | Como operador, quiero retirar un caso existente para administrar correctamente los casos. | Delete solicita confirmación y elimina por POST |
-| RF-11 | Validación: Evitar guardar formularios incompletos | Como operador, quiero evitar guardar formularios incompletos para administrar correctamente los casos. | Mensajes de error en español |
+| RF-11 | Validación: Evitar guardar formularios incompletos | Como operador, quiero impedir nombres inválidos y datos incompletos para mantener registros confiables. | Validación HTML5 y DataAnnotations del servidor, mensajes propios en español; rechazar caracteres no permitidos y exceso de longitud |
 | RF-12 | Navegación: Moverse entre operaciones | Como operador, quiero moverse entre operaciones para administrar correctamente los casos. | Enlaces de retorno y menú funcional |
 
 ## Requerimientos no funcionales
@@ -214,6 +214,17 @@ erDiagram
 | Defensa oral | No realizada | Pendiente |
 
 **Nota de integridad:** las pruebas de validación HTML5 no prueban por sí mismas la validación del servidor. La captura del rechazo de `-3` sí muestra un error devuelto en la respuesta del formulario. No se asigna puntaje definitivo a los criterios de la defensa.
+
+## Control de calidad de nombres — 07/11/2026
+
+**Justificación y alcance:** el examen exige nombres del caso y del cliente y campos obligatorios, pero no define límites ni un alfabeto. Se adoptan como criterios de calidad adicionales para RF-02 y RF-11, sin alterar el diseño Class 08, la fórmula de costos ni la arquitectura MVC.
+
+| Campo | Restricción HTML5 | Validación en servidor | Prueba de aceptación |
+|---|---|---|---|
+| Caso | `maxlength=60`, `pattern` | `StringLength(60)` y `RegularExpression` Unicode | Aceptar «Casa embrujada 2 - Cartago»; rechazar 61 caracteres, `@` y `_` |
+| Cliente | `maxlength=80`, `pattern` | `StringLength(80)` y `RegularExpression` Unicode | Aceptar «María Solórzano» y «Ana-María»; rechazar «Juan123», `@` y 81 caracteres |
+
+**Sin JavaScript:** la interfaz utiliza validación nativa HTML5; el servidor repite las reglas mediante DataAnnotations para evitar eludirlas manipulando el HTML. Los mensajes propios son españoles; los globos nativos dependen del idioma del navegador. La restricción de longitud también se refleja en el mapeo EF6: verificar el impacto de migración sobre datos preexistentes antes de aplicar cambios de esquema. Las pruebas indicadas siguen pendientes de ejecución en Visual Studio/LocalDB.
 
 ## Configuración y ejecución
 
