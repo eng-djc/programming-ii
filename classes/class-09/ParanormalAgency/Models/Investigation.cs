@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ParanormalAgency.Models
 {
+    // Representa una investigación paranormal y calcula su costo.
     public class Investigation : IValidatableObject
     {
         private int id;
@@ -21,6 +22,7 @@ namespace ParanormalAgency.Models
         // Constructor vacío para cargar registros y enlazar datos del formulario.
         public Investigation() { }
 
+        // Inicializa una investigación con sus datos y calcula el costo inicial.
         public Investigation(string caseName, string clientName, string phenomenonType, string riskLevel, decimal baseBudget, bool requiresSpecializedEquipment, DateTime investigationDate)
         {
             CaseName = caseName;
@@ -37,7 +39,6 @@ namespace ParanormalAgency.Models
         public int Id { get => id; set => id = value; }
 
         [Required(ErrorMessage = "Ingrese el nombre del caso.")]
-        // La columna admite 60 caracteres; el formulario limita los nombres a 50.
         [StringLength(60, ErrorMessage = "El nombre del caso admite máximo 60 caracteres.")]
         [RegularExpression(@"^[\p{L}\p{M}0-9]+(?:[ \-]*[\p{L}\p{M}0-9]+)*$", ErrorMessage = "Use letras, números, espacios o guiones en el nombre del caso.")]
         [Display(Name = "Nombre del caso")]
@@ -72,10 +73,11 @@ namespace ParanormalAgency.Models
         [Display(Name = "Fecha de investigación")]
         public DateTime? InvestigationDate { get => investigationDate; set => investigationDate = value; }
 
-        // El costo total se obtiene mediante CalculateTotalCost().
+        // Conserva el costo calculado sin permitir su edición directa.
         [Display(Name = "Costo total (USD)")]
         public decimal TotalCost { get => totalCost; private set => totalCost = value; }
 
+        // Comprueba las opciones válidas, las longitudes y los formatos de los datos.
         public IEnumerable<ValidationResult> Validate(ValidationContext context)
         {
             if (!PhenomenonTypes.Contains(PhenomenonType))
@@ -94,7 +96,8 @@ namespace ParanormalAgency.Models
                 yield return new ValidationResult("El presupuesto admite hasta dos decimales.", new[] { nameof(BaseBudget) });
         }
 
-        // Los porcentajes del fenómeno y el equipo se aplican al presupuesto base.
+        // Calcula el costo sumando presupuesto, fenómeno, riesgo y equipo especializado.
+        // Ambos porcentajes se aplican al presupuesto base.
         public decimal CalculateTotalCost()
         {
             if (!BaseBudget.HasValue || BaseBudget.Value < 0 || !RequiresSpecializedEquipment.HasValue)
