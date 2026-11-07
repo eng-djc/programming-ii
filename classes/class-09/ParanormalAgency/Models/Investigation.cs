@@ -6,14 +6,20 @@ namespace ParanormalAgency.Models
     // Representa una investigación paranormal y calcula su costo.
     public class Investigation : IValidatableObject
     {
+        // Identificador entero que distingue cada investigación en la base de datos.
         private int id;
+        // Los textos comienzan vacíos y se completan desde el formulario.
         private string caseName = "";
         private string clientName = "";
         private string phenomenonType = "";
         private string riskLevel = "";
+        // decimal? permite detectar un presupuesto sin ingresar y conservar precisión monetaria.
         private decimal? baseBudget;
+        // bool? diferencia Sí, No y la ausencia de una selección.
         private bool? requiresSpecializedEquipment;
+        // DateTime? permite detectar una fecha pendiente; la validación descarta horas.
         private DateTime? investigationDate;
+        // decimal almacena el importe final calculado, sin admitir valores nulos.
         private decimal totalCost;
 
         public static IReadOnlyList<string> PhenomenonTypes { get; } = Array.AsReadOnly(new[] { "Aparición", "Poltergeist", "Actividad demoníaca", "Objeto maldito" });
@@ -77,21 +83,26 @@ namespace ParanormalAgency.Models
         [Display(Name = "Costo total (USD)")]
         public decimal TotalCost { get => totalCost; private set => totalCost = value; }
 
-        // Comprueba las opciones válidas, las longitudes y los formatos de los datos.
+        // Rechaza fenómenos o riesgos fuera de las opciones disponibles, casos de más de 50 caracteres,
+        // nombres vacíos, fechas con hora y presupuestos con más de dos decimales.
         public IEnumerable<ValidationResult> Validate(ValidationContext context)
         {
+            // Comprueba que las categorías correspondan a las opciones definidas por el sistema.
             if (!PhenomenonTypes.Contains(PhenomenonType))
                 yield return new ValidationResult("Seleccione un fenómeno válido.", new[] { nameof(PhenomenonType) });
             if (!RiskLevels.Contains(RiskLevel))
                 yield return new ValidationResult("Seleccione un nivel de riesgo válido.", new[] { nameof(RiskLevel) });
+            // Limita el nombre del caso a 50 caracteres y rechaza nombres vacíos.
             if (CaseName?.Length > 50)
                 yield return new ValidationResult("El nombre del caso admite máximo 50 caracteres.", new[] { nameof(CaseName) });
             if (string.IsNullOrWhiteSpace(CaseName))
                 yield return new ValidationResult("Ingrese el nombre del caso.", new[] { nameof(CaseName) });
             if (string.IsNullOrWhiteSpace(ClientName))
                 yield return new ValidationResult("Ingrese el nombre del cliente.", new[] { nameof(ClientName) });
+            // Una fecha ingresada debe representar solo el día, sin componente horario.
             if (InvestigationDate.HasValue && InvestigationDate.Value.TimeOfDay != TimeSpan.Zero)
                 yield return new ValidationResult("La fecha no debe incluir hora.", new[] { nameof(InvestigationDate) });
+            // El presupuesto monetario admite como máximo dos posiciones decimales.
             if (BaseBudget.HasValue && decimal.Round(BaseBudget.Value, 2) != BaseBudget.Value)
                 yield return new ValidationResult("El presupuesto admite hasta dos decimales.", new[] { nameof(BaseBudget) });
         }
@@ -102,6 +113,7 @@ namespace ParanormalAgency.Models
         {
             if (!BaseBudget.HasValue || BaseBudget.Value < 0 || !RequiresSpecializedEquipment.HasValue)
                 throw new ValidationException("Complete el presupuesto y la selección de equipo.");
+            // Asigna el porcentaje de recargo correspondiente al fenómeno.
             decimal phenomenonRate = PhenomenonType switch
             {
                 "Aparición" => 0.15m,
@@ -110,6 +122,7 @@ namespace ParanormalAgency.Models
                 "Objeto maldito" => 0.30m,
                 _ => throw new ValidationException("Seleccione un fenómeno válido.")
             };
+            // El riesgo agrega un monto fijo, no un porcentaje.
             decimal riskAmount = RiskLevel switch
             {
                 "Bajo" => 500m,
@@ -118,10 +131,12 @@ namespace ParanormalAgency.Models
                 "Crítico" => 4000m,
                 _ => throw new ValidationException("Seleccione un nivel de riesgo válido.")
             };
+            // Los dos recargos porcentuales se calculan sobre el mismo presupuesto original.
             decimal budget = BaseBudget.Value;
             decimal phenomenonCost = budget * phenomenonRate;
             decimal equipmentCost = RequiresSpecializedEquipment.Value ? budget * 0.20m : 0m;
             decimal total = budget + phenomenonCost + riskAmount + equipmentCost;
+            // Guarda el total con dos decimales y devuelve el importe calculado.
             TotalCost = decimal.Round(total, 2, MidpointRounding.AwayFromZero);
             return TotalCost;
         }
