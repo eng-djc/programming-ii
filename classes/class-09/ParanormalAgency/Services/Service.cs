@@ -7,6 +7,7 @@ namespace ParanormalAgency.Services
 {
     public class Service : DbContext
     {
+        // Configura la actualización del esquema de la base de datos mediante EF6.
         static Service()
         {
             System.Data.Entity.Database.SetInitializer(
@@ -15,6 +16,7 @@ namespace ParanormalAgency.Services
 
         public Service() : base(GetConnection()) { }
 
+        // Obtiene la conexión configurada o utiliza SQL Server LocalDB.
         private static string GetConnection()
         {
             var config = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory)
@@ -25,6 +27,7 @@ namespace ParanormalAgency.Services
 
         public DbSet<Investigation> Investigations { get; set; } = null!;
 
+        // Asocia las investigaciones con su tabla y define la precisión monetaria.
         protected override void OnModelCreating(DbModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -33,18 +36,21 @@ namespace ParanormalAgency.Services
             builder.Entity<Investigation>().Property(x => x.TotalCost).HasPrecision(18, 2);
         }
 
+        // Recupera las investigaciones ordenadas por identificador.
         public List<Investigation> GetInvestigations() => Investigations.OrderBy(x => x.Id).ToList();
+        // Busca una investigación por su identificador.
         public Investigation? FindInvestigation(int id) => Investigations.Find(id);
 
+        // Valida los datos y calcula el costo antes de guardar.
         private static void ValidateInvestigation(Investigation item)
         {
             Validator.ValidateObject(item, new ValidationContext(item), validateAllProperties: true);
-            // Verifica las reglas de los campos antes de calcular el costo.
             var errors = item.Validate(new ValidationContext(item)).ToList();
             if (errors.Count > 0) throw new ValidationException(errors[0].ErrorMessage);
             item.CalculateTotalCost();
         }
 
+        // Registra una investigación en la base de datos.
         public void AddInvestigation(Investigation item)
         {
             ValidateInvestigation(item);
@@ -52,6 +58,7 @@ namespace ParanormalAgency.Services
             SaveChanges();
         }
 
+        // Actualiza los datos y el costo de una investigación existente.
         public bool UpdateInvestigation(Investigation item)
         {
             ValidateInvestigation(item);
@@ -69,6 +76,7 @@ namespace ParanormalAgency.Services
             return true;
         }
 
+        // Elimina una investigación existente por su identificador.
         public bool DeleteInvestigation(int id)
         {
             var item = FindInvestigation(id);
