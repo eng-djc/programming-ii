@@ -38,7 +38,7 @@ namespace ParanormalAgency.Models
 
         [Required(ErrorMessage = "Ingrese el nombre del caso.")]
         [StringLength(60, ErrorMessage = "El nombre del caso admite máximo 50 caracteres.")]
-        [RegularExpression(@"^[\p{L}\p{M}0-9]+(?:[ \-][\p{L}\p{M}0-9]+)*$", ErrorMessage = "Use letras, números, espacios o guiones en el nombre del caso.")]
+        [RegularExpression(@"^[\p{L}\p{M}0-9]+(?:[ \-]*[\p{L}\p{M}0-9]+)*$", ErrorMessage = "Use letras, números, espacios o guiones en el nombre del caso.")]
         [Display(Name = "Nombre del caso")]
         public string CaseName { get => caseName; set => caseName = value; }
 
