@@ -1,11 +1,11 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// Registra los controladores y las vistas MVC.
+// Habilita los controladores y las vistas Razor.
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Configura la página de error y HTTPS cuando no se ejecuta en desarrollo.
+// Muestra una página de error y habilita HSTS fuera del entorno de desarrollo.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Investigation/Error");
@@ -19,6 +19,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+// Abre la lista de investigaciones como página principal.
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Investigation}/{action=Index}/{id?}");
