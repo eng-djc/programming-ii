@@ -1,13 +1,10 @@
 @model Investigation
-@{ ViewData["Title"] = "Registrar caso"; }
-<div class="mx-auto" style="max-width:540px">
-<h2>Registro de nuevo caso</h2>
-<p>Complete la información para iniciar la investigación.</p>
-<form asp-action="Create" method="post">
+@{ ViewData["Title"] = "Agregar investigación"; }
+<h2>Agregar investigación</h2>
+<form asp-controller="Investigation" asp-action="Create" method="post">
     @Html.AntiForgeryToken()
     <partial name="_Form" model="Model" />
-    <button type="submit" class="btn btn-primary">Guardar caso</button>
+    <button type="submit" class="btn btn-primary">Guardar</button>
     <button type="reset" class="btn btn-secondary">Restablecer</button>
-    <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
 </form>
-</div>
