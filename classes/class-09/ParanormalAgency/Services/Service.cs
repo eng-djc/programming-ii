@@ -39,8 +39,7 @@ namespace ParanormalAgency.Services
         private static void ValidateInvestigation(Investigation item)
         {
             Validator.ValidateObject(item, new ValidationContext(item), validateAllProperties: true);
-            // Validator.ValidateObject no ejecuta IValidatableObject en todos los escenarios
-            // con propiedades inválidas; se validan explícitamente sus reglas cruzadas.
+            // Verifica las reglas de los campos antes de calcular el costo.
             var errors = item.Validate(new ValidationContext(item)).ToList();
             if (errors.Count > 0) throw new ValidationException(errors[0].ErrorMessage);
             item.CalculateTotalCost();
