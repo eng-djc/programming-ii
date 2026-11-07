@@ -7,7 +7,8 @@ namespace ParanormalAgency.Services
 {
     public class Service : DbContext
     {
-        // Configura la actualización del esquema de la base de datos mediante EF6.
+        // Configura las migraciones de EF6 (Entity Framework 6) para actualizar
+        // la estructura de la base de datos según el modelo.
         static Service()
         {
             System.Data.Entity.Database.SetInitializer(
