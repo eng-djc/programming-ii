@@ -1,0 +1,47 @@
+@model Investigation
+<div asp-validation-summary="All" class="text-danger"></div>
+<div class="mb-3">
+    <label asp-for="CaseName" class="form-label"></label>
+    <input asp-for="CaseName" class="form-control" maxlength="60" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9]+([ -][A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9]+)*" title="Use letras, números, espacios o guiones (máximo 60 caracteres)." required />
+    <span asp-validation-for="CaseName" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label asp-for="ClientName" class="form-label"></label>
+    <input asp-for="ClientName" class="form-control" maxlength="80" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+([ -][A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)*" title="Use solo letras, espacios o guiones (máximo 80 caracteres)." required />
+    <span asp-validation-for="ClientName" class="text-danger"></span>
+</div>
+<fieldset class="mb-3">
+    <legend class="fs-6">Tipo de fenómeno:</legend>
+    @foreach (var type in Investigation.PhenomenonTypes)
+    {
+        <div class="form-check">
+            <input class="form-check-input" type="radio" asp-for="PhenomenonType" value="@type" id="phenomenon-@type.Replace(" ", "-")" required />
+            <label class="form-check-label" for="phenomenon-@type.Replace(" ", "-")">@type</label>
+        </div>
+    }
+    <span asp-validation-for="PhenomenonType" class="text-danger"></span>
+</fieldset>
+<div class="mb-3">
+    <label asp-for="RiskLevel" class="form-label"></label>
+    <select asp-for="RiskLevel" class="form-select" required>
+        <option value="">Seleccione una opción</option>
+        @foreach (var level in Investigation.RiskLevels) { <option value="@level">@level</option> }
+    </select>
+    <span asp-validation-for="RiskLevel" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label asp-for="BaseBudget" class="form-label"></label>
+    <input asp-for="BaseBudget" type="number" min="0" step="0.01" class="form-control" required />
+    <span asp-validation-for="BaseBudget" class="text-danger"></span>
+</div>
+<fieldset class="mb-3">
+    <legend class="fs-6">Requiere equipo especializado:</legend>
+    <div class="form-check"><input asp-for="RequiresSpecializedEquipment" type="radio" value="true" id="equipment-yes" class="form-check-input" required /><label for="equipment-yes" class="form-check-label">Sí</label></div>
+    <div class="form-check"><input asp-for="RequiresSpecializedEquipment" type="radio" value="false" id="equipment-no" class="form-check-input" required /><label for="equipment-no" class="form-check-label">No</label></div>
+    <span asp-validation-for="RequiresSpecializedEquipment" class="text-danger"></span>
+</fieldset>
+<div class="mb-3">
+    <label asp-for="InvestigationDate" class="form-label"></label>
+    <input asp-for="InvestigationDate" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" required />
+    <span asp-validation-for="InvestigationDate" class="text-danger"></span>
+</div>

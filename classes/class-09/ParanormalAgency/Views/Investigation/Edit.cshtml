@@ -1,0 +1,11 @@
+@model Investigation
+@{ ViewData["Title"] = "Editar investigación"; }
+<h2>Editar investigación</h2>
+<form asp-controller="Investigation" asp-action="Edit" asp-route-id="@Model.Id" method="post">
+    @Html.AntiForgeryToken()
+    <input asp-for="Id" type="hidden" />
+    <partial name="_Form" model="Model" />
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+    <button type="reset" class="btn btn-secondary">Restablecer</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
