@@ -1,0 +1,194 @@
+# ParanormalAgency — Examen Semana 09
+
+## Enunciado
+
+Una agencia de investigaciones paranormales requiere una aplicación web para registrar, consultar, actualizar y eliminar investigaciones. Cada caso incluye nombre del caso, cliente, tipo de fenómeno (Aparición, Poltergeist, Actividad demoníaca u Objeto maldito), riesgo (Bajo, Medio, Alto o Crítico), presupuesto base en USD, necesidad de equipo especializado y fecha de investigación. El sistema calcula y muestra el costo total.
+
+**Costo total = presupuesto base + incremento por fenómeno + adicional por riesgo + incremento por equipo especializado.**
+
+| Fenómeno | Incremento |
+|---|---:|
+| Aparición | 15% del presupuesto base |
+| Poltergeist | 25% |
+| Actividad demoníaca | 45% |
+| Objeto maldito | 30% |
+
+| Riesgo | Adicional USD |
+|---|---:|
+| Bajo | 500 |
+| Medio | 1.000 |
+| Alto | 2.000 |
+| Crítico | 4.000 |
+
+El equipo especializado agrega 20% del presupuesto base cuando se selecciona Sí. El cálculo se ejecuta en el modelo al crear y editar.
+
+## Rúbrica — Distribución del puntaje
+
+| Criterio | Puntos | Subcriterios oficiales | Evidencia |
+|---|---:|---|---|
+| Clase lógica | 5 | Atributos; constructores; propiedades | Models/Investigation.cs |
+| Cálculos matemáticos | 5 | Calcular costo en clase lógica; mostrar costo | Investigation.CalculateTotalCost; Views/Investigation/Index.cshtml |
+| Controlador | 10 | Index; Create; Delete; Edit | Controllers/InvestigationController.cs |
+| Vistas | 10 | Mostrar; validaciones; etiquetas; submit/reset; precarga | Views/Investigation/ |
+| Base de datos / Service | 10 | Agregar; mostrar; eliminar; actualizar | Services/Service.cs |
+| Aspectos varios | 5 | Navegación; formato; español; quitar Home/Privacy | Views/Shared/_Layout.cshtml; Program.cs |
+| Defensa | 55 | Dominio del tema; responder preguntas | Pendiente de defensa |
+| **Total** | **100** | | |
+
+## Notas importantes — Criterios de aceptación
+
+| ID | Condición oficial | Estado |
+|---|---|---|
+| NI-01 | Create y Edit con igual estructura y distribución visual, controles correctos y submit/reset | Pendiente de validación de ejecución y/o revisión visual |
+| NI-02 | Fecha de investigación sin hora | Pendiente de validación de ejecución y/o revisión visual |
+| NI-03 | Todos los campos obligatorios y formulario acorde a la imagen | Pendiente de validación de ejecución y/o revisión visual |
+| NI-04 | Registrar, mostrar todos los datos, editar y eliminar | Pendiente de validación de ejecución y/o revisión visual |
+| NI-05 | Calcular costo al crear y editar | Pendiente de validación de ejecución y/o revisión visual |
+| NI-06 | Cálculo dentro de la clase lógica | Pendiente de validación de ejecución y/o revisión visual |
+| NI-07 | Navegación correcta | Pendiente de validación de ejecución y/o revisión visual |
+| NI-08 | Eliminar Home y Privacy | Pendiente de validación de ejecución y/o revisión visual |
+| NI-09 | Aplicación completamente en español | Pendiente de validación de ejecución y/o revisión visual |
+
+## Requerimientos funcionales
+
+| ID | Requerimiento | Historia de usuario | Criterio de aceptación |
+|---|---|---|---|
+| RF-01 | Registrar investigaciones: Registrar un caso con todos los campos obligatorios | Como operador, quiero registrar un caso con todos los campos obligatorios para administrar correctamente los casos. | El registro se almacena y aparece en Index |
+| RF-02 | Identificar caso y cliente: Capturar los nombres del caso y del cliente | Como operador, quiero capturar los nombres del caso y del cliente para administrar correctamente los casos. | Ambos campos son obligatorios |
+| RF-03 | Seleccionar fenómeno: Elegir uno de los cuatro fenómenos oficiales | Como operador, quiero elegir uno de los cuatro fenómenos oficiales para administrar correctamente los casos. | Radio de selección única |
+| RF-04 | Seleccionar riesgo: Elegir Bajo, Medio, Alto o Crítico | Como operador, quiero elegir bajo, medio, alto o crítico para administrar correctamente los casos. | Lista desplegable obligatoria |
+| RF-05 | Presupuesto y equipo: Indicar presupuesto en USD y equipo especializado | Como operador, quiero indicar presupuesto en usd y equipo especializado para administrar correctamente los casos. | Número no negativo y radio Sí/No |
+| RF-06 | Fecha de investigación: Seleccionar la fecha del caso | Como operador, quiero seleccionar la fecha del caso para administrar correctamente los casos. | Campo date sin hora |
+| RF-07 | Costo total: Calcular automáticamente el costo final | Como operador, quiero calcular automáticamente el costo final para administrar correctamente los casos. | Fórmula del PDF implementada en Model |
+| RF-08 | Listado: Consultar todos los casos y sus datos | Como operador, quiero consultar todos los casos y sus datos para administrar correctamente los casos. | Index muestra todos los campos y costo |
+| RF-09 | Edición: Actualizar un caso existente | Como operador, quiero actualizar un caso existente para administrar correctamente los casos. | Edit precarga datos y recalcula costo |
+| RF-10 | Eliminación: Retirar un caso existente | Como operador, quiero retirar un caso existente para administrar correctamente los casos. | Delete solicita confirmación y elimina por POST |
+| RF-11 | Validación: Evitar guardar formularios incompletos | Como operador, quiero evitar guardar formularios incompletos para administrar correctamente los casos. | Mensajes de error en español |
+| RF-12 | Navegación: Moverse entre operaciones | Como operador, quiero moverse entre operaciones para administrar correctamente los casos. | Enlaces de retorno y menú funcional |
+
+## Requerimientos no funcionales
+
+| ID | Requerimiento | Historia de usuario | Criterio de aceptación |
+|---|---|---|---|
+| RNF-01 | MVC: Separar modelo, vista y controlador | Como desarrollador, quiero separar modelo, vista y controlador para contar con una aplicación confiable y defendible. | Estructura ASP.NET Core MVC |
+| RNF-02 | Visual Studio: Abrir y ejecutar solución | Como desarrollador, quiero abrir y ejecutar solución para contar con una aplicación confiable y defendible. | Proyecto .NET 8 y archivo de solución |
+| RNF-03 | Persistencia: Conservar registros entre ejecuciones | Como desarrollador, quiero conservar registros entre ejecuciones para contar con una aplicación confiable y defendible. | EF6 6.5.2 y SQL Server LocalDB |
+| RNF-04 | Idioma: Mostrar toda la interfaz en español | Como desarrollador, quiero mostrar toda la interfaz en español para contar con una aplicación confiable y defendible. | Etiquetas, mensajes y botones en español |
+| RNF-05 | Consistencia visual: Mantener Create/Edit uniformes | Como desarrollador, quiero mantener create/edit uniformes para contar con una aplicación confiable y defendible. | Ambos comparten _Form.cshtml |
+| RNF-06 | Tecnologías: Conservar HTML, Razor y Bootstrap CSS | Como desarrollador, quiero conservar html, razor y bootstrap css para contar con una aplicación confiable y defendible. | Sin JavaScript |
+| RNF-07 | Integridad: Validar entradas antes de guardar | Como desarrollador, quiero validar entradas antes de guardar para contar con una aplicación confiable y defendible. | DataAnnotations y validación de Service |
+| RNF-08 | Precisión: Evitar errores monetarios | Como desarrollador, quiero evitar errores monetarios para contar con una aplicación confiable y defendible. | Decimal con precisión 18,2 |
+| RNF-09 | Fecha: No mostrar hora innecesaria | Como desarrollador, quiero no mostrar hora innecesaria para contar con una aplicación confiable y defendible. | Fecha dd/MM/yyyy en listado |
+| RNF-10 | Mantenibilidad: Documentar lógica crítica | Como desarrollador, quiero documentar lógica crítica para contar con una aplicación confiable y defendible. | Comentarios profesionales en español |
+| RNF-11 | Formularios seguros: Evitar cambios no previstos | Como desarrollador, quiero evitar cambios no previstos para contar con una aplicación confiable y defendible. | Antiforgery y Bind explícito |
+| RNF-12 | Fidelidad académica: Conservar convenciones de Class 08 | Como desarrollador, quiero conservar convenciones de class 08 para contar con una aplicación confiable y defendible. | Model/Service/Controller/Views y EF6 |
+
+## UML — Casos de uso
+
+```mermaid
+flowchart LR
+    Operator["Operador"]
+    subgraph System["Sistema de investigaciones"]
+      Create(["Registrar caso"])
+      Read(["Consultar casos"])
+      Edit(["Editar caso"])
+      Delete(["Eliminar caso"])
+      Validate(["Validar datos"])
+      Cost(["Calcular costo"])
+    end
+    Operator --> Create
+    Operator --> Read
+    Operator --> Edit
+    Operator --> Delete
+    Create -.-> Validate
+    Edit -.-> Validate
+    Create -.-> Cost
+    Edit -.-> Cost
+```
+
+## UML — Clases
+
+```mermaid
+classDiagram
+    class Investigation {
+      -int id
+      -string caseName
+      -string clientName
+      -string phenomenonType
+      -string riskLevel
+      -decimal? baseBudget
+      -bool? requiresSpecializedEquipment
+      -DateTime? investigationDate
+      -decimal totalCost
+      +Investigation()
+      +Investigation(caseName,clientName,phenomenonType,riskLevel,baseBudget,requiresSpecializedEquipment,investigationDate)
+      +CalculateTotalCost() decimal
+      +Validate(context) IEnumerable
+    }
+    class Service {
+      +DbSet~Investigation~ Investigations
+      +GetInvestigations() List
+      +FindInvestigation(id) Investigation
+      +AddInvestigation(item) void
+      +UpdateInvestigation(item) bool
+      +DeleteInvestigation(id) bool
+    }
+    class InvestigationController {
+      +Index() IActionResult
+      +Create() IActionResult
+      +Edit(id) IActionResult
+      +Delete(id) IActionResult
+    }
+    class DbContext
+    DbContext <|-- Service
+    Service --> Investigation : CRUD
+    InvestigationController --> Service : usa
+```
+
+## Diagrama de base de datos
+
+```mermaid
+erDiagram
+    INVESTIGATIONS {
+        int Id PK
+        nvarchar CaseName
+        nvarchar ClientName
+        nvarchar PhenomenonType
+        nvarchar RiskLevel
+        decimal BaseBudget
+        bit RequiresSpecializedEquipment
+        date InvestigationDate
+        decimal TotalCost
+    }
+```
+
+## Configuración y ejecución
+
+| Componente | Tecnología |
+|---|---|
+| Lenguaje | C# |
+| Framework | .NET 8, ASP.NET Core MVC |
+| ORM | Entity Framework 6.5.2 (no EF Core) |
+| Base de datos | SQL Server Express LocalDB |
+| UI | Razor, HTML y Bootstrap CSS; sin JavaScript |
+
+1. Abrir `ParanormalAgency.slnx` en una versión de Visual Studio compatible con soluciones SLNX y .NET 8; alternativamente abrir `ParanormalAgency.csproj`.
+2. Verificar que SQL Server LocalDB esté instalado en Windows y que la instancia `MSSQLLocalDB` exista.
+3. Verificar `ConnectionStrings:BloggingDatabase` en `appsettings.json`; la base independiente se llama `ParanormalAgency`.
+4. Restaurar paquetes NuGet y compilar.
+5. Las migraciones automáticas de EF6 están configuradas en `Migrations/Configuration.cs` y se aplican mediante el inicializador `MigrateDatabaseToLatestVersion` al utilizar el contexto.
+6. Para administrar migraciones desde Package Manager Console, utilizar los comandos **de EF6**, no los de EF Core. `Enable-Migrations` solo corresponde si aún no existe la configuración; no duplicarla. `Update-Database -Verbose` requiere confirmar que la herramienta EF6 y la configuración del proyecto sean compatibles.
+7. Ejecutar y verificar la tabla `Investigations`, CRUD y persistencia. LocalDB es una tecnología de Windows; WSL permite editar archivos pero no sustituye la prueba de integración con LocalDB en Windows.
+
+## Pruebas de aceptación
+
+| ID | Requisito | Caso | Resultado esperado | Estado |
+|---|---|---|---|---|
+| T-01 | RF-01 | Registrar caso completo | Registro persistido | No ejecutado |
+| T-02 | RF-07 | Poltergeist, Alto, USD 1000, equipo Sí | USD 3450.00 | No ejecutado |
+| T-03 | RF-09 | Editar fenómeno/riesgo | Costo recalculado | No ejecutado |
+| T-04 | RF-10 | Confirmar eliminación | Registro eliminado | No ejecutado |
+| T-05 | RF-11 | Enviar formulario incompleto | Errores en español | No ejecutado |
+| T-06 | RNF-09 | Mostrar fecha | Solo dd/MM/yyyy | No ejecutado |
+| T-07 | RNF-03 | Reiniciar aplicación | Registros conservados | No ejecutado |
+| T-08 | RNF-02 | Abrir solución en Visual Studio | Compilación y ejecución | No ejecutado |
