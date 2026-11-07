@@ -37,14 +37,14 @@ namespace ParanormalAgency.Models
         public int Id { get => id; set => id = value; }
 
         [Required(ErrorMessage = "Ingrese el nombre del caso.")]
-        [StringLength(60, ErrorMessage = "El nombre del caso admite máximo 60 caracteres.")]
+        [StringLength(60, ErrorMessage = "El nombre del caso admite máximo 50 caracteres.")]
         [RegularExpression(@"^[\p{L}\p{M}0-9]+(?:[ \-][\p{L}\p{M}0-9]+)*$", ErrorMessage = "Use letras, números, espacios o guiones en el nombre del caso.")]
         [Display(Name = "Nombre del caso")]
         public string CaseName { get => caseName; set => caseName = value; }
 
         [Required(ErrorMessage = "Ingrese el nombre del cliente.")]
         [StringLength(80, ErrorMessage = "El nombre del cliente admite máximo 80 caracteres.")]
-        [RegularExpression(@"^[\p{L}\p{M}]+(?:[ \-][\p{L}\p{M}]+)*$", ErrorMessage = "Use solo letras, espacios o guiones en el nombre del cliente.")]
+        [RegularExpression(@"^[\p{L}\p{M}]+(?: [\p{L}\p{M}]+)*$", ErrorMessage = "Use solo letras y espacios en el nombre del cliente.")]
         [Display(Name = "Nombre del cliente")]
         public string ClientName { get => clientName; set => clientName = value; }
 
@@ -81,6 +81,8 @@ namespace ParanormalAgency.Models
                 yield return new ValidationResult("Seleccione un fenómeno válido.", new[] { nameof(PhenomenonType) });
             if (!RiskLevels.Contains(RiskLevel))
                 yield return new ValidationResult("Seleccione un nivel de riesgo válido.", new[] { nameof(RiskLevel) });
+            if (CaseName?.Length > 50)
+                yield return new ValidationResult("El nombre del caso admite máximo 50 caracteres.", new[] { nameof(CaseName) });
             if (string.IsNullOrWhiteSpace(CaseName))
                 yield return new ValidationResult("Ingrese el nombre del caso.", new[] { nameof(CaseName) });
             if (string.IsNullOrWhiteSpace(ClientName))
