@@ -37,12 +37,14 @@ namespace ParanormalAgency.Models
         public int Id { get => id; set => id = value; }
 
         [Required(ErrorMessage = "Ingrese el nombre del caso.")]
-        [MaxLength(100, ErrorMessage = "Máximo 100 caracteres.")]
+        [StringLength(60, ErrorMessage = "El nombre del caso admite máximo 60 caracteres.")]
+        [RegularExpression(@"^[\p{L}\p{M}0-9]+(?:[ \-][\p{L}\p{M}0-9]+)*$", ErrorMessage = "Use letras, números, espacios o guiones en el nombre del caso.")]
         [Display(Name = "Nombre del caso")]
         public string CaseName { get => caseName; set => caseName = value; }
 
         [Required(ErrorMessage = "Ingrese el nombre del cliente.")]
-        [MaxLength(100, ErrorMessage = "Máximo 100 caracteres.")]
+        [StringLength(80, ErrorMessage = "El nombre del cliente admite máximo 80 caracteres.")]
+        [RegularExpression(@"^[\p{L}\p{M}]+(?:[ \-][\p{L}\p{M}]+)*$", ErrorMessage = "Use solo letras, espacios o guiones en el nombre del cliente.")]
         [Display(Name = "Nombre del cliente")]
         public string ClientName { get => clientName; set => clientName = value; }
 
