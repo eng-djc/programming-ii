@@ -47,14 +47,18 @@ namespace ParanormalAgency.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public IActionResult Edit(int id, [Bind("Id,CaseName,ClientName,PhenomenonType,RiskLevel,BaseBudget,RequiresSpecializedEquipment,InvestigationDate")] Investigation item)
         {
+            // Impide actualizar un registro si el identificador es inválido o no coincide.
             if (id <= 0 || id != item.Id) return BadRequest();
+            // Solo guarda los cambios cuando los datos recibidos pasan la validación.
             if (ModelState.IsValid)
             {
                 try
                 {
+                    // Si el registro ya no existe, responde 404 en lugar de crear otro.
                     if (!service.UpdateInvestigation(item)) return NotFound();
                     return RedirectToAction(nameof(Index));
                 }
+                // Conserva el formulario y muestra el motivo si falla la validación o el guardado.
                 catch (ValidationException ex) { ModelState.AddModelError("", ex.Message); }
                 catch (Exception) { ModelState.AddModelError("", "No se pudo actualizar. Verifique la base de datos."); }
             }
@@ -65,7 +69,9 @@ namespace ParanormalAgency.Controllers
         [HttpGet]
         public IActionResult Delete(int id)
         {
+            // Un identificador inválido no permite buscar el registro.
             if (id <= 0) return BadRequest();
+            // Presenta la confirmación sin eliminar datos todavía.
             try { var item = service.FindInvestigation(id); return item == null ? NotFound() : View(item); }
             catch (Exception) { return DatabaseError(); }
         }
@@ -74,17 +80,21 @@ namespace ParanormalAgency.Controllers
         [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
+            // La eliminación ocurre únicamente al recibir la confirmación por POST.
             if (id <= 0) return BadRequest();
+            // Regresa al listado si se eliminó; responde 404 si el registro no existe.
             try { return service.DeleteInvestigation(id) ? RedirectToAction(nameof(Index)) : NotFound(); }
             catch (Exception) { return DatabaseError(); }
         }
 
+        // Presenta la vista compartida de errores de la aplicación.
         [HttpGet]
         public IActionResult Error() => View("Error");
 
         // Devuelve la vista de error cuando falla el acceso a los datos.
         private IActionResult DatabaseError()
         {
+            // HTTP 503 indica que el servicio no está disponible temporalmente.
             Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
             return View("Error");
         }
