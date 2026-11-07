@@ -1,7 +1,8 @@
 @model IEnumerable<Investigation>
 @{ ViewData["Title"] = "Investigaciones"; }
-<h2>Investigaciones paranormales</h2>
-<p><a asp-action="Create" class="btn btn-primary">Registrar nuevo caso</a></p>
+@* La presentación conserva el formato de lista de la Clase 8. *@
+<h2>Lista de investigaciones</h2>
+<p><a asp-action="Create" class="btn btn-primary">Agregar investigación</a></p>
 <table class="table table-striped">
     <thead><tr><th>Caso</th><th>Cliente</th><th>Fenómeno</th><th>Riesgo</th><th>Presupuesto (USD)</th><th>Equipo</th><th>Fecha</th><th>Costo total (USD)</th><th>Acciones</th></tr></thead>
     <tbody>
@@ -11,7 +12,7 @@
             <td>@item.CaseName</td><td>@item.ClientName</td><td>@item.PhenomenonType</td><td>@item.RiskLevel</td>
             <td>@item.BaseBudget?.ToString("N2")</td><td>@(item.RequiresSpecializedEquipment == true ? "Sí" : "No")</td>
             <td>@item.InvestigationDate?.ToString("dd/MM/yyyy")</td><td>@item.TotalCost.ToString("N2")</td>
-            <td><a asp-action="Edit" asp-route-id="@item.Id">Editar</a> | <a asp-action="Delete" asp-route-id="@item.Id">Eliminar</a></td>
+            <td><a asp-action="Edit" asp-route-id="@item.Id">Actualizar</a> | <a asp-action="Delete" asp-route-id="@item.Id">Eliminar</a></td>
         </tr>
     }
     </tbody>
