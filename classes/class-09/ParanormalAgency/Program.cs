@@ -1,11 +1,11 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// Registrar servicios MVC como en Class 08.
+// Registra los controladores y las vistas MVC.
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Mantener el pipeline de Class 08; el examen requiere eliminar Home/Privacy.
+// Configura la página de error y HTTPS cuando no se ejecuta en desarrollo.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Investigation/Error");
