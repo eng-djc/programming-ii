@@ -2,7 +2,7 @@
 <div asp-validation-summary="All" class="text-danger"></div>
 <div class="mb-3">
     <label asp-for="CaseName" class="form-label"></label>
-    <input asp-for="CaseName" class="form-control" maxlength="50" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9]+([ -][A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9]+)*" title="Máximo 50 caracteres. Use letras, números, espacios o guiones." required />
+    <input asp-for="CaseName" class="form-control" maxlength="50" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9]+([ -]*[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9]+)*" title="Máximo 50 caracteres. Use letras, números, espacios o guiones." required />
     <span asp-validation-for="CaseName" class="text-danger"></span>
 </div>
 <div class="mb-3">
