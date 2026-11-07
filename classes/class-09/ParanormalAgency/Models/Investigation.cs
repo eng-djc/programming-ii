@@ -18,7 +18,7 @@ namespace ParanormalAgency.Models
         public static IReadOnlyList<string> PhenomenonTypes { get; } = Array.AsReadOnly(new[] { "Aparición", "Poltergeist", "Actividad demoníaca", "Objeto maldito" });
         public static IReadOnlyList<string> RiskLevels { get; } = Array.AsReadOnly(new[] { "Bajo", "Medio", "Alto", "Crítico" });
 
-        // EF6 y el model binding requieren un constructor sin parámetros.
+        // Constructor vacío para cargar registros y enlazar datos del formulario.
         public Investigation() { }
 
         public Investigation(string caseName, string clientName, string phenomenonType, string riskLevel, decimal baseBudget, bool requiresSpecializedEquipment, DateTime investigationDate)
@@ -37,7 +37,8 @@ namespace ParanormalAgency.Models
         public int Id { get => id; set => id = value; }
 
         [Required(ErrorMessage = "Ingrese el nombre del caso.")]
-        [StringLength(60, ErrorMessage = "El nombre del caso admite máximo 50 caracteres.")]
+        // La columna admite 60 caracteres; el formulario limita los nombres a 50.
+        [StringLength(60, ErrorMessage = "El nombre del caso admite máximo 60 caracteres.")]
         [RegularExpression(@"^[\p{L}\p{M}0-9]+(?:[ \-]*[\p{L}\p{M}0-9]+)*$", ErrorMessage = "Use letras, números, espacios o guiones en el nombre del caso.")]
         [Display(Name = "Nombre del caso")]
         public string CaseName { get => caseName; set => caseName = value; }
@@ -71,7 +72,7 @@ namespace ParanormalAgency.Models
         [Display(Name = "Fecha de investigación")]
         public DateTime? InvestigationDate { get => investigationDate; set => investigationDate = value; }
 
-        // El costo se calcula en el servidor; no se permite modificarlo desde formularios.
+        // El costo total se obtiene mediante CalculateTotalCost().
         [Display(Name = "Costo total (USD)")]
         public decimal TotalCost { get => totalCost; private set => totalCost = value; }
 
@@ -93,7 +94,7 @@ namespace ParanormalAgency.Models
                 yield return new ValidationResult("El presupuesto admite hasta dos decimales.", new[] { nameof(BaseBudget) });
         }
 
-        // Todos los incrementos porcentuales se calculan sobre el presupuesto original.
+        // Los porcentajes del fenómeno y el equipo se aplican al presupuesto base.
         public decimal CalculateTotalCost()
         {
             if (!BaseBudget.HasValue || BaseBudget.Value < 0 || !RequiresSpecializedEquipment.HasValue)
@@ -115,8 +116,10 @@ namespace ParanormalAgency.Models
                 _ => throw new ValidationException("Seleccione un nivel de riesgo válido.")
             };
             decimal budget = BaseBudget.Value;
-            TotalCost = decimal.Round(budget + budget * phenomenonRate + riskAmount +
-                (RequiresSpecializedEquipment.Value ? budget * 0.20m : 0m), 2, MidpointRounding.AwayFromZero);
+            decimal phenomenonCost = budget * phenomenonRate;
+            decimal equipmentCost = RequiresSpecializedEquipment.Value ? budget * 0.20m : 0m;
+            decimal total = budget + phenomenonCost + riskAmount + equipmentCost;
+            TotalCost = decimal.Round(total, 2, MidpointRounding.AwayFromZero);
             return TotalCost;
         }
     }
