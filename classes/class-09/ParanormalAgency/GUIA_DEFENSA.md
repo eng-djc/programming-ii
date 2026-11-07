@@ -67,7 +67,7 @@ El equipo agrega 20% de la base si se selecciona **Sí**; con **No**, agrega cer
 | ¿Cómo se guardan los datos? | Entity Framework 6 usa `DbContext` y `SaveChanges()` con LocalDB. | `Services/Service.cs` |
 | ¿Cómo se evita guardar un presupuesto negativo? | Se valida en el HTML y también en el servidor. | `_Form.cshtml`, `Investigation.cs` |
 | ¿Por qué hay validación doble? | La del navegador ayuda al usuario; la del servidor protege los datos aunque se omita el HTML. | `Investigation.cs` |
-| ¿Cómo se evitan nombres incorrectos? | El caso admite hasta 60 caracteres y el cliente hasta 80; el cliente no admite números. | `Investigation.cs`, `_Form.cshtml` |
+| ¿Cómo se evitan nombres incorrectos? | El caso admite hasta 50 caracteres y el cliente hasta 80; el cliente solo permite letras y espacios. | `Investigation.cs`, `_Form.cshtml` |
 | ¿Por qué la fecha no tiene hora? | El examen solicita fecha de investigación y expresamente indica que no debe mostrar hora. | `InvestigationDate`, vistas |
 | ¿Por qué no hay Home ni Privacy? | Es una instrucción expresa del examen; se conserva el resto del formato de Class 08. | `Program.cs`, `_Layout.cshtml` |
 | ¿Se usa JavaScript? | No se agregó JavaScript a las vistas ni a la lógica del proyecto. | Vistas Razor |
@@ -89,4 +89,4 @@ Modelo (Investigation):
 
 **Frase de cierre:** «La aplicación registra investigaciones paranormales, valida sus datos y calcula automáticamente el costo. Separé las pantallas, el controlador, la lógica y la base de datos siguiendo el MVC de Class 08.»
 
-**Alcance:** esta guía facilita la defensa; no cambia requisitos, cálculos, esquema de base de datos ni comportamiento del programa. Las pruebas de demostración deben realizarse previamente en Visual Studio.
+**Preparación:** abrir la solución en Visual Studio, ejecutar la aplicación con LocalDB y verificar un registro antes de compartir pantalla.
