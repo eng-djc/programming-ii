@@ -1,0 +1,14 @@
+@model Investigation
+@{ ViewData["Title"] = "Editar caso"; }
+<div class="mx-auto" style="max-width:540px">
+<h2>Editar caso</h2>
+<p>Actualice la información de la investigación.</p>
+<form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+    @Html.AntiForgeryToken()
+    <input asp-for="Id" type="hidden" />
+    <partial name="_Form" model="Model" />
+    <button type="submit" class="btn btn-primary">Actualizar caso</button>
+    <button type="reset" class="btn btn-secondary">Restablecer</button>
+    <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+</form>
+</div>
