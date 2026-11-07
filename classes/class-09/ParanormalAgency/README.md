@@ -89,7 +89,7 @@ El equipo especializado agrega 20% del presupuesto base cuando se selecciona Sí
 | ID | Requerimiento | Historia de usuario | Criterio de aceptación |
 |---|---|---|---|
 | RF-01 | Registrar investigaciones: Registrar un caso con todos los campos obligatorios | Como operador, quiero registrar un caso con todos los campos obligatorios para administrar correctamente los casos. | El registro se almacena y aparece en Index |
-| RF-02 | Identificar caso y cliente: Capturar los nombres del caso y del cliente | Como operador, quiero capturar nombres legibles para identificar correctamente los expedientes y clientes. | Ambos obligatorios; caso máximo 60 caracteres (letras, números, espacios, guiones); cliente máximo 80 (letras, espacios, guiones, sin números) |
+| RF-02 | Identificar caso y cliente: Capturar los nombres del caso y del cliente | Como operador, quiero capturar nombres legibles para identificar correctamente los expedientes y clientes. | Ambos obligatorios; caso máximo 50 caracteres (letras, números, espacios, guiones); cliente máximo 80 (solo letras y espacios, sin números ni guiones) |
 | RF-03 | Seleccionar fenómeno: Elegir uno de los cuatro fenómenos oficiales | Como operador, quiero elegir uno de los cuatro fenómenos oficiales para administrar correctamente los casos. | Radio de selección única |
 | RF-04 | Seleccionar riesgo: Elegir Bajo, Medio, Alto o Crítico | Como operador, quiero elegir bajo, medio, alto o crítico para administrar correctamente los casos. | Lista desplegable obligatoria |
 | RF-05 | Presupuesto y equipo: Indicar presupuesto en USD y equipo especializado | Como operador, quiero indicar presupuesto en usd y equipo especializado para administrar correctamente los casos. | Número no negativo y radio Sí/No |
@@ -223,10 +223,12 @@ erDiagram
 
 | Campo | Restricción HTML5 | Validación en servidor | Prueba de aceptación |
 |---|---|---|---|
-| Caso | `maxlength=60`, `pattern` | `StringLength(60)` y `RegularExpression` Unicode | Aceptar «Casa embrujada 2 - Cartago»; rechazar 61 caracteres, `@` y `_` |
-| Cliente | `maxlength=80`, `pattern` | `StringLength(80)` y `RegularExpression` Unicode | Aceptar «María Solórzano» y «Ana-María»; rechazar «Juan123», `@` y 81 caracteres |
+| Caso | `maxlength=50`, `pattern` | `StringLength(60) en esquema, límite efectivo de 50 en IValidatableObject` y `RegularExpression` Unicode | Aceptar «Casa embrujada 2 - Cartago»; rechazar 51 caracteres, `@` y `_` |
+| Cliente | `maxlength=80`, `pattern` | `StringLength(80)` y `RegularExpression` Unicode | Aceptar «María Solórzano» y «Ana María»; rechazar «Juan123», «Ana-María», `@` y 81 caracteres |
 
 **Sin JavaScript:** la interfaz utiliza validación nativa HTML5; el servidor repite las reglas mediante DataAnnotations para evitar eludirlas manipulando el HTML. Los mensajes propios son españoles; los globos nativos dependen del idioma del navegador. La restricción de longitud también se refleja en el mapeo EF6: verificar el impacto de migración sobre datos preexistentes antes de aplicar cambios de esquema. Las pruebas indicadas siguen pendientes de ejecución en Visual Studio/LocalDB.
+
+**Nota de esquema:** el campo de caso conserva capacidad de 60 caracteres en EF6 para evitar una nueva migración destructiva; la aplicación limita efectivamente a 50 con HTML5 y validación de servidor. El cliente mantiene 80 en EF6 y ahora solo permite letras y espacios.
 
 ## Configuración y ejecución
 
