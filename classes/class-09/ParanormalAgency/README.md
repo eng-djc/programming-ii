@@ -1,5 +1,7 @@
 # ParanormalAgency — Examen Semana 09
 
+**Para la exposición:** [Guía breve de defensa (recorrido de pantalla y código)](GUIA_DEFENSA.md). El README conserva los requisitos y la rúbrica; la guía explica el sistema sin siglas.
+
 ## Enunciado
 
 Una agencia de investigaciones paranormales requiere una aplicación web para registrar, consultar, actualizar y eliminar investigaciones. Cada caso incluye nombre del caso, cliente, tipo de fenómeno (Aparición, Poltergeist, Actividad demoníaca u Objeto maldito), riesgo (Bajo, Medio, Alto o Crítico), presupuesto base en USD, necesidad de equipo especializado y fecha de investigación. El sistema calcula y muestra el costo total.
