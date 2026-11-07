@@ -68,6 +68,20 @@ El equipo especializado agrega 20% del presupuesto base cuando se selecciona Sí
 
 **Regla para cambios futuros:** antes de modificar un archivo, identificar el RF/RNF, la historia de usuario, el criterio de aceptación, el punto de rúbrica, el archivo afectado y la prueba que verificará el cambio. Si no existe justificación, no introducir la modificación. Los estados «implementado», «compilado», «probado» y «aprobado» no son equivalentes; registrar solo evidencias observadas.
 
+## Aclaración del requisito de fecha — fuente del examen
+
+**Texto oficial del enunciado:** «Fecha de investigación: campo de fecha». **Nota importante 2:** «La fecha de investigación no debe mostrar la hora».
+
+**RF-06 — Registro de fecha de investigación.** Como operador de la agencia, quiero registrar la fecha de una investigación para identificarla en el expediente. **Aceptación:** campo obligatorio de tipo HTML `date` en Create/Edit, con el valor recuperado correctamente al editar; la fecha se muestra sin componente de hora en Index.
+
+**RNF-09 — Presentación de fecha.** La interfaz debe representar la fecha sin hora. El texto `mm/dd/yyyy` o `dd/mm/aaaa` que aparece dentro del selector nativo puede variar según el navegador y la configuración regional del usuario; no es un requisito que deba implementarse con JavaScript. El listado muestra `dd/MM/yyyy`.
+
+**NI-02 — Restricción de la rúbrica.** No se debe mostrar hora en el campo de fecha de investigación.
+
+**Alcance semántico:** el PDF no precisa si la fecha corresponde a la visita programada o a la ejecución efectiva de la investigación. No indica que sea la fecha de aparición del fenómeno. Por fidelidad al enunciado, la etiqueta se mantiene «Fecha de investigación»; no se agrega fecha/hora del suceso ni se impone una interpretación de agenda no exigida.
+
+**Sin JavaScript:** los controles y las restricciones nativas de HTML5 funcionan sin scripts. Los mensajes de validación emergentes del navegador pueden aparecer en inglés si el idioma del navegador es inglés; la aplicación no puede forzar su traducción sin alterar el mecanismo de validación. La validación de negocio y los mensajes definidos por la aplicación deben permanecer en español y ejecutarse en el servidor.
+
 ## Requerimientos funcionales
 
 | ID | Requerimiento | Historia de usuario | Criterio de aceptación |
