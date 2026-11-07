@@ -1,9 +1,13 @@
 @model Investigation
-@{ ViewData["Title"] = "Eliminar caso"; }
+@{ ViewData["Title"] = "Eliminar investigación"; }
 <h2>Eliminar investigación</h2>
-<p>¿Desea eliminar el caso <strong>@Model.CaseName</strong> del cliente <strong>@Model.ClientName</strong>?</p>
+<p>¿Está seguro de que desea eliminar esta investigación?</p>
+<dl class="row">
+    <dt class="col-sm-3">Caso</dt><dd class="col-sm-9">@Model.CaseName</dd>
+    <dt class="col-sm-3">Cliente</dt><dd class="col-sm-9">@Model.ClientName</dd>
+</dl>
 <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
-    @Html.AntiForgeryToken()
-    <button type="submit" class="btn btn-danger">Confirmar eliminación</button>
+@Html.AntiForgeryToken()
+<button type="submit" class="btn btn-danger">Eliminar</button>
     <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
 </form>
