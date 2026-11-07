@@ -195,6 +195,26 @@ erDiagram
     }
 ```
 
+## Auditoría visual y pruebas observadas — 07/11/2026
+
+**Cambio de presentación en Index:** la tabla de nueve columnas conserva `table table-striped` de Class 08 y se envuelve en `table-responsive` de Bootstrap para permitir desplazamiento horizontal en pantallas estrechas. No se modifican campos, encabezados, lógica, navegación, estilos propios ni scripts. **Trazabilidad:** RF-08 (mostrar todos los datos), RNF-05 (consistencia visual), RNF-06 (Bootstrap sin JavaScript), RNF-12 (fidelidad a Class 08), NI-04 (mostrar todos los datos), rúbrica de Vistas (10) y Aspectos varios (5). **Historia de usuario:** Como operador, quiero consultar las nueve columnas y acceder a Actualizar/Eliminar incluso en una ventana estrecha para administrar los casos sin perder información. **Aceptación pendiente:** comprobar visualmente que las acciones se alcanzan mediante desplazamiento horizontal, sin recorte.
+
+**Evidencia manual aportada en capturas (no sustituye pruebas automatizadas):**
+
+| Prueba | Evidencia observada | Estado |
+|---|---|---|
+| Create con datos válidos | Registros visibles en Index y costo calculado | Aprobada en prueba manual |
+| Index | Datos y costo visibles; fecha sin hora | Aprobada en prueba manual |
+| Edit | Presupuesto actualizado a 1.000,00; costo recalculado a 3.350,00 | Aprobada en prueba manual |
+| Delete | Confirmación y posterior lista vacía | Aprobada en prueba manual |
+| HTML5 required | Navegador impidió envío con cada uno de los siete campos vacíos | Aprobada en navegador |
+| Presupuesto negativo en servidor | Con `novalidate` temporal en DevTools, `-3` devolvió mensaje «Ingrese un presupuesto válido en USD.» sin redirigir a Index | Aprobada en servidor; consulta independiente a BD pendiente |
+| Persistencia entre reinicios | No se aportó reinicio controlado | Pendiente |
+| Desplazamiento horizontal en Index | Ajuste Bootstrap incorporado | Pendiente de verificación visual |
+| Defensa oral | No realizada | Pendiente |
+
+**Nota de integridad:** las pruebas de validación HTML5 no prueban por sí mismas la validación del servidor. La captura del rechazo de `-3` sí muestra un error devuelto en la respuesta del formulario. No se asigna puntaje definitivo a los criterios de la defensa.
+
 ## Configuración y ejecución
 
 | Componente | Tecnología |
