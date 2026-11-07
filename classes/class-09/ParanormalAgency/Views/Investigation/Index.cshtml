@@ -3,6 +3,7 @@
 @* La presentación conserva el formato de lista de la Clase 8. *@
 <h2>Lista de investigaciones</h2>
 <p><a asp-action="Create" class="btn btn-primary">Agregar investigación</a></p>
+<div class="table-responsive">
 <table class="table table-striped">
     <thead><tr><th>Caso</th><th>Cliente</th><th>Fenómeno</th><th>Riesgo</th><th>Presupuesto (USD)</th><th>Equipo</th><th>Fecha</th><th>Costo total (USD)</th><th>Acciones</th></tr></thead>
     <tbody>
@@ -17,4 +18,5 @@
     }
     </tbody>
 </table>
+</div>
 @if (!Model.Any()) { <p>No hay investigaciones registradas.</p> }
