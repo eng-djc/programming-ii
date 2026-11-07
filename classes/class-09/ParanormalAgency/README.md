@@ -49,6 +49,25 @@ El equipo especializado agrega 20% del presupuesto base cuando se selecciona Sí
 | NI-08 | Eliminar Home y Privacy | Pendiente de validación de ejecución y/o revisión visual |
 | NI-09 | Aplicación completamente en español | Pendiente de validación de ejecución y/o revisión visual |
 
+## Matriz de trazabilidad y control de cambios
+
+**Jerarquía de fuentes:** examen saneado (funcionalidad y rúbrica) > Class 08 Cherkessia (estructura MVC y formato académico) > Class 07 EGamer (referencia secundaria). Las diferencias respecto a Class 08 solo se aceptan si están exigidas por el examen o son indispensables para implementar el dominio paranormal.
+
+| Cambio o decisión | Requisito / historia | Nota o criterio de rúbrica | Evidencia en código | Justificación | Validación |
+|---|---|---|---|---|---|
+| Inicio en lista de investigaciones; no Home/Privacy | RF-08, RF-12 | NI-07, NI-08; Aspectos varios (5) | `Program.cs`, `Views/Shared/_Layout.cshtml` | Excepción explícita a la plantilla Class 08 por exigencia del examen | Navegación observada; revisar ausencia de rutas/enlaces innecesarios |
+| Modelo con atributos, propiedades y dos constructores | RF-01, RF-02; RNF-01 | Clase lógica (5) | `Models/Investigation.cs` | Mantener patrón de Class 08 y adaptar los campos al examen | Compilación aprobada; revisión de propiedades pendiente |
+| Porcentajes, riesgo fijo y equipo sobre presupuesto base | RF-03 a RF-07 | NI-05, NI-06; Cálculos (5) | `Models/Investigation.cs` | Fórmula exacta del examen, sin cálculo en controlador | Pruebas de combinaciones pendientes |
+| CRUD mediante controlador y Service EF6 | RF-01, RF-08 a RF-10; RNF-01, RNF-03 | NI-04; Controlador (10); Service (10) | `Controllers/InvestigationController.cs`, `Services/Service.cs` | Seguir la separación MVC y DbContext de Class 08 | Index cargó en Windows; Create/Edit/Delete pendientes |
+| Controles radio, select, number y date obligatorios | RF-02 a RF-06, RF-11 | NI-01, NI-03; Vistas (10) | `Views/Investigation/_Form.cshtml` | Controles definidos por el examen; mismo formulario para Create/Edit | Revisión visual y validaciones pendientes |
+| Fecha sin hora | RF-06; RNF-09 | NI-02 | `Models/Investigation.cs`, `Views/Investigation/Index.cshtml` | La hora no aporta valor al caso y el examen pide fecha | Prueba de persistencia y visualización pendiente |
+| Estilos y estructura HTML de Class 08 | RNF-05, RNF-12 | NI-01; Aspectos varios (5) | `Views/Shared/_Layout.cshtml`, `wwwroot/css/site.css`, vistas | No personalizar la plantilla sin requisito | Comparación visual parcial; Create/Edit pendientes |
+| Etiquetas, botones y mensajes en español | RF-11, RF-12; RNF-04 | NI-09; Aspectos varios (5) | Vistas, modelos y controlador | Requisito explícito del examen | Revisión integral pendiente |
+| Protección antifalsificación y campos enlazados explícitamente | RNF-07, RNF-11 | Integridad de operaciones CRUD | `Controllers/InvestigationController.cs`, vistas POST | Convención de seguridad existente en Class 08; no agrega funciones ajenas | Pruebas POST pendientes |
+| Documentación y pruebas vinculadas a rúbrica | RNF-10, RNF-12 | Rúbrica completa (100) | `README.md` | Facilitar defensa y demostrar cumplimiento sin atribuir puntos no comprobados | Defensa y pruebas pendientes |
+
+**Regla para cambios futuros:** antes de modificar un archivo, identificar el RF/RNF, la historia de usuario, el criterio de aceptación, el punto de rúbrica, el archivo afectado y la prueba que verificará el cambio. Si no existe justificación, no introducir la modificación. Los estados «implementado», «compilado», «probado» y «aprobado» no son equivalentes; registrar solo evidencias observadas.
+
 ## Requerimientos funcionales
 
 | ID | Requerimiento | Historia de usuario | Criterio de aceptación |
