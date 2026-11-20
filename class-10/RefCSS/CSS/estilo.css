@@ -1,0 +1,82 @@
+/*  HOJAS DE ESTILO
+CSS (Cascading Style Sheet) es un lenguaje de estilo que define la presentación de los documentos HTML, con CSS podemos cambiar fuentes, colores, márgenes, tamaños, imágenes de fondo, maquetación, crear animaciones y otros efectos y más.
+
+Sintaxis:
+etiqueta {									
+<estilos CSS>
+}
+
+contenedor etiqueta {
+<estilos CSS>
+}
+
+#identificador etiqueta {
+<estilos CSS>
+}
+
+etiqueta.clase {
+<estilos CSS>
+}
+
+Identificadores y clases
+Cuando necesitamos que una misma etiqueta aparezca en diferentes sitios, se emplea los identificadores y las clases, con las etiquetas <span> y <div>.
+
+*/
+
+/*estilos.css*/
+P {/*cambiamos apariencia de los párrafos*/
+font-size : 12pt;
+font-family : arial,helvetica;
+font-weight : normal;
+}
+
+H1 {/*cambiamos la apariencia de los encabezados de primer nivel*/
+font-size : 36pt;
+font-family : verdana,arial;
+text-decoration : underline;
+text-align : center;
+background-color : Teal;
+}
+
+ul li {/*cambiamos la apariencia de los elementos de las listas
+desordenadas*/
+font-size : 10pt;
+font-family : verdana,arial;
+background-color : 666666;
+}
+
+BODY /*cambiamos la apariencia de todo el cuerpo*/ {
+background-color : #B0F8FF;
+font-family : arial;
+color :A1A5A6;
+}
+
+p.especial{/*clase que se aplica sólo a los párrafos*/
+font-size : 16pt;
+}
+#enorme{/* mediante identificador*/
+font-size : 28pt;
+}
+
+.borde {/*clase para bordes*/
+border-top: solid 2px #A00000;
+border-bottom: outset 3px #00FF00;
+border-left: dotted 2px #A00000;
+border-right: dashed 2px #0000FF;
+}
+
+A:link {/*pseudoclase para los enlaces*/
+text-decoration:none;color:#0000cc;
+}
+
+A:visited {
+text-decoration:none;color:#ffcc33;
+}
+
+A:active {
+text-decoration:none;color:#ff0000;
+}
+
+A:hover {
+text-decoration:underline;color:#999999;font-weight:bold
+}
