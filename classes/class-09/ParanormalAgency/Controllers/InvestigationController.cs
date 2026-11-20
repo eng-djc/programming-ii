@@ -17,7 +17,7 @@ namespace ParanormalAgency.Controllers
             catch (Exception) { return DatabaseError(); }
         }
 
-        // Abre el formulario para registrar una investigación.
+        // Abre el formulario para registrar una investigación, aquí es donde es importante el constructor vacío de Investigation
         [HttpGet]
         public IActionResult Create() => View(new Investigation());
 
@@ -35,6 +35,8 @@ namespace ParanormalAgency.Controllers
         }
 
         // Busca una investigación y carga sus datos para editarlos.
+
+        /// cuida de no incluir base de datas
         [HttpGet]
         public IActionResult Edit(int id)
         {

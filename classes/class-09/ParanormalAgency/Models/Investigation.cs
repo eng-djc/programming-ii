@@ -26,6 +26,8 @@ namespace ParanormalAgency.Models
         public static IReadOnlyList<string> RiskLevels { get; } = Array.AsReadOnly(new[] { "Bajo", "Medio", "Alto", "Crítico" });
 
         // Constructor vacío para cargar registros y enlazar datos del formulario.
+
+        // FAVOR iniciatiz los atributos feedback.
         public Investigation() { }
 
         // Inicializa una investigación con sus datos y calcula el costo inicial.
@@ -41,15 +43,19 @@ namespace ParanormalAgency.Models
             CalculateTotalCost();
         }
 
-        [Key]
+          [Key]
         public int Id { get => id; set => id = value; }
 
+        // Data Annotations Nombre del caso: obligatorio, con un máximo de 60 caracteres en este atributo.
+        // La expresión regular permite letras, números, espacios y guiones.
         [Required(ErrorMessage = "Ingrese el nombre del caso.")]
         [StringLength(60, ErrorMessage = "El nombre del caso admite máximo 60 caracteres.")]
         [RegularExpression(@"^[\p{L}\p{M}0-9]+(?:[ \-]*[\p{L}\p{M}0-9]+)*$", ErrorMessage = "Use letras, números, espacios o guiones en el nombre del caso.")]
         [Display(Name = "Nombre del caso")]
         public string CaseName { get => caseName; set => caseName = value; }
 
+        // Nombre del cliente: obligatorio, máximo 80 caracteres.
+        // La expresión regular permite letras y espacios, pero rechaza números y símbolos.
         [Required(ErrorMessage = "Ingrese el nombre del cliente.")]
         [StringLength(80, ErrorMessage = "El nombre del cliente admite máximo 80 caracteres.")]
         [RegularExpression(@"^[\p{L}\p{M}]+(?: [\p{L}\p{M}]+)*$", ErrorMessage = "Use solo letras y espacios en el nombre del cliente.")]
@@ -64,6 +70,9 @@ namespace ParanormalAgency.Models
         [Display(Name = "Nivel de riesgo")]
         public string RiskLevel { get => riskLevel; set => riskLevel = value; }
 
+        // Presupuesto base: obligatorio, no admite valores negativos.
+        // Range establece un mínimo de 0 y un máximo de 999999999999.99 USD.
+        // Display define la etiqueta visible en el formulario.
         [Required(ErrorMessage = "Ingrese el presupuesto base.")]
         [Range(typeof(decimal), "0", "999999999999.99", ErrorMessage = "Ingrese un presupuesto válido en USD.")]
         [Display(Name = "Presupuesto base (USD)")]
@@ -83,8 +92,7 @@ namespace ParanormalAgency.Models
         [Display(Name = "Costo total (USD)")]
         public decimal TotalCost { get => totalCost; private set => totalCost = value; }
 
-        // Rechaza fenómenos o riesgos fuera de las opciones disponibles, casos de más de 50 caracteres,
-        // nombres vacíos, fechas con hora y presupuestos con más de dos decimales.
+        // Implementa el método Validate() de la interfaz IValidatableObject para aplicar validaciones personalizadas
         public IEnumerable<ValidationResult> Validate(ValidationContext context)
         {
             // Comprueba que las categorías correspondan a las opciones definidas por el sistema.
@@ -107,7 +115,7 @@ namespace ParanormalAgency.Models
                 yield return new ValidationResult("El presupuesto admite hasta dos decimales.", new[] { nameof(BaseBudget) });
         }
 
-        // Calcula el costo sumando presupuesto, fenómeno, riesgo y equipo especializado.
+        // Como esta es la clase lógica, aquí se Calcula el costo sumando presupuesto, fenómeno, riesgo y equipo especializado.
         // Ambos porcentajes se aplican al presupuesto base.
         public decimal CalculateTotalCost()
         {
@@ -134,6 +142,8 @@ namespace ParanormalAgency.Models
             // Los dos recargos porcentuales se calculan sobre el mismo presupuesto original.
             decimal budget = BaseBudget.Value;
             decimal phenomenonCost = budget * phenomenonRate;
+            // El operador ternario (? :) calcula un recargo del 20% sobre el presupuesto base
+            // si se requiere equipo especializado; de lo contrario, asigna 0.
             decimal equipmentCost = RequiresSpecializedEquipment.Value ? budget * 0.20m : 0m;
             decimal total = budget + phenomenonCost + riskAmount + equipmentCost;
             // Guarda el total con dos decimales y devuelve el importe calculado.
