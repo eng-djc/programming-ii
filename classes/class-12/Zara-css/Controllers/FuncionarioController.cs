@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Zara.Models;
 using Zara.Services;
@@ -28,9 +27,6 @@ namespace Zara.Controllers
         }
 
         [HttpGet]
-        public ActionResult Details(int id) => mostrarFuncionario(id, "Details");
-
-        [HttpGet]
         public ActionResult Create() => View(new Funcionario());
 
         [HttpPost]
@@ -47,10 +43,6 @@ namespace Zara.Controllers
                 {
                     service.agregarFuncionario(funcionario);
                     return RedirectToAction(nameof(Index));
-                }
-                catch (ValidationException ex)
-                {
-                    ModelState.AddModelError("", ex.Message);
                 }
                 catch (Exception)
                 {
@@ -88,10 +80,6 @@ namespace Zara.Controllers
                         return NotFound();
 
                     return RedirectToAction(nameof(Index));
-                }
-                catch (ValidationException ex)
-                {
-                    ModelState.AddModelError("", ex.Message);
                 }
                 catch (Exception)
                 {

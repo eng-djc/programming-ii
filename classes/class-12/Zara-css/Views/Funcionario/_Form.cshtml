@@ -1,4 +1,7 @@
 @model Funcionario
+@{
+    var fechaMaxima = DateTime.Today.ToString("yyyy-MM-dd");
+}
 
 <div asp-validation-summary="All" class="text-danger"></div>
 
@@ -18,14 +21,15 @@
 
 <div class="mb-3">
     <label asp-for="Telefono" class="form-label"></label>
-    <input asp-for="Telefono" type="tel" class="form-control" maxlength="30" required />
+    <input asp-for="Telefono" type="tel" class="form-control" maxlength="30"
+           inputmode="numeric" pattern="[0-9]+" required />
     <span asp-validation-for="Telefono" class="text-danger"></span>
 </div>
 
 <div class="mb-3">
     <label asp-for="FechaNacimiento" class="form-label"></label>
     <input asp-for="FechaNacimiento" type="date" asp-format="{0:yyyy-MM-dd}"
-           class="form-control" required />
+           class="form-control" max="@fechaMaxima" required />
     <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
 </div>
 
@@ -65,12 +69,14 @@
     <label asp-for="Clave" class="form-label"></label>
     @if (ViewData["Editando"] as bool? == true)
     {
-        <input asp-for="Clave" type="password" class="form-control" />
+        <input asp-for="Clave" type="password" class="form-control"
+               autocomplete="new-password" />
         <small>Deje la clave vacía para conservar la actual.</small>
     }
     else
     {
-        <input asp-for="Clave" type="password" class="form-control" required />
+        <input asp-for="Clave" type="password" class="form-control"
+               autocomplete="new-password" required />
     }
     <span asp-validation-for="Clave" class="text-danger"></span>
 </div>

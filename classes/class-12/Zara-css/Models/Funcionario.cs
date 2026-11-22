@@ -70,6 +70,7 @@ namespace Zara.Models
 
         [Required(ErrorMessage = "Ingrese el teléfono.")]
         [MaxLength(30)]
+        [RegularExpression(@"^[0-9]+$", ErrorMessage = "El teléfono solo puede contener dígitos.")]
         [Display(Name = "Teléfono")]
         public string Telefono { get => telefono; set => telefono = value; }
 
@@ -112,6 +113,13 @@ namespace Zara.Models
                 yield return new ValidationResult(
                     "Seleccione un perfil válido.",
                     new[] { nameof(Perfil) });
+            }
+
+            if (FechaNacimiento.HasValue && FechaNacimiento.Value.Date > DateTime.Today)
+            {
+                yield return new ValidationResult(
+                    "La fecha de nacimiento no puede ser futura.",
+                    new[] { nameof(FechaNacimiento) });
             }
         }
     }

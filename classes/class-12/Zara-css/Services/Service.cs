@@ -1,7 +1,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
@@ -72,10 +71,7 @@ namespace Zara.Services
         /// </param>
         public void agregarPrenda(Prenda prendita)
         {
-            // Agrega la prenda al contexto.
             Prendas.Add(prendita);
-
-            // Guarda el registro en la base de datos.
             SaveChanges();
         }
 
@@ -87,7 +83,6 @@ namespace Zara.Services
         /// </returns>
         public List<Prenda> mostrarPrendas()
         {
-            // Consulta las prendas y devuelve una lista.
             return Prendas.ToList();
         }
 
@@ -105,15 +100,11 @@ namespace Zara.Services
         /// </exception>
         public Prenda buscarPrenda(int id)
         {
-            // Busca la primera prenda cuyo Id coincida.
-            // Si no existe, FirstOrDefault devuelve null.
             var prendaBuscada = Prendas.FirstOrDefault(p => p.Id == id);
 
-            // Verifica si se encontró la prenda.
             if (prendaBuscada != null)
                 return prendaBuscada;
 
-            // Genera una excepción si no existe.
             else throw new Exception("Esa prenda no se encuentra registrada");
         }
 
@@ -125,10 +116,7 @@ namespace Zara.Services
         /// </param>
         public void eliminarPrenda(Prenda prendita)
         {
-            // Marca la prenda para eliminarla.
             Prendas.Remove(prendita);
-
-            // Guarda la eliminación en la base de datos.
             SaveChanges();
         }
 
@@ -143,29 +131,17 @@ namespace Zara.Services
         /// </exception>
         public void actualizarPrenda(Prenda prendita)
         {
-            // Busca la prenda por su identificador.
             var prendaBuscada = Prendas.FirstOrDefault(p => p.Id == prendita.Id);
 
-            // Verifica que el registro exista.
             if (prendaBuscada != null)
             {
-                // Actualiza la marca de la prenda.
                 prendaBuscada.Marca = prendita.Marca;
-
-                // Actualiza la talla de la prenda.
                 prendaBuscada.Talla = prendita.Talla;
-
-                // Actualiza el precio de la prenda.
                 prendaBuscada.Precio = prendita.Precio;
-
-                // Genero
                 prendaBuscada.Genero = prendita.Genero;
-
-                // Guarda los cambios en la base de datos.
                 SaveChanges();
             }
 
-            // Genera una excepción si no encuentra el registro.
             else throw new Exception("No se encontraron registros de esa prenda");
         }
 
@@ -185,12 +161,8 @@ namespace Zara.Services
 
         public void agregarFuncionario(Funcionario funcionario)
         {
-            if (string.IsNullOrWhiteSpace(funcionario.Clave))
-                throw new ValidationException("Ingrese la clave.");
-
-            // Solo se guarda el hash; la clave temporal no se persiste.
             funcionario.ClaveHash =
-                new PasswordHasher<Funcionario>().HashPassword(funcionario, funcionario.Clave);
+                new PasswordHasher<Funcionario>().HashPassword(funcionario, funcionario.Clave!);
             funcionario.Clave = null;
 
             Funcionarios.Add(funcionario);
@@ -244,26 +216,7 @@ namespace Zara.Services
         /// </param>
         public void agregarFabricante(Fabricante fabricante)
         {
-            // Verifica que el objeto no sea nulo.
-            ArgumentNullException.ThrowIfNull(fabricante);
-
-            // Valida las propiedades definidas en el modelo.
-            Validator.ValidateObject(
-                fabricante,
-                new ValidationContext(fabricante),
-                validateAllProperties: true);
-
-            // El Id debe ser cero porque SQL Server
-            // asigna automáticamente el identificador.
-            if (fabricante.Id != 0)
-                throw new ArgumentException(
-                    "El ID de un fabricante nuevo debe ser cero.",
-                    nameof(fabricante));
-
-            // Agrega el fabricante al contexto.
             Fabricantes.Add(fabricante);
-
-            // Guarda el registro en la base de datos.
             SaveChanges();
         }
 
@@ -276,7 +229,6 @@ namespace Zara.Services
         /// </returns>
         public List<Fabricante> mostrarFabricantes()
         {
-            // Ordena los fabricantes por Id y devuelve la lista.
             return Fabricantes.OrderBy(f => f.Id).ToList();
         }
 
@@ -291,7 +243,6 @@ namespace Zara.Services
         /// </returns>
         public Fabricante? buscarFabricante(int id)
         {
-            // Find busca el registro mediante su clave primaria.
             return Fabricantes.Find(id);
         }
 
@@ -307,41 +258,16 @@ namespace Zara.Services
         /// </returns>
         public bool actualizarFabricante(Fabricante fabricante)
         {
-            // Verifica que el objeto no sea nulo.
-            ArgumentNullException.ThrowIfNull(fabricante);
-
-            // Valida las propiedades del fabricante.
-            Validator.ValidateObject(
-                fabricante,
-                new ValidationContext(fabricante),
-                validateAllProperties: true);
-
-            // Comprueba que el identificador sea positivo.
-            if (fabricante.Id <= 0)
-                throw new ArgumentException(
-                    "El ID del fabricante debe ser positivo.",
-                    nameof(fabricante));
-
-            // Busca el fabricante por su identificador.
             var existente = Fabricantes.Find(fabricante.Id);
 
-            // Devuelve false si no encuentra el registro.
             if (existente == null)
                 return false;
 
-            // Actualiza el nombre del fabricante.
             existente.Nombre = fabricante.Nombre;
-
-            // Actualiza el prestigio del fabricante.
             existente.Prestigio = fabricante.Prestigio;
-
-            // Actualiza la fecha de creación.
             existente.FechaCreacion = fabricante.FechaCreacion;
-
-            // Guarda las modificaciones.
             SaveChanges();
 
-            // Confirma que se actualizó el registro.
             return true;
         }
 
@@ -357,20 +283,14 @@ namespace Zara.Services
         /// </returns>
         public bool eliminarFabricante(int id)
         {
-            // Busca el fabricante por su identificador.
             var existente = Fabricantes.Find(id);
 
-            // Comprueba si el registro existe.
             if (existente == null)
                 return false;
 
-            // Marca el fabricante para eliminarlo.
             Fabricantes.Remove(existente);
-
-            // Guarda la eliminación en la base de datos.
             SaveChanges();
 
-            // Confirma que se eliminó el registro.
             return true;
         }
 
