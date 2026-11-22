@@ -19,8 +19,17 @@ body {
 }
 
 #header {
+  position: relative;
+  height: auto;
+  aspect-ratio: 640 / 250;
   background-position: center top;
-  background-size: cover;
+  background-size: contain;
+}
+
+.headtitle {
+  position: absolute;
+  top: auto;
+  bottom: 5px;
 }
 
 #menu {
