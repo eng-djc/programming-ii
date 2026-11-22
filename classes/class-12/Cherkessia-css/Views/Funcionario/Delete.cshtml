@@ -1,0 +1,12 @@
+@model Funcionario
+@{ ViewData["Title"] = "Eliminar funcionario"; }
+<div class="funcionarios">
+<h2>Eliminar funcionario</h2>
+<p>¿Está seguro de que desea eliminar este funcionario?</p>
+<partial name="_Detalle" model="Model" />
+<form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+</div>

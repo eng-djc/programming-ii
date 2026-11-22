@@ -1,0 +1,9 @@
+@model Volcan
+<dl class="row">
+    <dt class="col-sm-3">Nombre</dt><dd class="col-sm-9">@Model.Nombre</dd>
+    <dt class="col-sm-3">Provincia</dt><dd class="col-sm-9">@Model.Provincia</dd>
+    <dt class="col-sm-3">Activo</dt><dd class="col-sm-9">@(Model.Activo == true ? "Sí" : "No")</dd>
+    <dt class="col-sm-3">Expulsa gases</dt><dd class="col-sm-9">@Model.Gases</dd>
+    <dt class="col-sm-3">Instrumento</dt><dd class="col-sm-9">@Model.Instrumento?.Nombre</dd>
+    <dt class="col-sm-3">IRV al guardar</dt><dd class="col-sm-9">@Model.IRV — @Model.clasificarRiesgo()</dd>
+</dl>
