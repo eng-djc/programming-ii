@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Zara</title>
+    <link rel="stylesheet" href="~/css/css.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <div id="container">
+        <div id="header">
+            <div class="headtitle">Zara</div>
+        </div>
+
+        <div id="menu">
+            <ul>
+                <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                <li><a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
+                <li><a asp-area="" asp-controller="Prenda" asp-action="Index">Prendas</a></li>
+                <li><a asp-area="" asp-controller="Fabricante" asp-action="Index">Fabricantes</a></li>
+                <li><a asp-area="" asp-controller="Funcionario" asp-action="Index">Funcionarios</a></li>
+            </ul>
+        </div>
+
+        <div id="content">
+            <main id="insidecontent" role="main">
+                @RenderBody()
+            </main>
+            <div class="clear"></div>
+        </div>
+
+        <div id="footer">
+            <span>Copyright © 2026 - Zara</span>
+        </div>
+    </div>
+</body>
+</html>

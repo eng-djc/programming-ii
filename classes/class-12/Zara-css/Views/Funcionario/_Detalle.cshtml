@@ -1,0 +1,11 @@
+@model Funcionario
+
+<dl class="row">
+    <dt>Nombre</dt><dd>@Model.Nombre</dd>
+    <dt>Cédula</dt><dd>@Model.Cedula</dd>
+    <dt>Teléfono</dt><dd>@Model.Telefono</dd>
+    <dt>Fecha de nacimiento</dt><dd>@Model.FechaNacimiento?.ToString("dd/MM/yyyy")</dd>
+    <dt>Estado</dt><dd>@(Model.Activo == true ? "Activo" : "Inactivo")</dd>
+    <dt>Perfil</dt><dd>@Model.Perfil</dd>
+    <dt>Usuario</dt><dd>@Model.Usuario</dd>
+</dl>

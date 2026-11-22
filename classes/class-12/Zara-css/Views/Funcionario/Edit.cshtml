@@ -1,0 +1,16 @@
+@model Funcionario
+@{
+    ViewData["Title"] = "Editar funcionario";
+    ViewData["Editando"] = true;
+}
+
+<div class="funcionarios">
+    <h2>Editar funcionario</h2>
+    <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+        @Html.AntiForgeryToken()
+        <input asp-for="Id" type="hidden" />
+        <partial name="_Form" model="Model" />
+        <button type="submit" class="btn btn-primary">Actualizar</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
