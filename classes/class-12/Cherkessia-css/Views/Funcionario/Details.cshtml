@@ -1,0 +1,8 @@
+@model Funcionario
+@{ ViewData["Title"] = "Detalles del funcionario"; }
+<div class="funcionarios">
+<h2>Detalles del funcionario</h2>
+<partial name="_Detalle" model="Model" />
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Actualizar</a>
+<a asp-action="Index" class="btn btn-secondary">Volver</a>
+</div>

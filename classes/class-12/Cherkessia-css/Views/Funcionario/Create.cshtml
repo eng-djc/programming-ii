@@ -1,0 +1,11 @@
+@model Funcionario
+@{ ViewData["Title"] = "Agregar funcionario"; }
+<div class="funcionarios">
+<h2>Agregar funcionario</h2>
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+    <partial name="_Form" model="Model" />
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+</div>

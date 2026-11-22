@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Cherkessia</title>
+
+    <link rel="stylesheet" href="~/css/css.css" asp-append-version="true" />
+
+</head>
+<body>
+    <div id="container">
+
+        <div id="header">
+            <div class="headtitle">Supera tus lìmites</div>
+        </div>
+
+        <div id="menu">
+            <ul>
+                <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                <li><a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
+                <li><a asp-area="" asp-controller="Instrumento" asp-action="Index">Instrumentos</a></li>
+                <li><a asp-area="" asp-controller="Volcan" asp-action="Index">Volcanes</a></li>
+                <li><a asp-area="" asp-controller="Funcionario" asp-action="Index">Funcionarios</a></li>
+            </ul>
+        </div>
+
+
+        <div id="content">
+
+            <div id="insidecontent">
+                @RenderBody()
+                </div>
+
+    
+
+                <div style="clear: both;"></div>
+
+            </div>
+
+
+
+            <div id="footer">
+                <span>Copyright © 2026 | Todos los derechos revervados  </span>
+            </div>
+
+        </div>
+
+</body>
+</html>

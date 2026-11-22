@@ -1,0 +1,23 @@
+@model IEnumerable<Funcionario>
+@{ ViewData["Title"] = "Funcionarios"; }
+<div class="funcionarios">
+<h2>Lista de funcionarios</h2>
+<p><a asp-action="Create" class="btn btn-primary">Agregar funcionario</a></p>
+<div class="tabla-desplazable" role="region" aria-label="Lista de funcionarios" tabindex="0">
+<table class="table table-striped">
+    <thead><tr><th>Nombre</th><th>Cédula</th><th>Teléfono</th><th>Fecha de nacimiento</th><th>Estado</th><th>Perfil</th><th>Usuario</th><th>Acciones</th></tr></thead>
+    <tbody>
+    @foreach (var funcionario in Model)
+    {
+        <tr>
+            <td>@funcionario.Nombre</td><td>@funcionario.Cedula</td><td>@funcionario.Telefono</td>
+            <td>@funcionario.FechaNacimiento?.ToString("dd/MM/yyyy")</td><td>@(funcionario.Activo == true ? "Activo" : "Inactivo")</td>
+            <td>@funcionario.Perfil</td><td>@funcionario.Usuario</td>
+            <td><a asp-action="Details" asp-route-id="@funcionario.Id">Detalles</a> | <a asp-action="Edit" asp-route-id="@funcionario.Id">Actualizar</a> | <a asp-action="Delete" asp-route-id="@funcionario.Id">Eliminar</a></td>
+        </tr>
+    }
+    </tbody>
+</table>
+</div>
+@if (!Model.Any()) { <p>No hay funcionarios registrados.</p> }
+</div>

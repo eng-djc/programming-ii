@@ -1,0 +1,9 @@
+@model ErrorViewModel
+@{ ViewData["Title"] = "Error"; }
+<h1 class="text-danger">No se pudo completar la operación.</h1>
+<p>Inténtelo nuevamente. Si el problema continúa, verifique la conexión a la base de datos.</p>
+@if (Model.ShowRequestId)
+{
+    <p>Identificador de solicitud: <code>@Model.RequestId</code></p>
+}
+<a asp-controller="Home" asp-action="Index">Volver a Home</a>
