@@ -1,0 +1,36 @@
+@model IEnumerable<Zara.Models.Fabricante>
+@{ ViewData["Title"] = "Fabricantes"; }
+
+@* GET Index: lista los registros recuperados mediante Service.mostrarFabricantes. *@
+<h2>Fabricantes</h2>
+<p><a asp-action="Create" class="btn btn-primary">Agregar fabricante</a></p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Prestigio</th>
+            <th>Fecha de creación</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @* Fecha renderizada como texto sin hora; un registro por fila. *@
+        @foreach (var fabricante in Model)
+        {
+            <tr>
+                <td data-label="Nombre">@fabricante.Nombre</td>
+                <td data-label="Prestigio">@fabricante.Prestigio</td>
+                <td data-label="Fecha de creación">@(fabricante.FechaCreacion?.ToString("dd/MM/yyyy"))</td>
+                <td data-label="Acciones">
+                    <a asp-action="Edit" asp-route-id="@fabricante.Id">Editar</a> |
+                    @* Elimina desde el listado mediante POST; no muestra confirmación. *@
+                    <form asp-controller="Fabricante" asp-action="Delete"
+                          asp-route-id="@fabricante.Id" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-link p-0 align-baseline">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

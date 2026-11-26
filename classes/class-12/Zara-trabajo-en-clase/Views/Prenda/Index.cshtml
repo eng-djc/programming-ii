@@ -1,0 +1,40 @@
+@model IEnumerable<Zara.Models.Prenda>
+@{
+    ViewData["Title"] = "Prendas";
+}
+
+@* GET Index recibe la lista de prendas que consulta el controlador. *@
+<h2>Lista de prendas</h2>
+
+@* Navega al formulario GET Create para agregar una nueva prenda. *@
+<p><a asp-action="Create" class="btn btn-primary">Agregar prenda</a></p>
+
+@* Tabla que muestra los registros consultados mediante Service.mostrarPrendas(). *@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Marca</th>
+            <th>Talla</th>
+            <th>Precio</th>
+            <th>Género</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @* Genera una fila por cada prenda recibida del controlador. *@
+        @foreach (var prenda in Model)
+        {
+            <tr>
+                <td data-label="Marca">@prenda.Marca</td>
+                <td data-label="Talla">@prenda.Talla</td>
+                <td data-label="Precio">@prenda.Precio</td>
+                <td data-label="Género">@prenda.Genero</td>
+                <td data-label="Acciones">
+                    @* Enlaces GET para editar, consultar o confirmar eliminación. *@
+                    <a asp-action="Edit" asp-route-id="@prenda.Id">Actualizar</a> 
+                    <a asp-action="Delete" asp-route-id="@prenda.Id">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
