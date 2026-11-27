@@ -31,10 +31,12 @@
 </form>
 <form id="cancelar-login" action="@Url.Action("Login", "Funcionario")" method="get"></form>
 
-@* Si el servicio rechaza las credenciales, el POST de FuncionarioController captura
-   AuthenticationException, asigna ex.Message a ViewBag.Error y devuelve esta vista.
-   ViewBag comparte ese mensaje con la vista durante la solicitud actual. Al abrir
-   el login o pulsar Cancelar se hace un nuevo GET y ViewBag.Error queda sin valor. *@
+@* ViewBag.Error contiene el texto de ex.Message que el controlador asigna cuando
+   el servicio rechaza el ingreso: "Datos de inicio de sesión incorrectos.".
+   En cada renderizado comprobamos si hay texto antes de mostrar el encabezado.
+   Al abrir el login o pulsar Cancelar comienza un nuevo GET que deja Error sin asignar.
+   En cambio, dentro de esta solicitud el valor se conserva al leerlo: el if lo
+   consulta primero y el h3 vuelve a leer el mismo mensaje para mostrarlo. *@
 @if (!string.IsNullOrEmpty(ViewBag.Error))
 {
     @* El signo ! invierte la condición: solo se genera el encabezado si hay texto. *@
