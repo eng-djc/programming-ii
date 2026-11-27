@@ -3,6 +3,16 @@
     ViewData["Title"] = "Login funcionario";
 }
 
+<script>
+    // document representa la página HTML que Razor construye con el layout y esta vista.
+    // El navegador ya leyó el div del menú porque aparece antes de RenderBody en el layout.
+    // getElementById busca ese elemento por su id y guarda la referencia en la variable menu.
+    var menu = document.getElementById("menu");
+
+    // display = "none" oculta el menú y libera su espacio solo en la página de login.
+    menu.style.display = "none";
+</script>
+
 <h1>Login funcionario</h1>
 <form asp-action="Login" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
