@@ -1,3 +1,4 @@
+using System.Security.Authentication;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
@@ -26,21 +27,20 @@ namespace Zara.Controllers
             if (!ModelState.IsValid)
                 return View(datos);
 
-            Funcionario? funcionario;
+            Funcionario funcionario;
             try
             {
                 // El servicio busca un funcionario activo y verifica el hash de su clave.
-                funcionario = service.verificarCredenciales(datos.Usuario, datos.Clave);
+                funcionario = service.login(datos.Usuario, datos.Clave);
+            }
+            catch (AuthenticationException ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(datos);
             }
             catch (Exception)
             {
                 return errorConsulta();
-            }
-
-            if (funcionario == null)
-            {
-                ModelState.AddModelError("", "Usuario o clave incorrectos.");
-                return View(datos);
             }
 
             // La cookie identifica al funcionario en las siguientes solicitudes.

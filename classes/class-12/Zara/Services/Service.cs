@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Security.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Zara.Models;
 
@@ -147,21 +148,44 @@ namespace Zara.Services
 
         #endregion
 
-        #region CRUD de Funcionarios
+        #region Inicio de sesión de funcionarios
 
-        public Funcionario? verificarCredenciales(string usuario, string clave)
+        /// <summary>
+        /// Busca la cuenta activa y comprueba la clave enviada desde el formulario de login.
+        /// </summary>
+        /// <param name="user">Nombre de usuario ingresado en el formulario.</param>
+        /// <param name="password">Clave ingresada para esta verificación.</param>
+        /// <returns>El funcionario validado que el controlador usará para iniciar la sesión.</returns>
+        /// <exception cref="AuthenticationException">
+        /// El usuario no identifica una única cuenta activa o la clave es incorrecta.
+        /// </exception>
+        public Funcionario login(string user, string password)
         {
+            // f representa cada funcionario. EF6 filtra por usuario y estado en la base.
+            // Dos filas bastan para detectar un usuario duplicado. La consulta es de solo lectura.
             var candidatos = Funcionarios.AsNoTracking()
-                .Where(f => f.Activo == true && f.Usuario == usuario)
+                .Where(f => f.Usuario == user && f.Activo == true)
                 .Take(2).ToList();
-            if (candidatos.Count != 1)
-                return null;
 
-            var funcionario = candidatos[0];
-            var resultado = new PasswordHasher<Funcionario>()
-                .VerifyHashedPassword(funcionario, funcionario.ClaveHash, clave);
-            return resultado == PasswordVerificationResult.Failed ? null : funcionario;
+            if (candidatos.Count == 1)
+            {
+                var funcionarioLogueado = candidatos[0];
+                // Al registrar la cuenta se guarda ClaveHash. El verificador usa ese hash
+                // para comprobar la clave que el funcionario acaba de escribir.
+                var resultado = new PasswordHasher<Funcionario>()
+                    .VerifyHashedPassword(funcionarioLogueado, funcionarioLogueado.ClaveHash, password);
+
+                if (resultado != PasswordVerificationResult.Failed)
+                    return funcionarioLogueado;
+            }
+
+            // El controlador muestra el mismo mensaje para todos los ingresos rechazados.
+            throw new AuthenticationException("Datos de inicio de sesión incorrectos.");
         }
+
+        #endregion
+
+        #region CRUD de Funcionarios
 
         public List<Funcionario> mostrarFuncionarios()
         {
