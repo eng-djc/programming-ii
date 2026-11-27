@@ -2,6 +2,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddAuthentication("Cookies").AddCookie("Cookies", options =>
+{
+    options.LoginPath = "/Funcionario/Login";
+});
 
 var app = builder.Build();
 
@@ -18,6 +22,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

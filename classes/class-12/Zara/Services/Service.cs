@@ -149,6 +149,20 @@ namespace Zara.Services
 
         #region CRUD de Funcionarios
 
+        public Funcionario? verificarCredenciales(string usuario, string clave)
+        {
+            var candidatos = Funcionarios.AsNoTracking()
+                .Where(f => f.Activo == true && f.Usuario == usuario)
+                .Take(2).ToList();
+            if (candidatos.Count != 1)
+                return null;
+
+            var funcionario = candidatos[0];
+            var resultado = new PasswordHasher<Funcionario>()
+                .VerifyHashedPassword(funcionario, funcionario.ClaveHash, clave);
+            return resultado == PasswordVerificationResult.Failed ? null : funcionario;
+        }
+
         public List<Funcionario> mostrarFuncionarios()
         {
             return Funcionarios.OrderBy(f => f.Nombre).ToList();

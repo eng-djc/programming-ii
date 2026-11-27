@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Zara.Models;
 using Zara.Services;
@@ -11,6 +13,41 @@ namespace Zara.Controllers
         public FuncionarioController()
         {
             service = new Service();
+        }
+
+        [HttpGet]
+        public ActionResult Login() => View(new LoginFuncionario());
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Login(LoginFuncionario datos)
+        {
+            if (!ModelState.IsValid)
+                return View(datos);
+
+            Funcionario? funcionario;
+            try
+            {
+                funcionario = service.verificarCredenciales(datos.Usuario, datos.Clave);
+            }
+            catch (Exception)
+            {
+                return errorConsulta();
+            }
+
+            if (funcionario == null)
+            {
+                ModelState.AddModelError("", "Usuario o clave incorrectos.");
+                return View(datos);
+            }
+
+            var identidad = new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, funcionario.Id.ToString()),
+                new Claim(ClaimTypes.Name, funcionario.Usuario)
+            }, "Cookies");
+            await HttpContext.SignInAsync("Cookies", new ClaimsPrincipal(identidad));
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]

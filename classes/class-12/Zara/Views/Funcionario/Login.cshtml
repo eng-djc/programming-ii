@@ -1,0 +1,22 @@
+@model LoginFuncionario
+@{
+    ViewData["Title"] = "Login funcionario";
+}
+
+<h1>Login funcionario</h1>
+<form asp-action="Login" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Usuario"></label>
+        <input asp-for="Usuario" class="form-control" autocomplete="username" maxlength="100" required />
+        <span asp-validation-for="Usuario" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Clave"></label>
+        <input asp-for="Clave" type="password" class="form-control" autocomplete="current-password" required />
+        <span asp-validation-for="Clave" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Aceptar</button>
+    <button type="submit" form="cancelar-login" class="btn btn-secondary">Cancelar</button>
+</form>
+<form id="cancelar-login" action="@Url.Action("Login", "Funcionario")" method="get"></form>
