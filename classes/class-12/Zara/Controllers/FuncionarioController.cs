@@ -20,21 +20,25 @@ namespace Zara.Controllers
         [HttpGet]
         public ActionResult Login() => View(new LoginFuncionario());
 
+        // POST: procesa el usuario y la clave que se enviaron al presionar Aceptar.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginFuncionario datos)
         {
+            // Si faltan datos o algún campo es inválido, la vista muestra los errores del formulario.
             if (!ModelState.IsValid)
                 return View(datos);
 
-            Funcionario funcionario;
+            Funcionario usuarioLogueado;
             try
             {
-                // El servicio busca un funcionario activo y verifica el hash de su clave.
-                funcionario = service.login(datos.Usuario, datos.Clave);
+                // El servicio devuelve el funcionario activo cuya clave verificó.
+                // Si rechaza las credenciales, lanza AuthenticationException y se omite la asignación.
+                usuarioLogueado = service.login(datos.Usuario, datos.Clave);
             }
             catch (AuthenticationException ex)
             {
+                // El resumen de validación del login muestra el mensaje del servicio.
                 ModelState.AddModelError("", ex.Message);
                 return View(datos);
             }
@@ -43,11 +47,12 @@ namespace Zara.Controllers
                 return errorConsulta();
             }
 
-            // La cookie identifica al funcionario en las siguientes solicitudes.
+            // La identidad usa el ID y el nombre de la cuenta que devolvió el servicio.
+            // SignInAsync emite la cookie antes de redirigir a Home/Index.
             var identidad = new ClaimsIdentity(new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, funcionario.Id.ToString()),
-                new Claim(ClaimTypes.Name, funcionario.Usuario)
+                new Claim(ClaimTypes.NameIdentifier, usuarioLogueado.Id.ToString()),
+                new Claim(ClaimTypes.Name, usuarioLogueado.Usuario)
             }, "Cookies");
             await HttpContext.SignInAsync("Cookies", new ClaimsPrincipal(identidad));
             return RedirectToAction("Index", "Home");
