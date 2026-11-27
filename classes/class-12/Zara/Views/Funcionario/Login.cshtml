@@ -15,10 +15,6 @@
 
 <h1>Login funcionario</h1>
 <form asp-action="Login" method="post">
-    @if (ViewBag.Error is string mensaje)
-    {
-        <div class="text-danger" role="alert">@mensaje</div>
-    }
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="form-group">
         <label asp-for="Usuario"></label>
@@ -34,3 +30,13 @@
     <button type="submit" form="cancelar-login" class="btn btn-secondary">Cancelar</button>
 </form>
 <form id="cancelar-login" action="@Url.Action("Login", "Funcionario")" method="get"></form>
+
+@* Si el servicio rechaza las credenciales, el POST de FuncionarioController captura
+   AuthenticationException, asigna ex.Message a ViewBag.Error y devuelve esta vista.
+   ViewBag comparte ese mensaje con la vista durante la solicitud actual. Al abrir
+   el login o pulsar Cancelar se hace un nuevo GET y ViewBag.Error queda sin valor. *@
+@if (!string.IsNullOrEmpty(ViewBag.Error))
+{
+    @* El signo ! invierte la condición: solo se genera el encabezado si hay texto. *@
+    <h3 style="color: red" role="alert">@ViewBag.Error</h3>
+}
