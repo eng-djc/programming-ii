@@ -29,6 +29,8 @@ namespace Zara.Controllers
             if (!ModelState.IsValid)
                 return View(datos);
 
+            // El POST recibe LoginFuncionario. La variable local usuarioLogueado recibe
+            // el objeto Funcionario que devuelve el servicio al validar las credenciales.
             Funcionario usuarioLogueado;
             try
             {
@@ -38,8 +40,9 @@ namespace Zara.Controllers
             }
             catch (AuthenticationException ex)
             {
-                // El resumen de validación del login muestra el mensaje del servicio.
-                ModelState.AddModelError("", ex.Message);
+                // La excepción lanzada en Service.login llega a este catch del controlador.
+                // La vista puede leer ViewBag.Error al renderizar esta misma solicitud.
+                ViewBag.Error = ex.Message;
                 return View(datos);
             }
             catch (Exception)
@@ -55,6 +58,7 @@ namespace Zara.Controllers
                 new Claim(ClaimTypes.Name, usuarioLogueado.Usuario)
             }, "Cookies");
             await HttpContext.SignInAsync("Cookies", new ClaimsPrincipal(identidad));
+            // Tras iniciar sesión, el navegador hace una nueva petición a HomeController.Index.
             return RedirectToAction("Index", "Home");
         }
 

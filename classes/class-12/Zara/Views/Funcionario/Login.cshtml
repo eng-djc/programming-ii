@@ -15,6 +15,10 @@
 
 <h1>Login funcionario</h1>
 <form asp-action="Login" method="post">
+    @if (ViewBag.Error is string mensaje)
+    {
+        <div class="text-danger" role="alert">@mensaje</div>
+    }
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="form-group">
         <label asp-for="Usuario"></label>
