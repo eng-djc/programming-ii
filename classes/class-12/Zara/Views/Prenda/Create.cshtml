@@ -43,6 +43,41 @@
         </select>
         <span asp-validation-for="Genero" class="text-danger"></span>
     </div>
+    <div class="mb-3">
+        @* Create de PrendaController envía ViewBag.Fabricantes desde el servicio.
+           Aquí se usa como una lista de objetos Fabricante. *@
+        <label asp-for="Fabricante" class="form-label"></label>
+        <select asp-for="Fabricante" class="form-select" required>
+            <option value="">Seleccione un fabricante</option>
+            @* foreach recorre la lista fabricante por fabricante. *@
+            @foreach (var itemFabricante in (IEnumerable<Zara.Models.Fabricante>)ViewBag.Fabricantes)
+            {
+                @if (!string.IsNullOrWhiteSpace(itemFabricante.Nombre))
+                {
+                    @* Cada fabricante genera una opción.
+                       value contiene el Nombre que se envía al guardar la Prenda;
+                       @itemFabricante.Nombre es el texto que ve el usuario. *@
+                    <option value="@itemFabricante.Nombre">@itemFabricante.Nombre</option>
+                }
+            }
+        </select>
+        @* El fabricante seleccionado se guarda en Prenda.Fabricante. *@
+        <span asp-validation-for="Fabricante" class="text-danger"></span>
+
+        @* Ejemplo para examen - RadioButton
+           foreach recorre la misma lista de fabricantes.
+           type="radio" crea un RadioButton por fabricante.
+           Todos usan name="Fabricante", por eso se selecciona solo uno.
+           value="@itemFabricante.Nombre" sería el valor enviado al modelo.
+           @itemFabricante.Nombre muestra el nombre al usuario.
+
+           @foreach (var itemFabricante in (IEnumerable<Zara.Models.Fabricante>)ViewBag.Fabricantes)
+           {
+               <input type="radio" name="Fabricante" value="@itemFabricante.Nombre" />
+               @itemFabricante.Nombre
+           }
+        *@
+    </div>
 
     @* Submit envía los datos mediante POST; el controlador redirige al Index
        si guarda correctamente y vuelve a mostrar esta vista si hay errores. *@

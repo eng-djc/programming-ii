@@ -59,7 +59,7 @@ namespace Zara.Controllers
             }, "Cookies");
             await HttpContext.SignInAsync("Cookies", new ClaimsPrincipal(identidad));
             // Tras iniciar sesión, el navegador hace una nueva petición a HomeController.Index.
-            return RedirectToAction("Index", "Home");
+            return Redirect("~/Home/Index");
         }
 
         [HttpGet]

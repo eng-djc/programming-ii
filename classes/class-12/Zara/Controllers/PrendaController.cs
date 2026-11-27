@@ -43,6 +43,7 @@ namespace Zara.Controllers
         [HttpGet]
         public ActionResult Create()
         {
+            ViewBag.Fabricantes = service.mostrarFabricantes();
             return View(new Prenda());
         }
 
@@ -50,10 +51,19 @@ namespace Zara.Controllers
         // Recibe los campos del formulario y valida antes de insertar la prenda.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind("Marca,Talla,Precio,Genero")] Prenda prendita)
+        public ActionResult Create([Bind("Marca,Talla,Precio,Genero,Fabricante")] Prenda prendita)
         {
+            ViewBag.Fabricantes = new List<Fabricante>();
             try
             {
+                var fabricantes = service.mostrarFabricantes();
+                ViewBag.Fabricantes = fabricantes;
+                if (string.IsNullOrWhiteSpace(prendita.Fabricante) ||
+                    !fabricantes.Any(f => f.Nombre == prendita.Fabricante))
+                {
+                    ModelState.AddModelError(nameof(Prenda.Fabricante), "Seleccione un fabricante registrado.");
+                }
+
                 // Solo guardar si los datos cumplen las validaciones del modelo.
                 if (ModelState.IsValid)
                 {

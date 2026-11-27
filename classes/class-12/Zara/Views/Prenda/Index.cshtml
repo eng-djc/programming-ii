@@ -17,6 +17,7 @@
             <th>Talla</th>
             <th>Precio</th>
             <th>Género</th>
+            <th>Fabricante</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -29,6 +30,7 @@
                 <td data-label="Talla">@prenda.Talla</td>
                 <td data-label="Precio">@prenda.Precio</td>
                 <td data-label="Género">@prenda.Genero</td>
+                <td data-label="Fabricante">@prenda.Fabricante</td>
                 <td data-label="Acciones">
                     @* Enlaces GET para editar, consultar o confirmar eliminación. *@
                     <a asp-action="Edit" asp-route-id="@prenda.Id">Actualizar</a> 

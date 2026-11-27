@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace Zara.Models
 {
@@ -10,15 +11,17 @@ namespace Zara.Models
         private string talla;
         private double precio;
         private string genero;
+        private string fabricante;
 
         // Constructor con parámetros
-        public Prenda(int id, string marca, string talla, double precio, string genero)
+        public Prenda(int id, string marca, string talla, double precio, string genero, string fabricante)
         {
             this.Id = id;
             this.Marca = marca;
             this.Talla = talla;
             this.Precio = precio;
             this.Genero = genero;
+            this.Fabricante = fabricante;
         }
 
         // Constructor sin parámetros
@@ -29,6 +32,7 @@ namespace Zara.Models
             this.Talla = "";
             this.Precio = 0;
             this.Genero = "";
+            this.Fabricante = "";
         }
 
         // Propiedades públicas con Get y Set
@@ -57,6 +61,10 @@ namespace Zara.Models
         [RegularExpression(@"^(Hombre|Mujer|Unisex)$",
             ErrorMessage = "Seleccione una categoría válida.")]
         public string Genero { get => genero; set => genero = value; }
+
+        // La selección se valida al crear, sin impedir editar prendas anteriores.
+        [ValidateNever]
+        public string Fabricante { get => fabricante; set => fabricante = value; }
 
         // Valida campos obligatorios sin modificar la nulabilidad
         // de las columnas de la base de datos existente.
