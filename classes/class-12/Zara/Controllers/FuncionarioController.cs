@@ -15,6 +15,7 @@ namespace Zara.Controllers
             service = new Service();
         }
 
+        // GET: abre el formulario con usuario y clave vacíos.
         [HttpGet]
         public ActionResult Login() => View(new LoginFuncionario());
 
@@ -28,6 +29,7 @@ namespace Zara.Controllers
             Funcionario? funcionario;
             try
             {
+                // El servicio busca un funcionario activo y verifica el hash de su clave.
                 funcionario = service.verificarCredenciales(datos.Usuario, datos.Clave);
             }
             catch (Exception)
@@ -41,6 +43,7 @@ namespace Zara.Controllers
                 return View(datos);
             }
 
+            // La cookie identifica al funcionario en las siguientes solicitudes.
             var identidad = new ClaimsIdentity(new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, funcionario.Id.ToString()),
@@ -102,7 +105,7 @@ namespace Zara.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(
-            int id,
+            [FromRoute] int id,
             [Bind("Id,Nombre,Cedula,Telefono,FechaNacimiento,Activo,Perfil,Usuario,Clave")]
             Funcionario funcionario)
         {
